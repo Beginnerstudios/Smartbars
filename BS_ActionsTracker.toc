@@ -1,0 +1,12 @@
+## Interface: 90105
+## Title: BS_ActionsTracker
+## Notes: Tracking your actions.
+## Author: BeginnerStudios
+## Version: 0002
+## SavedVariablesPerCharacter:TrackedSpellsCharacter
+
+BS_ActionsTracker_Global.lua
+BS_ActionsTracker_UI.lua
+BS_ActionsTracker_Actions.lua
+BS_ActionsTracker_Config.lua
+BS_ActionsTracker_Core.lua

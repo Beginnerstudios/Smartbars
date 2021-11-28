@@ -1,0 +1,10 @@
+{
+    "Lua.diagnostics.disable": [
+        "undefined-field",
+        "redundant-parameter"
+    ],
+    "Lua.diagnostics.globals": [
+        "SlashCmdList",
+        "nill"
+    ]
+}
