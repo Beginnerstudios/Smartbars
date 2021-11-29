@@ -5,6 +5,7 @@
     ],
     "Lua.diagnostics.globals": [
         "SlashCmdList",
-        "nill"
+        "nill",
+        "ReloadUI"
     ]
 }

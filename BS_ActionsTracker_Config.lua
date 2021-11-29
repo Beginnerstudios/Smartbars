@@ -2,7 +2,6 @@
 local _,BS_ActionsTracker = ...;
 BS_ActionsTracker.Config ={};
 local Config = BS_ActionsTracker.Config;
-
 --Init------------------------------------
 function Config:Init()
     UI = BS_ActionsTracker.UI
@@ -12,41 +11,32 @@ function Config:Init()
 end
 --Config:Functions------------------------
 function Config:CreateCommands()
-
-SLASH_BS1 = "/bs"
-SlashCmdList["BS"] = function(msg)
+    SLASH_BS1 = "/bs"
+    SlashCmdList["BS"] = function(msg)
     Config:ToggleConfigMode()
+    end
 end
 function Config:ToggleConfigMode()
---if frame is open
-if not IsActionsTrackerPrimaryFrameVisible then 
-    -- if frame is closed    
-    UI:DisplayActions(Actions.GetUserActions2(),UI:GetFrame(1));  
+    if not IsActionsTrackerPrimaryFrameVisible then    
+    IsActionsTrackerPrimaryFrameVisible = true
+    UI:DisplayActions(Actions.GetUserActions():GetUsed()[1],UI:GetFrame(1));  
     UI:GetFrame(1):Show()
     UI:GetFrame(2):SetMovable(true) 
+    UI:GetFrame(2):EnableMouse(true) 
     UI:GetFrame(2).title:SetText("BS_ActionsTracker - move frame,edit text")
-    Actions:SetIsConfigMode(true)
     IsActionsTrackerConfigMode = true    
     UI:GetFrame(2):Show()
-    for k,v in pairs(Actions.GetTrackedActions()) do
-        if v[3]~=nill then
-        v[3].edit:SetEnabled(true)
-        end
-    end     
-    IsActionsTrackerPrimaryFrameVisible = true
+    UI:ToggleEditbox(true)    
     else
         UI:GetFrame(1):Hide()
         UI:GetFrame(2):SetMovable(false) 
-        UI:GetFrame(2).title:SetText("")
-        Actions:SetIsConfigMode(false) 
+        UI:GetFrame(2):EnableMouse(false) 
+        UI:GetFrame(2).title:SetText("")   
         UI:UpdateTrackedActions(Actions.GetTrackedActions())
-        IsActionsTrackerConfigMode = false 
-        for k,v in pairs(Actions.GetTrackedActions()) do
-            if v[3]~=nill then
-            v[3].edit:SetEnabled(false)
-            end
-        end 
+        UI:ToggleEditbox(false)
         IsActionsTrackerPrimaryFrameVisible = false
+        IsActionsTrackerConfigMode = false  
     end
-    end
+
 end
+-- Revision version Build 0003 --

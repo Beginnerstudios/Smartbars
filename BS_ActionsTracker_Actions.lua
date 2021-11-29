@@ -9,22 +9,7 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local lastOffset =0
-local isConfigMode
-
-
 --Actions:Functions-----------------------
-function Actions:GetUserActions2()
-    local slotCount = 120
-    local allSlotTable = {}
-        for i=1,slotCount do
-        local actionType,actionID,subType = GetActionInfo(i)
-            if actionID ~=nil then
-                allSlotTable[actionID] = {i,actionID,nil,""}           --- [1]slot id [2]spellID
-            end
-          end
-         return allSlotTable
-end
-
 function Actions:GetUserActions()---test                                
     local returnTable =
         {                         
@@ -89,16 +74,8 @@ function Actions:InitTrackedActions(actions)
         end       
     end
     UI:UpdateUI()
-end  
-
-   
+end     
 --Getters & Setters,Reset-----------------------------
-function Actions:GetIsConfigMode()
-    return isConfigMode
-end
-function Actions:SetIsConfigMode(value)
-    isConfigMode = value
-end
 function Actions:GetTrackedActions()
     return trackedActions
 end 
@@ -112,4 +89,4 @@ function Actions:ResetActions()
 trackedActions = nill
 ReloadUI()
 end
-
+-- Revision version Build 0003 --
