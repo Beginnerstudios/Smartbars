@@ -6,6 +6,12 @@
     "Lua.diagnostics.globals": [
         "SlashCmdList",
         "nill",
-        "ReloadUI"
+        "ReloadUI",
+        "C_Timer",
+        "CreateFrame",
+        "UIParent",
+        "GetActionCooldown",
+        "IsUsableAction",
+        "GetActionTexture"
     ]
 }
