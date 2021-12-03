@@ -12,6 +12,7 @@
         "UIParent",
         "GetActionCooldown",
         "IsUsableAction",
-        "GetActionTexture"
+        "GetActionTexture",
+        "GetActionInfo"
     ]
 }

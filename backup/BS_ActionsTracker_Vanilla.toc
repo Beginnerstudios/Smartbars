@@ -1,0 +1,13 @@
+## Interface: 11401
+## Title: BS_ActionsTracker
+## Notes: Tracking your actions.
+## Author: BeginnerStudios
+## Version: 0003
+## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition
+
+BS_ActionsTracker_Global.lua
+BS_ActionsTracker_UI.lua
+BS_ActionsTracker_Actions.lua
+BS_ActionsTracker_Config.lua
+BS_ActionsTracker_Events.lua
+BS_ActionsTracker_Core.lua

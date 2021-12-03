@@ -90,7 +90,7 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
     SecondaryFrame:SetMovable(false)
      --SECONDARY FRAME -EVENTS
     SecondaryFrame:SetScript("OnUpdate", function ()
-    UI:UpdateTrackedActions(Actions:GetTrackedActions())
+    UI:UpdateTrackedActions(Actions:GetActions():Tracked()[1])
     end)
 
     return SecondaryFrame

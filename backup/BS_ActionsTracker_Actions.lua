@@ -61,10 +61,7 @@ end
 --Getters & Setters,Reset-----------------------------
  function Actions:SetTrackedActions(tActions)
     trackedActions = tActions
-end   
-function Actions:GetTrackedActions()
-    return trackedActions
-end     
+end        
 function Actions:ResetActions()
 local emptyActions = nill
 TrackedSpellsCharacter = nill
