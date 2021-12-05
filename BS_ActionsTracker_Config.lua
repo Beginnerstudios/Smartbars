@@ -32,7 +32,7 @@ function Config:ToggleConfigMode()
         UI:GetFrame(2):SetMovable(false) 
         UI:GetFrame(2):EnableMouse(false)      
         UI:GetFrame(2).title:SetAlpha(0)                                       
-        UI:UpdateTrackedActions(Actions:GetActions():Tracked()[1])
+       -- UI:UpdateTrackedActions(Actions:GetActions():Tracked()[1])
         UI:ToggleEditbox(false)
         Config:SaveConfig()
         IsActionsTrackerPrimaryFrameVisible = false
@@ -42,6 +42,6 @@ function Config:ToggleConfigMode()
 end
 function Config:SaveConfig()
     TrackedSpellsFramePosition = UI:GetFramePosition(2)
-    TrackedSpellsCharacter = Actions:GetActions():Tracked()[1]
+    TrackedSpellsCharacter = Actions:GetTrackedActions()
 end
 -- Revision version Build 0004 --

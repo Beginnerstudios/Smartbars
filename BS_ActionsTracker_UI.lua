@@ -11,6 +11,7 @@ Config = BS_ActionsTracker.Config
 end
 --Variables-------------------------------
 local frames = {};
+local displayedActions={};
 --UI:Frames-------------------------------
 function UI:CreateFrames()  --create and assign frames to table "frames" [1]primary [2]secondary
   local function PrimaryFrame()
@@ -114,11 +115,21 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
   local xOffstet = 0;
   local yOffset = -20;
   local count = 0
+
+  if displayedActions~=nill then
+    for k,v in pairs(displayedActions) do
+      if displayedActions[k]~=nill then
+      displayedActions[k][3]:Hide()
+      displayedActions[k][3] = nill
+      end
+    end
+  end
   for k,v in pairs(actions) do
-  local actionWidget=UI:CreateActionWidget(actions[k],frame,false)
-  actionWidget:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
-  xOffstet = xOffstet+50;
-  count = count +1
+   
+    actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
+    actions[k][3]:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
+    xOffstet = xOffstet+50;
+     count = count +1
    --Next line after 12 spells
     if(count==12) then
     yOffset = yOffset -75;
@@ -127,14 +138,15 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     end
     --Compare widgets with tracked actions
     for q,v in pairs(Actions:GetActions():Tracked()[1]) do
-     if actions[k][2] == v[2] then
-        actionWidget:SetChecked(true)
+    if actions[k][2] == v[2] and v[5] == Actions:GetCurrentSpecialization() then
+      actions[k][3]:SetChecked(true)
      end
     end
     -- ACTION WIDGETS -- EVENTS
-    actionWidget:SetScript("OnClick",function (self) 
+    actions[k][3]:SetScript("OnClick",function (self) 
     Actions:AddTrackedAction(actions[k]) end)
-  end
+  end  
+displayedActions = actions
  UI:UpdateUI()
 end
 --UI:Widgets-------------------------------
@@ -143,6 +155,7 @@ function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
  local newTexture= GetActionTexture(action[1])
+ --local newTexture= GetSpellTexture(action[2])
  if isTracked then
   actionWidget:SetHighlightTexture(nill)
   actionWidget:SetPushedTexture(nill)
@@ -164,7 +177,7 @@ function UI:CreateEditBox(trackedAction,isEnabled)--Add editbox with desired tex
   parentFrame.edit:SetEnabled(isEnabled)
   parentFrame.edit:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE")
   parentFrame.edit:SetScript("OnEditFocusLost", function (self)             
-  trackedAction[4] = self:GetText()  
+  trackedAction[4] = self:GetText() 
   end)
 
 
@@ -190,32 +203,33 @@ local usedSpellsCount = Actions:GetActions().Used()[2];
   local point = TrackedSpellsFramePosition[3]
   local relativePoint = TrackedSpellsFramePosition[4]
   frames[2]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
-
+ UI:RefreshTrackedIcons(Actions:GetTrackedActions())
 end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
   local actions = trackedActionsTable
   local configMode = IsActionsTrackerConfigMode
 if actions ~=nill then
   for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
-    local start, duration, enable = GetActionCooldown(actions[actionID][1])
-    local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])
+    if actions[actionID][5] == Actions:GetCurrentSpecialization() then
+      actions[actionID][3]:Show()
+      local start, duration, enable = GetActionCooldown(actions[actionID][1])
+      local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])
       if not configMode then
         if actions[actionID][3].edit ~=nil then
         if enable>0 and duration>1.5 or notEnoughMana then
-      actions[actionID][3]:SetAlpha(0)
-      actions[actionID][3].edit:SetAlpha(0)
-        elseif duration<1.5 then
-        actions[actionID][3]:SetAlpha(1)
-        actions[actionID][3].edit:SetAlpha(1)
-        else
-        actions[actionID][3]:SetAlpha(1)
-        actions[actionID][3].edit:SetAlpha(1)
+         actions[actionID][3]:Hide()
+        elseif duration<1.5 then      
+       actions[actionID][3]:Show()
+        else      
+        actions[actionID][3]:Show()
         end
       end
-      else
-        actions[actionID][3]:SetAlpha(1)
-        actions[actionID][3].edit:SetAlpha(1)
+      else      
+       actions[actionID][3]:Show()
       end
+    else
+    actions[actionID][3]:Hide()
+    end
   end
   end
 UI:SortTrackedActions(actions)
@@ -225,7 +239,7 @@ function UI:SortTrackedActions(trackedActions)
   local count = 0
   for k,v in pairs(trackedActions) do
     local actionID = k 
-  if trackedActions[actionID][3]:GetAlpha()>0 then    ----Sort tracked actions
+  if trackedActions[actionID][3]:GetAlpha()>0 and trackedActions[actionID][3]:IsVisible() == true then    ----Sort tracked actions
   trackedActions[actionID][3]:SetPoint("LEFT",UI:GetFrame(2),"LEFT",startOffset,-40)
   trackedActions[actionID][3].edit:SetPoint("CENTER",trackedActions[actionID][3],"CENTER",2,0)
   startOffset = startOffset +50
@@ -233,6 +247,14 @@ function UI:SortTrackedActions(trackedActions)
   end
  
 end
+end
+function UI:RefreshTrackedIcons(trackedActions)
+  for k,v in pairs(trackedActions) do
+    if v[3]~=nill then
+      local newTexture= GetActionTexture(v[1])
+      v[3]:SetNormalTexture(newTexture)   
+    end
+  end
 end
 --Getters & Setters-----------------------------
 function UI:GetFrame(frameIndex)  --return frame from table "frames" [1]primary [2]secondary

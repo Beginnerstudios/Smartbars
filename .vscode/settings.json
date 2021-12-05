@@ -1,7 +1,8 @@
 {
     "Lua.diagnostics.disable": [
         "undefined-field",
-        "redundant-parameter"
+        "redundant-parameter",
+        "empty-block"
     ],
     "Lua.diagnostics.globals": [
         "SlashCmdList",
@@ -13,6 +14,8 @@
         "GetActionCooldown",
         "IsUsableAction",
         "GetActionTexture",
-        "GetActionInfo"
+        "GetActionInfo",
+        "GetSpecialization",
+        "GetSpellTexture"
     ]
 }
