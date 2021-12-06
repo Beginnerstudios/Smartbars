@@ -16,6 +16,9 @@
         "GetActionTexture",
         "GetActionInfo",
         "GetSpecialization",
-        "GetSpellTexture"
+        "GetSpellTexture",
+        "getglobal",
+        "GetBuildInfo",
+        "GetPrimaryTalentTree"
     ]
 }

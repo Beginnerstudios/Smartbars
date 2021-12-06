@@ -41,7 +41,7 @@ function Actions:AddTrackedAction(action)
         trackedActions[actionID][3]:Hide() 
         trackedActions[actionID]=nill
     else  
-       local curretSpec = GetSpecialization()   
+       local curretSpec = Config:GetCorrectSpecialization()   
        trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(2),true),action[4],curretSpec} 
        trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID],true)  
             
@@ -71,7 +71,7 @@ function Actions:GetCurrentSpecialization()
     return currentSpecialization
 end  
 function Actions:SetCurrentSpecialization()
-    currentSpecialization = GetSpecialization()
+    currentSpecialization = Config:GetCorrectSpecialization()
 end  
 function Actions:ResetActions()
 TrackedSpellsCharacter = nill

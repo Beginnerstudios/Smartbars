@@ -16,18 +16,19 @@ function Events:RegisterEvents()
   local frame = CreateFrame("Frame")
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
-  frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 
+  local version,build,date = GetBuildInfo()
+  if version == "9.1.5" then
+    frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+  end
   frame:SetScript("OnEvent", function(this, event, ...)
       MyAddon[event](MyAddon, ...)
   end)
 
-  function MyAddon:PLAYER_LOGIN()
-
+  function MyAddon:PLAYER_LOGIN()    
       self:SetDefaults()    
-      Actions:SetCurrentSpecialization(GetSpecialization())  
+      Actions:SetCurrentSpecialization(Config:GetCorrectSpecialization())  
       Actions:SetTrackedActions(TrackedSpellsCharacter)
-
   end
   function MyAddon:PLAYER_LOGOUT()
      
@@ -52,7 +53,15 @@ function Events:RegisterEvents()
 
         TrackedSpellsFramePosition = {0,-200,"CENTER","CENTER"}
        
-    end
+      end
+      if not TrackedActionsColumnCount then
+        TrackedActionsColumnCount = 8       
+      end
+    if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
+      TrackedActionsFrameScale = 1
+    
+     
+  end
   end  
 end
 -- Revision version Build 0004 --

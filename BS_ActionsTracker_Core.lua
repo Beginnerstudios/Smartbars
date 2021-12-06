@@ -19,12 +19,12 @@ Events:RegisterEvents()
 Actions:SetCurrentSpecialization()
 C_Timer.After(5, function()
   
-    print("BS_ActionsTracker loaded -  BUILD0004\n    Type /bs for settings.")   
+    print("BS_ActionsTracker loaded -  BUILD0005\n    Type /bs for settings.")   
     Config:CreateCommands();
     UI:CreateFrames();
     Actions:InitTrackedActions(Actions:GetTrackedActions());
     UI:UpdateTrackedActions(Actions:GetTrackedActions())
-
+   
    
 end)
 -- Revision version Build 0004 --

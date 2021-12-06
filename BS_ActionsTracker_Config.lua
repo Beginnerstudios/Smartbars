@@ -43,5 +43,14 @@ end
 function Config:SaveConfig()
     TrackedSpellsFramePosition = UI:GetFramePosition(2)
     TrackedSpellsCharacter = Actions:GetTrackedActions()
+    TrackedActionsFrameScale = UI:GetFrame(2):GetScale()
+end
+function Config:GetCorrectSpecialization()
+    local version,build,date = GetBuildInfo()
+    if version == "9.1.5" then
+    return GetSpecialization()
+    else
+    return 0
+    end
 end
 -- Revision version Build 0004 --
