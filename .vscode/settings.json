@@ -19,6 +19,7 @@
         "GetSpellTexture",
         "getglobal",
         "GetBuildInfo",
-        "GetPrimaryTalentTree"
+        "GetPrimaryTalentTree",
+        "CreateFontString"
     ]
 }

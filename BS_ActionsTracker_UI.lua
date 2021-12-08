@@ -12,132 +12,125 @@ end
 --Variables-------------------------------
 local frames = {};
 local displayedActions={};
+local trackedActionsColumnCount=0 --SV
+local trackedSpellsFramePosition ={};--SV
+local trackedActionsFrameScale =0--SV
 
 --UI:Frames-------------------------------
 function UI:CreateFrames()  --create and assign frames to table "frames" [1]primary [2]secondary
   local function PrimaryFrame()
     local UIConfig = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
-    UIConfig:RegisterEvent("ADDON_LOADED")
-    UI:SetFrameMoveable(UIConfig)
-    local userActionsCount = Actions.GetActions().Used()[2]
-    local neededHeight =0
-    if userActionsCount<12 then
-    neededHeight =200
-    else
-    neededHeight = (userActionsCount/12+1)*100
-    end
-    
-   
+    local defaultFont = "GameFontHighlight"
+    UI:SetFrameMoveable(UIConfig)  
     UIConfig:Hide()
-    UIConfig:SetSize(630,neededHeight);
+    UIConfig:SetSize(630,0);
     UIConfig:SetPoint("CENTER",UIParent,"CENTER",0,100);
     -- PRIMARY FRAME EVENTS ---
     UIConfig.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
     -- MAIN FRAME - TITLE -
+  
        UIConfig.title = UIConfig:CreateFontString(nil,"OVERLAY");
        UIConfig.title:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
-       UIConfig.title:SetFontObject("GameFontHighlight")
+       UIConfig.title:SetFontObject(defaultFont)
        UIConfig.title:SetText("BS_ActionsTracker");
       -- MAIN FRAME - HEADERTEXT -  Number of used actions
       UIConfig.titleUsed = UIConfig:CreateFontString(nil,"OVERLAY");
       UIConfig.titleUsed:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-40);
-      UIConfig.titleUsed:SetFontObject("GameFontHighlight")
+      UIConfig.titleUsed:SetFontObject(defaultFont)
       UIConfig.titleUsed:SetText("Used actions:");
            -- MAIN FRAME - HEADERTEXT -  Number of unused actions
     UIConfig.titleUsedValue = UIConfig:CreateFontString(nil,"OVERLAY");
     UIConfig.titleUsedValue:SetPoint("LEFT",UIConfig.titleUsed,"LEFT",100,0);
-    UIConfig.titleUsedValue:SetFontObject("GameFontHighlight")
+    UIConfig.titleUsedValue:SetFontObject(defaultFont)
     UIConfig.titleUsedValue:SetText("");
     -- MAIN FRAME - HEADERTEXT -  Number of unused actions
     UIConfig.titleTrackedStatic = UIConfig:CreateFontString(nil,"OVERLAY");
     UIConfig.titleTrackedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-60);
-    UIConfig.titleTrackedStatic:SetFontObject("GameFontHighlight")
+    UIConfig.titleTrackedStatic:SetFontObject(defaultFont)
     UIConfig.titleTrackedStatic:SetText("Tracked actions:");
     -- MAIN FRAME - HEADERTEXT -  Number of unused actions
     UIConfig.titleTrackedValue = UIConfig:CreateFontString(nil,"OVERLAY");
     UIConfig.titleTrackedValue:SetPoint("LEFT",UIConfig.titleTrackedStatic,"LEFT",100,0);
-    UIConfig.titleTrackedValue:SetFontObject("GameFontHighlight")
+    UIConfig.titleTrackedValue:SetFontObject(defaultFont)
     UIConfig.titleTrackedValue:SetText("");
       -- MAIN FRAME - SPELLSTITLE
       UIConfig.spellsTitle = UIConfig:CreateFontString(nil,"ARTWORK");
       UIConfig.spellsTitle:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-80);
-      UIConfig.spellsTitle:SetFontObject("GameFontHighlight")
+      UIConfig.spellsTitle:SetFontObject(defaultFont)
       UIConfig.spellsTitle:SetText("Used actions in action bars:");
       -- RESET ACTION BUTTON ---
-      local resetButton = CreateFrame("Button", "only_for_testing", UIConfig,"UIPanelButtonTemplate")
-      resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -70, -40)
-      resetButton:SetWidth(70)
-      resetButton:SetHeight(35)
-      resetButton:SetText("Reset all")
-      resetButton:SetNormalFontObject("GameFontNormalSmall")
+      UIConfig.resetButton = CreateFrame("Button", "only_for_testing", UIConfig,"UIPanelButtonTemplate")
+      UIConfig.resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -70, -40)
+      UIConfig.resetButton:SetWidth(70)
+      UIConfig.resetButton:SetHeight(35)
+      UIConfig.resetButton:SetText("Reset all")
+      UIConfig.resetButton:SetNormalFontObject(defaultFont)
       --Reset button events----
-      resetButton:SetScript("OnClick", function ()
+      UIConfig.resetButton:SetScript("OnClick", function ()
       Actions:ResetActions()
       end)
-      local slider = CreateFrame("Slider", "myslider", UIConfig,"OptionsSliderTemplate")
-      slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", -20, -40)
-      slider:SetWidth(100)
-      slider:SetHeight(15)
-      slider:SetMinMaxValues(0.5,1.5)
-      slider:SetValue(TrackedActionsFrameScale)
-      slider:SetScript("OnValueChanged", function (self) 
-        slider:SetStepsPerPage(10)      
-      frames[2]:SetScale(self:GetValue()) 
-         
+      
+      UIConfig.slider = CreateFrame("Slider", "myslider", UIConfig,"OptionsSliderTemplate")
+      UIConfig.slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", -20, -40)
+      UIConfig.slider:SetWidth(100)
+      UIConfig.slider:SetHeight(15)
+      UIConfig.slider:SetMinMaxValues(0.5,1.5)
+      UIConfig.slider:SetValue(trackedActionsFrameScale)
+      UIConfig.slider:SetStepsPerPage(10)      
+      UIConfig.slider:SetScript("OnValueChanged", function (self) 
+      frames[2]:SetScale(self:GetValue())     
       end)
-      getglobal(slider:GetName() .. 'Low'):SetText('0,5'); --Sets the left-side slider text (default is "Low").
-      getglobal(slider:GetName() .. 'High'):SetText('1,5'); --Sets the right-side slider text (default is "High").
-      getglobal(slider:GetName() .. 'Text'):SetText('Scale'); --Sets the "title" text (top-centre of slider).
+      getglobal(UIConfig.slider:GetName() .. 'Low'):SetText('0,5'); --Sets the left-side slider text (default is "Low").
+      getglobal(UIConfig.slider:GetName() .. 'High'):SetText('1,5'); --Sets the right-side slider text (default is "High").
+      getglobal(UIConfig.slider:GetName() .. 'Text'):SetText('Scale'); --Sets the "title" text (top-centre of slider).
 
 
-      local columnsText = UIConfig:CreateFontString(nil,"ARTWORK");
-      columnsText:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",60,-30);
-      columnsText:SetFontObject("GameFontHighlight")
-      columnsText:SetText("Columns: ");
-      local columnsText2 = UIConfig:CreateFontString(nil,"ARTWORK");
-      columnsText2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",90,-30);
-      columnsText2:SetFontObject("GameFontHighlight")
-      columnsText2:SetText(TrackedActionsColumnCount);
+      UIConfig.columnsText = UIConfig:CreateFontString(nil,"ARTWORK");
+      UIConfig.columnsText:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",60,-30);
+      UIConfig.columnsText:SetFontObject(defaultFont)
+      UIConfig.columnsText:SetText("Columns: ");
+      UIConfig.columnsText2 = UIConfig:CreateFontString(nil,"ARTWORK");
+      UIConfig.columnsText2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",90,-30);
+      UIConfig.columnsText2:SetFontObject(defaultFont)
+      UIConfig.columnsText2:SetText(trackedActionsColumnCount);
 
 
 
-      local minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
-      minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 35, -60)
-      minusButton:SetWidth(35)
-      minusButton:SetHeight(35)
-      minusButton:SetText("-")
-      minusButton:SetNormalFontObject("GameFontNormalSmall")    
-      minusButton:SetScript("OnClick", function ()
-      if TrackedActionsColumnCount>= 2 then
-        TrackedActionsColumnCount = TrackedActionsColumnCount -1
-        columnsText2:SetText(TrackedActionsColumnCount)
+      UIConfig.minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
+      UIConfig.minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 35, -60)
+      UIConfig.minusButton:SetSize(35,35)
+      UIConfig.minusButton:SetText("-")
+      UIConfig.minusButton:SetNormalFontObject(defaultFont)    
+      UIConfig.minusButton:SetScript("OnClick", function ()
+      if trackedActionsColumnCount>= 2 then
+        trackedActionsColumnCount = trackedActionsColumnCount -1
+        UIConfig.columnsText2:SetText(trackedActionsColumnCount)
       end
       end)
 
-      local plusButton = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
-      plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 80, -60)
-      plusButton:SetWidth(35)
-      plusButton:SetHeight(35)
-      plusButton:SetText("+")
-      plusButton:SetNormalFontObject("GameFontNormalSmall")    
-      plusButton:SetScript("OnClick", function ()
-      if TrackedActionsColumnCount<= 12 then
-        TrackedActionsColumnCount = TrackedActionsColumnCount +1
-        columnsText2:SetText(TrackedActionsColumnCount)
+      UIConfig.plusButton = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
+      UIConfig.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 80, -60)
+      UIConfig.plusButton:SetSize(35,35)
+      UIConfig.plusButton:SetText("+")
+      UIConfig.plusButton:SetNormalFontObject(defaultFont)    
+      UIConfig.plusButton:SetScript("OnClick", function ()
+      if trackedActionsColumnCount<= 12 then
+        trackedActionsColumnCount = trackedActionsColumnCount +1
+        UIConfig.columnsText2:SetText(trackedActionsColumnCount)
       end
       end)
 
 
 
       
-      
+
        return UIConfig
   end
   local function SecondaryFrame()
     SecondaryFrame = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
-    SecondaryFrame:SetScale(TrackedActionsFrameScale)
+    SecondaryFrame:SetScale(trackedActionsFrameScale)
   
    
     UI:SetFrameMoveable(SecondaryFrame)
@@ -215,14 +208,12 @@ function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate")
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
- local newTexture= GetActionTexture(action[1])
- --local newTexture= GetSpellTexture(action[2])
+ local newTexture= API:GetActionTexture(action[1])
  if isTracked then
   actionWidget:SetWidth(50)
   actionWidget:SetHeight(50)
   actionWidget:SetHighlightTexture(nill)
   actionWidget:SetPushedTexture(nill)
-  
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
@@ -230,29 +221,66 @@ function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with
  actionWidget:SetNormalTexture(newTexture)
  return actionWidget
 end
-function UI:CreateEditBox(trackedAction,isEnabled)--Add editbox with desired text on frame
-  local parentFrame = trackedAction[3]
-  parentFrame.edit = CreateFrame("EditBox",nil, parentFrame, "UICheckButtonTemplate")
-  parentFrame.edit:SetPoint("CENTER",UIParent,"CENTER",0,0)
-  parentFrame.edit:SetSize(50,50)
-  parentFrame.edit:SetText(trackedAction[4])
-  parentFrame.edit:SetAutoFocus(false)
-  parentFrame.edit:SetMaxLetters(3)
-  parentFrame.edit:SetEnabled(isEnabled)
-  parentFrame.edit:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE")
-  parentFrame.edit:SetScript("OnEditFocusLost", function (self)             
-  trackedAction[4] = self:GetText() 
+function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
+  local edit = CreateFrame("EditBox",nil, parentWidget, "UICheckButtonTemplate")
+  edit:SetPoint("CENTER",UIParent,"CENTER",0,0)
+  edit:SetSize(50,50)
+  edit:SetText(valueToSave[4])
+  edit:SetAutoFocus(false)
+  edit:SetMaxLetters(3)
+  edit:SetEnabled(isEnabled)
+  edit:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE")
+  edit:SetScript("OnEditFocusLost", function (self)             
+  valueToSave[4] = self:GetText() 
   end)
+  return edit
+end
+function UI:CreateGroupLayout(parentWidget,isDisplayed)
+local xOfs = 0
+local yOfs = -25
+local defaultFont = "GameFontHighlight"
+local newWidget = CreateFrame("Frame", "bs_newpg", parentWidget)
+newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
 
+newWidget.columnsText2 =newWidget:CreateFontString(nil,"ARTWORK");
+newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",15,yOfs);
+newWidget.columnsText2:SetFontObject(defaultFont)
+newWidget.columnsText2:SetText("1");
 
-  return parentFrame.edit
+newWidget.minusButton = CreateFrame("Button", "bs_minus2", newWidget,"UIPanelButtonTemplate")
+newWidget.minusButton:SetPoint("CENTER", parentWidget, "CENTER", -15,yOfs)
+newWidget.minusButton:SetSize(20,20)
+newWidget.minusButton:SetText("-")
+newWidget.minusButton:SetNormalFontObject(defaultFont)    
+newWidget.minusButton:SetScript("OnClick", function ()
+--Function minus button
+end)
+newWidget.plusButton = CreateFrame("Button", "bs_plus2", newWidget,"UIPanelButtonTemplate")
+newWidget.plusButton:SetPoint("CENTER", parentWidget, "CENTER", 0, yOfs)
+newWidget.plusButton:SetSize(20,20)
+newWidget.plusButton:SetText("+")
+newWidget.plusButton:SetNormalFontObject(defaultFont)    
+newWidget.plusButton:SetScript("OnClick", function ()
+  --Function plus button
+end)
+if not isDisplayed then
+  newWidget:Hide()
+end
+return newWidget
 end
 function UI:ToggleEditbox(value)--Toggle edit boxes for edit in tracked actions
   for k,v in pairs(Actions:GetActions():Tracked()[1]) do
    if v[3]~=nill then
-   v[3].edit:SetEnabled(value)
+   v[3].edit:SetEnabled(value) 
+   if value == true then
+    v[3].group:Show()
+   else
+    v[3].group:Hide()
    end
+  end
 end
+  
+
 end
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
@@ -262,11 +290,21 @@ local usedSpellsCount = Actions:GetActions().Used()[2];
   frames[1].titleUsedValue:SetText(usedSpellsCount)
   frames[1].titleTrackedValue:SetText(trackedSpellsCount)
   --Secondary Frame size
-  local xOffset = TrackedSpellsFramePosition[1]
-  local yOffset = TrackedSpellsFramePosition[2]
-  local point = TrackedSpellsFramePosition[3]
-  local relativePoint = TrackedSpellsFramePosition[4]
-  frames[2]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+  local xOffset = trackedSpellsFramePosition[1] 
+  local yOffset = trackedSpellsFramePosition[2]
+  local point = trackedSpellsFramePosition[3]
+  local relativePoint = trackedSpellsFramePosition[4]
+frames[2]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+
+
+if usedSpellsCount<12 then
+frames[1]:SetHeight(400)
+else
+frames[1]:SetHeight(usedSpellsCount/12+3*140)
+end
+
+
+
  UI:RefreshTrackedIcons(Actions:GetTrackedActions())
 end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
@@ -276,8 +314,8 @@ if actions ~=nill then
   for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
     if actions[actionID][5] == Actions:GetCurrentSpecialization() then
       actions[actionID][3]:Show()
-      local start, duration, enable = GetActionCooldown(actions[actionID][1])
-      local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])
+      local start, duration, enable = API:GetActionCooldown(actions[actionID][1])
+      local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])      
       if not configMode then
         if actions[actionID][3].edit ~=nil then
         if enable>0 and duration>1.5 or notEnoughMana then
@@ -309,7 +347,7 @@ function UI:SortTrackedActions(trackedActions)
   trackedActions[actionID][3].edit:SetPoint("CENTER",trackedActions[actionID][3],"CENTER",2,0)
   startxOffset = startxOffset +50
   count = count + 1
-  if(startxOffset== TrackedActionsColumnCount*50) then
+  if(startxOffset== trackedActionsColumnCount*50) then
   startxOffset =0
   startyOffset  = startyOffset-52
   end
@@ -319,7 +357,7 @@ end
 function UI:RefreshTrackedIcons(trackedActions)
   for k,v in pairs(trackedActions) do
     if v[3]~=nill then
-      local newTexture= GetActionTexture(v[1])
+      local newTexture= API:GetActionTexture(v[1])
       v[3]:SetNormalTexture(newTexture)   
     end
   end
@@ -329,16 +367,26 @@ function UI:GetFrame(frameIndex)  --return frame from table "frames" [1]primary 
 return frames[frameIndex]
 end
 function UI:GetFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
- local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
- local function round2(num, numDecimalPlaces)
-  return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
- end
- return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-
+  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+  local function round2(num, numDecimalPlaces)
+    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+  end
+  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
+  
+end
+--Saved Variables------
+function UI:GetTrackedActionsColumnCount()
+return trackedActionsColumnCount
 end
 function UI:SetTrackedActionsFrameScale(savedScale)  
-  frames[2]:SetScale(savedScale)
+  trackedActionsFrameScale = savedScale
   end
+function UI:SetTrackedActionsColumnCount(columnCount)  
+  trackedActionsColumnCount = columnCount
+  end
+function UI:SetTrackedActionsFramePosition(framePosition)  
+  trackedSpellsFramePosition = framePosition
+end
 -- Revision version Build 0004 --
 
 

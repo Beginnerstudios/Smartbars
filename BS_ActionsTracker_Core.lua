@@ -7,6 +7,7 @@ UI = BS_ActionsTracker.UI
 Actions = BS_ActionsTracker.Actions
 Config = BS_ActionsTracker.Config
 Events = BS_ActionsTracker.Events
+API = BS_ActionsTracker.API
 --LoadingMessage--------------------------
 --Core:Functions--------------------------
 --Init------------------------------------
@@ -14,18 +15,17 @@ UI:Init()
 Actions:Init()
 Config:Init()
 Events:Init()
+API:Init()
 --Program run-----------------------------
 Events:RegisterEvents()
 Actions:SetCurrentSpecialization()
-C_Timer.After(5, function()
-  
+C_Timer.After(5, function()   
+    Config:LoadConfig()
     print("BS_ActionsTracker loaded -  BUILD0005\n    Type /bs for settings.")   
     Config:CreateCommands();
     UI:CreateFrames();
     Actions:InitTrackedActions(Actions:GetTrackedActions());
-    UI:UpdateTrackedActions(Actions:GetTrackedActions())
-   
-   
+    UI:UpdateTrackedActions(Actions:GetTrackedActions()) 
 end)
 -- Revision version Build 0004 --
 

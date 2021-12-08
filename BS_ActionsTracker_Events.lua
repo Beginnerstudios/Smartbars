@@ -18,51 +18,26 @@ function Events:RegisterEvents()
   frame:RegisterEvent("PLAYER_LOGOUT")
 
   local version,build,date = GetBuildInfo()
-  if version == "9.1.5" then
-    frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+  if version == "9.1.5" or version == "9.2.0" then
+  frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
   end
   frame:SetScript("OnEvent", function(this, event, ...)
       MyAddon[event](MyAddon, ...)
   end)
 
   function MyAddon:PLAYER_LOGIN()    
-      self:SetDefaults()    
-      Actions:SetCurrentSpecialization(Config:GetCorrectSpecialization())  
-      Actions:SetTrackedActions(TrackedSpellsCharacter)
+  Config:SetDefaults()
   end
-  function MyAddon:PLAYER_LOGOUT()
-     
-     Config:SaveConfig()
+  function MyAddon:PLAYER_LOGOUT()   
+  Config:SaveConfig()
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
-     Actions:SetCurrentSpecialization(GetSpecialization())
-     if IsActionsTrackerPrimaryFrameVisible then
-       Config:ToggleConfigMode()
-     end
-     UI:UpdateUI()
-    
-      
- end
-  function MyAddon:SetDefaults()
-
-      if not TrackedSpellsCharacter then
-          TrackedSpellsCharacter = {}
-          Actions:SetTrackedActions(TrackedSpellsCharacter)
-      end
-      if not TrackedSpellsFramePosition then
-
-        TrackedSpellsFramePosition = {0,-200,"CENTER","CENTER"}
-       
-      end
-      if not TrackedActionsColumnCount then
-        TrackedActionsColumnCount = 8       
-      end
-    if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
-      TrackedActionsFrameScale = 1
-    
-     
+  Config:LoadConfig()
+  if IsActionsTrackerPrimaryFrameVisible then
+  Config:ToggleConfigMode()
   end
-  end  
+  UI:UpdateUI()        
+ end
 end
 -- Revision version Build 0004 --
 
