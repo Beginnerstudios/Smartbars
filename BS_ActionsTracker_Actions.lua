@@ -12,8 +12,8 @@ local trackedActions = {}
 local currentSpecialization =0
 local trackedActionsPositionIndex = 1
 --Actions:Functions-----------------------
-function Actions:GetActions()---test                                
-    local returnTable =
+function Actions:GetActions()                         
+ local returnTable =
         {                         
             Used = function(self)
                 local slotCount = 120
@@ -41,7 +41,7 @@ function Actions:GetActions()---test
         }
 return returnTable
 end
-function Actions:AddTrackedAction(action)    
+function Actions:AddTrackedAction(action)
     local actionID = action[2]  
     if  trackedActions[actionID]then              
       Actions:DeleteTrackedAction(action)
@@ -51,7 +51,7 @@ function Actions:AddTrackedAction(action)
     UI:UpdateUI()
     
 end                                                               
-function Actions:InitTrackedActions(actions)    
+function Actions:InitTrackedActions(actions)
     if actions ~=nill then                 
     for actionID,v in pairs(actions) do                     
      Actions:CreateTrackedAction(actions[actionID],false,true)  

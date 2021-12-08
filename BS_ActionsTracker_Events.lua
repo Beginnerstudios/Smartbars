@@ -33,10 +33,10 @@ function Events:RegisterEvents()
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
-  if IsActionsTrackerPrimaryFrameVisible then
+  if Config:IsPrimaryFrameVisible() then
   Config:ToggleConfigMode()
   end
-  UI:UpdateUI()        
+  Config:UpdateUI()        
  end
 end
 -- Revision version Build 0004 --

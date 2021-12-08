@@ -9,6 +9,9 @@ function Config:Init()
     Actions = BS_ActionsTracker.Actions
     Global = BS_ActionsTracker.Global
 end
+--Config:Variables------------------------
+local isConfigMode = false
+local isPrimaryFrameVisible = false
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -17,15 +20,15 @@ function Config:CreateCommands()
     end
 end
 function Config:ToggleConfigMode()
-    if not IsActionsTrackerPrimaryFrameVisible then    
-    IsActionsTrackerPrimaryFrameVisible = true
+    if not Config:IsPrimaryFrameVisible() then    
+    isPrimaryFrameVisible = true
     UI:UpdateUI()
     UI:DisplayActions(Actions.GetActions():Used()[1],UI:GetFrame(1));  
     UI:GetFrame(1):Show()
     UI:GetFrame(2):SetMovable(true) 
     UI:GetFrame(2):EnableMouse(true) 
     UI:GetFrame(2).title:SetAlpha(1)
-    IsActionsTrackerConfigMode = true    
+    isConfigMode = true    
     UI:GetFrame(2):Show()
     UI:ToggleEditbox(true)    
     else
@@ -35,8 +38,8 @@ function Config:ToggleConfigMode()
         UI:GetFrame(2).title:SetAlpha(0)                                            
         UI:ToggleEditbox(false)
         Config:SaveConfig()
-        IsActionsTrackerPrimaryFrameVisible = false
-        IsActionsTrackerConfigMode = false  
+        isPrimaryFrameVisible = false
+        isConfigMode = false  
     end
 
 end
@@ -68,5 +71,22 @@ function Config:SetDefaults()
     if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
     TrackedActionsFrameScale = 1
     end   
+end
+function Config:UpdateUI()
+UI:UpdateUI()
+end
+function Config:IsPrimaryFrameVisible()
+    if isPrimaryFrameVisible then
+    return true
+    else
+    return false
+    end
+end
+function Config:IsConfigMode()
+    if isConfigMode then
+        return true
+        else
+        return false
+        end 
 end
 -- Revision version Build 0004 --

@@ -309,7 +309,7 @@ end
 end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
   local actions = trackedActionsTable
-  local configMode = IsActionsTrackerConfigMode
+  local configMode = Config:IsConfigMode()
 if actions ~=nill then
   for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
     if actions[actionID][5] == Actions:GetCurrentSpecialization() then
