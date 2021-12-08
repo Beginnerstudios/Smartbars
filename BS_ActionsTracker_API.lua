@@ -27,3 +27,7 @@ end
 function API:GetActionCooldown(spellID)
     return GetActionCooldown(spellID)
 end
+function API:GetBuildInfo()
+    local version,build,date = GetBuildInfo()
+    return version  
+end

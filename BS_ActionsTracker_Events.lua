@@ -17,10 +17,10 @@ function Events:RegisterEvents()
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
 
-  local version,build,date = GetBuildInfo()
-  if version == "9.1.5" or version == "9.2.0" then
+  if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
   end
+  
   frame:SetScript("OnEvent", function(this, event, ...)
       MyAddon[event](MyAddon, ...)
   end)

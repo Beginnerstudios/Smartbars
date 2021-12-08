@@ -1,68 +1,60 @@
-<mxfile host="app.diagrams.net" modified="2021-12-08T18:50:55.750Z" agent="5.0 (Windows)" etag="-kuATkAvfICSFns_eyyw" version="15.9.4" type="github">
-  <diagram id="4EjrFteb6AxKR3UikeAs" name="Page-1">
-    <mxGraphModel dx="1609" dy="1553" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-10" value="" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;spacingLeft=2;textDirection=ltr;" parent="1" vertex="1">
-          <mxGeometry x="-30" y="-40" width="1020" height="310" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-1" value="Blizzard API" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="20" y="-110" width="890" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-2" target="bBtUMvfZaDXqP1AEkA8x-3" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-2" value="BS_ActionsTrackerAPI" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="520" width="380" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-3" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-3" value="BS_ActionsTracker_Actions" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="500" y="70" width="180" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-5" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-5" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="710" y="90" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-5" value="BS_ActionsTracker_UI" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="500" y="140" width="180" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-7" value="BS_ActionsTracker_Config" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="254" y="110" width="160" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-8" value="&lt;div&gt;BS_ActionsTracker_Global&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="780" y="200" width="180" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-9" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-9" value="&lt;div&gt;BS_ActionsTracker_Events&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="40" width="400" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-11" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-11" target="bBtUMvfZaDXqP1AEkA8x-9" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="110" y="140" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="80" y="120" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-11" value="SavedVaraiables" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="90" y="90" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="bBtUMvfZaDXqP1AEkA8x-21" value="BS_ActionsTracker_Core" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="780" y="145" width="180" height="40" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="4EjrFteb6AxKR3UikeAs" name="Page-1">
+        <mxGraphModel dx="2283" dy="2325" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-10" value="" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;spacingLeft=2;textDirection=ltr;" parent="1" vertex="1">
+                    <mxGeometry x="-30" y="-40" width="1020" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-1" value="Blizzard API" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="-110" width="890" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-2" target="bBtUMvfZaDXqP1AEkA8x-3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-2" value="BS_ActionsTrackerAPI" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="520" width="380" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-3" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-3" value="BS_ActionsTracker_Actions" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="70" width="180" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-5" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="710" y="90" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-5" value="BS_ActionsTracker_UI" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="140" width="180" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-7" value="BS_ActionsTracker_Config" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="110" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-8" value="&lt;div&gt;BS_ActionsTracker_Global&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="200" width="180" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=classic;endFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-9" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-9" value="&lt;div&gt;BS_ActionsTracker_Events&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" width="400" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-11" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-11" value="SavedVaraiables" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-10" y="90" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bBtUMvfZaDXqP1AEkA8x-21" value="BS_ActionsTracker_Core" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="145" width="180" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>

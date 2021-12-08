@@ -89,4 +89,11 @@ function Config:IsConfigMode()
         return false
         end 
 end
+function Config:IsCurrentPatch()
+if API:GetBuildInfo() == "9.1.5" or API:GetBuildInfo() == "9.2.0" then
+    return true
+else
+    return false
+end
+end
 -- Revision version Build 0004 --
