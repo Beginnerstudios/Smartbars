@@ -15,6 +15,7 @@ local displayedActions={};
 local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
+local trackedActionsFrameCount = 0
 
 --UI:Frames-------------------------------
 function UI:CreateFrames()  --create and assign frames to table "frames" [1]primary [2]secondary
@@ -62,7 +63,7 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
       UIConfig.spellsTitle:SetText("Used actions in action bars:");
       -- RESET ACTION BUTTON ---
       UIConfig.resetButton = CreateFrame("Button", "only_for_testing", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -70, -40)
+      UIConfig.resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -120, -60)
       UIConfig.resetButton:SetWidth(70)
       UIConfig.resetButton:SetHeight(35)
       UIConfig.resetButton:SetText("Reset all")
@@ -73,7 +74,7 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
       end)
       
       UIConfig.slider = CreateFrame("Slider", "myslider", UIConfig,"OptionsSliderTemplate")
-      UIConfig.slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", -20, -40)
+      UIConfig.slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", 00, -50)
       UIConfig.slider:SetWidth(100)
       UIConfig.slider:SetHeight(15)
       UIConfig.slider:SetMinMaxValues(0.5,1.5)
@@ -88,18 +89,18 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
 
 
       UIConfig.columnsText = UIConfig:CreateFontString(nil,"ARTWORK");
-      UIConfig.columnsText:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",60,-30);
+      UIConfig.columnsText:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",-30,-30);
       UIConfig.columnsText:SetFontObject(defaultFont)
       UIConfig.columnsText:SetText("Columns: ");
       UIConfig.columnsText2 = UIConfig:CreateFontString(nil,"ARTWORK");
-      UIConfig.columnsText2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",90,-30);
+      UIConfig.columnsText2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",10,-30);
       UIConfig.columnsText2:SetFontObject(defaultFont)
       UIConfig.columnsText2:SetText(trackedActionsColumnCount);
 
 
 
       UIConfig.minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 35, -60)
+      UIConfig.minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -35, -60)
       UIConfig.minusButton:SetSize(35,35)
       UIConfig.minusButton:SetText("-")
       UIConfig.minusButton:SetNormalFontObject(defaultFont)    
@@ -111,7 +112,7 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
       end)
 
       UIConfig.plusButton = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 80, -60)
+      UIConfig.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 0, -60)
       UIConfig.plusButton:SetSize(35,35)
       UIConfig.plusButton:SetText("+")
       UIConfig.plusButton:SetNormalFontObject(defaultFont)    
@@ -121,6 +122,46 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
         UIConfig.columnsText2:SetText(trackedActionsColumnCount)
       end
       end)
+
+      ---Action bars count
+
+      UIConfig.cT = UIConfig:CreateFontString(nil,"ARTWORK");
+      UIConfig.cT:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",120,-30);
+      UIConfig.cT:SetFontObject(defaultFont)
+      UIConfig.cT:SetText("Tracked bars: ");
+      UIConfig.cT2 = UIConfig:CreateFontString(nil,"ARTWORK");
+      UIConfig.cT2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",170,-30);
+      UIConfig.cT2:SetFontObject(defaultFont)
+      UIConfig.cT2:SetText(trackedActionsFrameCount);
+
+      UIConfig.minusButton2 = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
+      UIConfig.minusButton2:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 115, -60)
+      UIConfig.minusButton2:SetSize(35,35)
+      UIConfig.minusButton2:SetText("-")
+      UIConfig.minusButton2:SetNormalFontObject(defaultFont)    
+      UIConfig.minusButton2:SetScript("OnClick", function ()
+      if trackedActionsFrameCount>= 2 then
+        trackedActionsFrameCount = trackedActionsFrameCount -1
+        UIConfig.cT2:SetText(trackedActionsFrameCount)
+     
+      end
+      end)
+
+      UIConfig.plusButton2 = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
+      UIConfig.plusButton2:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 155, -60)
+      UIConfig.plusButton2:SetSize(35,35)
+      UIConfig.plusButton2:SetText("+")
+      UIConfig.plusButton2:SetNormalFontObject(defaultFont)    
+      UIConfig.plusButton2:SetScript("OnClick", function ()
+      
+        if trackedActionsFrameCount<2 then
+        trackedActionsFrameCount = trackedActionsFrameCount+1    
+        UIConfig.cT2:SetText(trackedActionsFrameCount)
+        end
+     
+      end)
+
+
 
 
 
@@ -235,7 +276,8 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
   end)
   return edit
 end
-function UI:CreateGroupLayout(parentWidget,isDisplayed)
+function UI:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)
+print(valueToSave[6])
 local xOfs = 0
 local yOfs = -25
 local defaultFont = "GameFontHighlight"
@@ -245,15 +287,18 @@ newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
 newWidget.columnsText2 =newWidget:CreateFontString(nil,"ARTWORK");
 newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",15,yOfs);
 newWidget.columnsText2:SetFontObject(defaultFont)
-newWidget.columnsText2:SetText("1");
+newWidget.columnsText2:SetText(valueToSave[6]);
 
 newWidget.minusButton = CreateFrame("Button", "bs_minus2", newWidget,"UIPanelButtonTemplate")
 newWidget.minusButton:SetPoint("CENTER", parentWidget, "CENTER", -15,yOfs)
 newWidget.minusButton:SetSize(20,20)
 newWidget.minusButton:SetText("-")
 newWidget.minusButton:SetNormalFontObject(defaultFont)    
-newWidget.minusButton:SetScript("OnClick", function ()
---Function minus button
+newWidget.minusButton:SetScript("OnClick", function () 
+  if  valueToSave[6]>1 then
+  valueToSave[6] = valueToSave[6]-1
+  newWidget.columnsText2:SetText(valueToSave[6]);
+  end
 end)
 newWidget.plusButton = CreateFrame("Button", "bs_plus2", newWidget,"UIPanelButtonTemplate")
 newWidget.plusButton:SetPoint("CENTER", parentWidget, "CENTER", 0, yOfs)
@@ -261,7 +306,10 @@ newWidget.plusButton:SetSize(20,20)
 newWidget.plusButton:SetText("+")
 newWidget.plusButton:SetNormalFontObject(defaultFont)    
 newWidget.plusButton:SetScript("OnClick", function ()
-  --Function plus button
+  if valueToSave[6]< trackedActionsFrameCount then
+  valueToSave[6] = valueToSave[6]+1
+  newWidget.columnsText2:SetText(valueToSave[6]);
+  end  
 end)
 if not isDisplayed then
   newWidget:Hide()
@@ -308,11 +356,12 @@ end
  UI:RefreshTrackedIcons(Actions:GetTrackedActions())
 end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
+  
   local actions = trackedActionsTable
   local configMode = Config:IsConfigMode()
 if actions ~=nill then
   for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
-    if actions[actionID][5] == Actions:GetCurrentSpecialization() then
+    if actions[actionID][5] == Actions:GetCurrentSpecialization() then   
       actions[actionID][3]:Show()
       local start, duration, enable = API:GetActionCooldown(actions[actionID][1])
       local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])      
@@ -386,6 +435,12 @@ function UI:SetTrackedActionsColumnCount(columnCount)
   end
 function UI:SetTrackedActionsFramePosition(framePosition)  
   trackedSpellsFramePosition = framePosition
+end
+function UI:GetTrackedActionsFrameCount()  
+  return trackedActionsFrameCount 
+end
+function UI:SetTrackedActionsFrameCount(frameCount)  
+  trackedActionsFrameCount = frameCount 
 end
 -- Revision version Build 0004 --
 

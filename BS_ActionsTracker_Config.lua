@@ -49,6 +49,7 @@ function Config:SaveConfig()
     TrackedActionsFrameScale = UI:GetFrame(2):GetScale()
     TrackedSpellsCharacter = Actions:GetTrackedActions()
     TrackedActionsPositionIndex = Actions:GetTrackedActionsPositionIndex()
+    TrackedActionsFrameCount = UI:GetTrackedActionsFrameCount()
 end
 function Config:LoadConfig()
 Actions:SetCurrentSpecialization(API:GetSpecialization())
@@ -57,10 +58,14 @@ UI:SetTrackedActionsColumnCount(TrackedActionsColumnCount)
 UI:SetTrackedActionsFrameScale(TrackedActionsFrameScale)
 Actions:SetTrackedActions(TrackedSpellsCharacter) 
 Actions:SetTrackedActionsPositionIndex(TrackedActionsPositionIndex)   
+UI:SetTrackedActionsFrameCount(TrackedActionsFrameCount)
 end
 function Config:SetDefaults()
     if not TrackedSpellsCharacter then
         TrackedSpellsCharacter = {}      
+    end
+    if not TrackedActionsFrameCount then
+        TrackedActionsFrameCount = 1     
     end
     if not TrackedSpellsFramePosition then
       TrackedSpellsFramePosition = {0,-200,"CENTER","CENTER"}      

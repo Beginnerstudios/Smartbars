@@ -10,7 +10,6 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local currentSpecialization =0
-local trackedActionsPositionIndex = 1
 --Actions:Functions-----------------------
 function Actions:GetActions()                         
  local returnTable =
@@ -62,14 +61,17 @@ end
 function Actions:CreateTrackedAction(action,isEnabled,isExisting)
     local actionID = action[2] 
     local curretSpec = nill
+    local trackedFrame = nill
     if isExisting then
         curretSpec = action[5]
+        trackedFrame = action[6]
     else
         curretSpec = API:GetSpecialization()
+        trackedFrame = 1        
     end  
-    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(2),true),action[4],curretSpec,trackedActionsPositionIndex} 
+    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(2),true),action[4],curretSpec,trackedFrame} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],isEnabled)  
+    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
 end
 function Actions:DeleteTrackedAction(action)
     local actionID = action[2]
@@ -101,4 +103,5 @@ function Actions:SetTrackedActionsPositionIndex(positionIndex)
 function Actions:GetTrackedActionsPositionIndex()  
     return trackedActionsPositionIndex 
 end
+
 -- Revision version Build 0004 --
