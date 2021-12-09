@@ -16,9 +16,11 @@ local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
 local trackedActionsFrameCount = 0
+local maximumTrackedBars =5
+local SecondaryHolder
 
 --UI:Frames-------------------------------
-function UI:CreateFrames()  --create and assign frames to table "frames" [1]primary [2]secondary
+function UI:CreatePrimaryFrame()  --create and assign frames to table "frames" [1]primary [2]secondary
   local function PrimaryFrame()
     local UIConfig = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
     local defaultFont = "GameFontHighlight"
@@ -141,7 +143,9 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
       UIConfig.minusButton2:SetNormalFontObject(defaultFont)    
       UIConfig.minusButton2:SetScript("OnClick", function ()
       if trackedActionsFrameCount>= 2 then
+        UI:RemoveLastSecondaryFrame()
         trackedActionsFrameCount = trackedActionsFrameCount -1
+
         UIConfig.cT2:SetText(trackedActionsFrameCount)
      
       end
@@ -154,8 +158,9 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
       UIConfig.plusButton2:SetNormalFontObject(defaultFont)    
       UIConfig.plusButton2:SetScript("OnClick", function ()
       
-        if trackedActionsFrameCount<2 then
-        trackedActionsFrameCount = trackedActionsFrameCount+1    
+        if trackedActionsFrameCount<maximumTrackedBars then
+        trackedActionsFrameCount = trackedActionsFrameCount+1 
+        UI:CreateSecondaryFrame(#frames+1)   
         UIConfig.cT2:SetText(trackedActionsFrameCount)
         end
      
@@ -169,6 +174,14 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
 
        return UIConfig
   end
+  frames[1] = PrimaryFrame()
+  SecondaryHolder = CreateFrame("Frame","BS_ActionsTracker.SecondaryHolder",UIParent);
+  SecondaryHolder:SetPoint("CENTER",frames[1],"CENTER",0,-200);
+  SecondaryHolder:SetScript("OnUpdate", function ()
+    UI:UpdateTrackedActions(Actions:GetTrackedActions())
+    end)
+end
+function UI:CreateSecondaryFrame(index)
   local function SecondaryFrame()
     SecondaryFrame = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
     SecondaryFrame:SetScale(trackedActionsFrameScale)
@@ -176,23 +189,34 @@ function UI:CreateFrames()  --create and assign frames to table "frames" [1]prim
    
     UI:SetFrameMoveable(SecondaryFrame)
     SecondaryFrame:SetSize(150,75);
-    SecondaryFrame:SetPoint("CENTER",UIParent,"CENTER",0,-200);
+    SecondaryFrame:SetPoint("CENTER",SecondaryHolder,"CENTER",0,-200);
     --SECONDARY FRAME-TITLE
     SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"OVERLAY");
     SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"CENTER",25,0);
     SecondaryFrame.title:SetFontObject("GameFontHighlight")
-    SecondaryFrame.title:SetText("BS_ActionsTracker - move frame,edit text")
+    SecondaryFrame.title:SetText("BAR: "..index .." BS_ActionsTracker - move frame,edit text")
     SecondaryFrame.title:SetAlpha(0)
     SecondaryFrame:SetMovable(false)
-     --SECONDARY FRAME -EVENTS
-    SecondaryFrame:SetScript("OnUpdate", function ()
-    UI:UpdateTrackedActions(Actions:GetTrackedActions())
-    end)
+     --SECONDARY FRAME -EVENTS   
 
     return SecondaryFrame
   end
-  frames[1] = PrimaryFrame()
-  frames[2] = SecondaryFrame()
+
+  frames[#frames+1] = SecondaryFrame()
+ 
+end
+function UI:RemoveLastSecondaryFrame()
+local actions = Actions:GetTrackedActions()
+frames[#frames]:Hide()  
+for k,v in pairs(actions) do
+  if actions[k][6] == #frames-1 then
+    print("hit")
+    actions[k][6]=actions[k][6]-1  
+    actions[k][3].group.columnsText2:SetText(actions[k][6])
+  end
+
+end
+
 end
 function UI:SetFrameMoveable(frame)
   frame:EnableMouse(true)
@@ -204,6 +228,21 @@ function UI:SetFrameMoveable(frame)
   frame:SetScript("OnDragStop",function ()
   frame:StopMovingOrSizing()
   end)
+end
+function UI:ShowSecondaryFrames()
+  for i=2,#frames do
+  UI:GetFrame(i):SetMovable(true) 
+  UI:GetFrame(i):EnableMouse(true) 
+  UI:GetFrame(i).title:SetAlpha(1)    
+  UI:GetFrame(i):Show()
+  end
+end
+function UI:HideSecondaryFrames()
+  for i=2,#frames do
+  UI:GetFrame(i):SetMovable(false) 
+  UI:GetFrame(i):EnableMouse(false) 
+  UI:GetFrame(i).title:SetAlpha(0)    
+  end
 end
 --UI:Actions-------------------------------
 function UI:DisplayActions(actions,frame) --Create widgets for selected actions under selected frame parent
@@ -383,16 +422,22 @@ if actions ~=nill then
     end
   end
   end
-UI:SortTrackedActions(actions)
+
+  for i=1,#frames do
+ UI:SortTrackedActions(actions,i)
+  end
 end
-function UI:SortTrackedActions(trackedActions)
+function UI:SortTrackedActions(trackedActions,sortNumber)
   local startxOffset =0
   local startyOffset =-40
   local count = 0
+ 
   for k,v in pairs(trackedActions) do
-    local actionID = k 
+  local actionID = k 
+  local frameNumber = trackedActions[actionID][6]
+  if frameNumber == sortNumber then
   if trackedActions[actionID][3]:GetAlpha()>0 and trackedActions[actionID][3]:IsVisible() == true then    ----Sort tracked actions
-  trackedActions[actionID][3]:SetPoint("LEFT",UI:GetFrame(2),"LEFT",startxOffset,startyOffset)
+  trackedActions[actionID][3]:SetPoint("LEFT",UI:GetFrame(frameNumber+1),"LEFT",startxOffset,startyOffset)
   trackedActions[actionID][3].edit:SetPoint("CENTER",trackedActions[actionID][3],"CENTER",2,0)
   startxOffset = startxOffset +50
   count = count + 1
@@ -400,6 +445,7 @@ function UI:SortTrackedActions(trackedActions)
   startxOffset =0
   startyOffset  = startyOffset-52
   end
+end
 end
 end
 end

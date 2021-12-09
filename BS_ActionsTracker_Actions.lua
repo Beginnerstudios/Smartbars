@@ -53,7 +53,7 @@ end
 function Actions:InitTrackedActions(actions)
     if actions ~=nill then                 
     for actionID,v in pairs(actions) do                     
-     Actions:CreateTrackedAction(actions[actionID],false,true)  
+    Actions:CreateTrackedAction(actions[actionID],false,true)  
     end       
     end
     UI:UpdateUI()

@@ -25,17 +25,12 @@ function Config:ToggleConfigMode()
     UI:UpdateUI()
     UI:DisplayActions(Actions.GetActions():Used()[1],UI:GetFrame(1));  
     UI:GetFrame(1):Show()
-    UI:GetFrame(2):SetMovable(true) 
-    UI:GetFrame(2):EnableMouse(true) 
-    UI:GetFrame(2).title:SetAlpha(1)
-    isConfigMode = true    
-    UI:GetFrame(2):Show()
+    UI:ShowSecondaryFrames()
+    isConfigMode = true       
     UI:ToggleEditbox(true)    
     else
         UI:GetFrame(1):Hide()
-        UI:GetFrame(2):SetMovable(false) 
-        UI:GetFrame(2):EnableMouse(false)      
-        UI:GetFrame(2).title:SetAlpha(0)                                            
+        UI:HideSecondaryFrames()                                           
         UI:ToggleEditbox(false)
         Config:SaveConfig()
         isPrimaryFrameVisible = false
