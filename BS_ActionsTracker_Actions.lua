@@ -69,7 +69,7 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting)
         curretSpec = API:GetSpecialization()
         trackedFrame = 1        
     end  
-    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(2),true),action[4],curretSpec,trackedFrame} 
+    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(trackedFrame),true),action[4],curretSpec,trackedFrame} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
     trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
 end
@@ -91,12 +91,6 @@ end
 function Actions:SetCurrentSpecialization()
     currentSpecialization = API:GetSpecialization()
 end  
-function Actions:ResetActions()
-TrackedSpellsCharacter = nill
-Actions:SetTrackedActions(nill)
-UI:GetFrame(2):SetPoint("CENTER",UIParent,"CENTER",0,-200)
-ReloadUI()
-end
 function Actions:SetTrackedActionsPositionIndex(positionIndex)  
     trackedActionsPositionIndex = positionIndex
   end

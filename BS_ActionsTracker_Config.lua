@@ -12,6 +12,7 @@ end
 --Config:Variables------------------------
 local isConfigMode = false
 local isPrimaryFrameVisible = false
+
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -23,13 +24,13 @@ function Config:ToggleConfigMode()
     if not Config:IsPrimaryFrameVisible() then    
     isPrimaryFrameVisible = true
     UI:UpdateUI()
-    UI:DisplayActions(Actions.GetActions():Used()[1],UI:GetFrame(1));  
-    UI:GetFrame(1):Show()
+    UI:DisplayActions(Actions.GetActions():Used()[1],UI:GetPrimaryFrame());  
+    UI:GetPrimaryFrame():Show()
     UI:ShowSecondaryFrames()
     isConfigMode = true       
     UI:ToggleEditbox(true)    
     else
-        UI:GetFrame(1):Hide()
+        UI:GetPrimaryFrame():Hide()
         UI:HideSecondaryFrames()                                           
         UI:ToggleEditbox(false)
         Config:SaveConfig()
@@ -39,9 +40,9 @@ function Config:ToggleConfigMode()
 
 end
 function Config:SaveConfig()
-    TrackedSpellsFramePosition = UI:GetFramePosition(2)
+    TrackedSpellsFramePosition = UI:GetTrackedActionsFramesPosition()
     TrackedActionsColumnCount = UI:GetTrackedActionsColumnCount()
-    TrackedActionsFrameScale = UI:GetFrame(2):GetScale()
+    TrackedActionsFrameScale = UI:GetFrame(1):GetScale()
     TrackedSpellsCharacter = Actions:GetTrackedActions()
     TrackedActionsPositionIndex = Actions:GetTrackedActionsPositionIndex()
     TrackedActionsFrameCount = UI:GetTrackedActionsFrameCount()
@@ -56,6 +57,9 @@ Actions:SetTrackedActionsPositionIndex(TrackedActionsPositionIndex)
 UI:SetTrackedActionsFrameCount(TrackedActionsFrameCount)
 end
 function Config:SetDefaults()
+    if not IsCleared then
+       IsCleared = false
+    end
     if not TrackedSpellsCharacter then
         TrackedSpellsCharacter = {}      
     end
@@ -63,7 +67,12 @@ function Config:SetDefaults()
         TrackedActionsFrameCount = 1     
     end
     if not TrackedSpellsFramePosition then
-      TrackedSpellsFramePosition = {0,-200,"CENTER","CENTER"}      
+      TrackedSpellsFramePosition ={} 
+      TrackedSpellsFramePosition[1] = {350,100,"CENTER","CENTER"}     
+      TrackedSpellsFramePosition[2] = {350,0,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[3] = {350,-100,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[4] = {350,-200,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[5] = {350,-300,"CENTER","CENTER"}  
     end
     if not TrackedActionsColumnCount then
       TrackedActionsColumnCount = 8       
@@ -95,5 +104,13 @@ if API:GetBuildInfo() == "9.1.5" or API:GetBuildInfo() == "9.2.0" then
 else
     return false
 end
+end
+function Config:ResetAll()
+    TrackedSpellsFramePosition = nill
+    TrackedActionsColumnCount=nill
+    TrackedActionsFrameScale=nill
+    TrackedSpellsCharacter=nill
+    TrackedActionsFrameCount=nill
+    ReloadUI()
 end
 -- Revision version Build 0004 --

@@ -17,18 +17,22 @@ Config:Init()
 Events:Init()
 API:Init()
 --Program run-----------------------------
+
+
+
 Events:RegisterEvents()
 Actions:SetCurrentSpecialization()
+
+
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker loaded -  BUILD0005\n    Type /bs for settings.")   
+    print("BS_ActionsTracker -loaded-  BUILD0006\n    Type /bs for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrame();
-
     local yOfs = -200
     for i=1,UI:GetTrackedActionsFrameCount(),1 do
-    UI:CreateSecondaryFrame(i)
-    UI:GetFrame(i+1):SetPoint("CENTER",UIParent,"CENTER",0,yOfs);
+    UI:CreateTrackedActionBar(i)
+    UI:GetFrame(i):SetPoint("CENTER",UIParent,"CENTER",0,yOfs);
     yOfs = (yOfs)-100
     end
     Actions:InitTrackedActions(Actions:GetTrackedActions());

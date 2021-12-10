@@ -11,6 +11,7 @@ UI = BS_ActionsTracker.UI
 end
 --Variables-------------------------------
 --Events:Functions------------------------
+
 function Events:RegisterEvents()
   MyAddon = { }
   local frame = CreateFrame("Frame")
@@ -25,11 +26,22 @@ function Events:RegisterEvents()
       MyAddon[event](MyAddon, ...)
   end)
 
-  function MyAddon:PLAYER_LOGIN()    
+  function MyAddon:PLAYER_LOGIN() 
+    if  IsCleared ~=true then
+      TrackedSpellsFramePosition = nill
+      TrackedActionsColumnCount=nill
+      TrackedActionsFrameScale=nill
+      TrackedSpellsCharacter=nill
+      TrackedActionsFrameCount=nill
+      print("BS_ActionsTracker -reseted-")
+      IsCleared = true
+  end
+   
+
   Config:SetDefaults()
   end
   function MyAddon:PLAYER_LOGOUT()   
-  Config:SaveConfig()
+  --when player logout
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
