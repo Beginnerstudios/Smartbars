@@ -23,153 +23,161 @@ local maximumTrackedBars =5
 --UI:Frames-------------------------------
 function UI:CreatePrimaryFrame()  --create primary/secondary frame config/trackedaction bars 
   local function PrimaryFrame()
-      local UIConfig = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
-      local defaultFont = "GameFontHighlight"
+    local defaultFont = "GameFontHighlight"
+   
       function Frame()
-    UI:SetFrameMoveable(UIConfig)  
-    UIConfig:Hide()
-    UIConfig:SetSize(630,0);
-    UIConfig:SetPoint("CENTER",UIParent,"CENTER",-200,100);
-    UIConfig.CloseButton:SetScript("OnClick", function ()
+    local primaryFrame = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
+    UI:SetFrameMoveable(primaryFrame)  
+    primaryFrame:Hide()
+    primaryFrame:SetSize(630,0);
+    primaryFrame:SetPoint("CENTER",UIParent,"CENTER",-200,100);
+    primaryFrame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
+    return primaryFrame
       end
-      function StaticTitles()
-       UIConfig.title = UIConfig:CreateFontString(nil,"OVERLAY");
-       UIConfig.title:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
-       UIConfig.title:SetFontObject(defaultFont)
-       UIConfig.title:SetText("BS_ActionsTracker");
-       -- MAIN FRAME - HEADERTEXT -  Number of used actions
-       UIConfig.titleUsed = UIConfig:CreateFontString(nil,"OVERLAY");
-       UIConfig.titleUsed:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-40);
-       UIConfig.titleUsed:SetFontObject(defaultFont)
-       UIConfig.titleUsed:SetText("Used actions:");
-       -- MAIN FRAME - HEADERTEXT -  Number of unused actions
-       -- MAIN FRAME - HEADERTEXT -  Number of unused actions
-       UIConfig.titleTrackedStatic = UIConfig:CreateFontString(nil,"OVERLAY");
-       UIConfig.titleTrackedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-60);
-       UIConfig.titleTrackedStatic:SetFontObject(defaultFont)
-       UIConfig.titleTrackedStatic:SetText("Tracked actions:");
+      
+      function StaticTitles(parentFrame)
+       UIConfig = parentFrame
+       local titles = CreateFrame("Frame","BS_ActionsTracker.Primary",UIConfig) 
+       titles.frame = titles:CreateFontString(nil,"OVERLAY");
+       titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
+       titles.frame:SetFontObject(defaultFont)
+       titles.frame:SetText("BS_ActionsTracker");
 
-       UIConfig.spellsTitle = UIConfig:CreateFontString(nil,"ARTWORK");
-       UIConfig.spellsTitle:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-80);
-       UIConfig.spellsTitle:SetFontObject(defaultFont)
-       UIConfig.spellsTitle:SetText("Used actions in action bars:");
-      end
-      function ActionValues()
-    UIConfig.titleTrackedValue = UIConfig:CreateFontString(nil,"OVERLAY");
-    UIConfig.titleTrackedValue:SetPoint("LEFT",UIConfig.titleTrackedStatic,"LEFT",100,0);
-    UIConfig.titleTrackedValue:SetFontObject(defaultFont)
-    UIConfig.titleTrackedValue:SetText("");
+       titles.usedStatic = titles:CreateFontString(nil,"OVERLAY");
+       titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-40);
+       titles.usedStatic:SetFontObject(defaultFont)
+       titles.usedStatic:SetText("Used actions:");
+    
+       titles.trackedStatic = titles:CreateFontString(nil,"OVERLAY");
+       titles.trackedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-60);
+       titles.trackedStatic:SetFontObject(defaultFont)
+       titles.trackedStatic:SetText("Tracked actions:");
 
-    UIConfig.titleUsedValue = UIConfig:CreateFontString(nil,"OVERLAY");
-    UIConfig.titleUsedValue:SetPoint("LEFT",UIConfig.titleUsed,"LEFT",100,0);
-    UIConfig.titleUsedValue:SetFontObject(defaultFont)
-    UIConfig.titleUsedValue:SetText("");
+       titles.actionsStatic = titles:CreateFontString(nil,"ARTWORK");
+       titles.actionsStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-80);
+       titles.actionsStatic:SetFontObject(defaultFont)
+       titles.actionsStatic:SetText("Used actions in action bars:");
+       
+       titles.trackedValue = titles:CreateFontString(nil,"OVERLAY");
+       titles.trackedValue:SetPoint("LEFT",titles.trackedStatic,"LEFT",100,0);
+       titles.trackedValue:SetFontObject(defaultFont)
+       titles.trackedValue:SetText("0");
+       
+       titles.usedValue = titles:CreateFontString(nil,"OVERLAY");
+       titles.usedValue:SetPoint("LEFT",titles.usedStatic,"LEFT",100,0);
+       titles.usedValue:SetFontObject(defaultFont)
+       titles.usedValue:SetText("0");
+       return titles
       end
-      function ResetButton()
+      function ResetButton(parentFrame)
       -- RESET ACTION BUTTON ---
-      UIConfig.resetButton = CreateFrame("Button", "only_for_testing", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -120, -60)
-      UIConfig.resetButton:SetWidth(70)
-      UIConfig.resetButton:SetHeight(35)
-      UIConfig.resetButton:SetText("Reset all")
-      UIConfig.resetButton:SetNormalFontObject(defaultFont)
+      UIConfig = parentFrame
+      local resetButton = CreateFrame("Button", "only_for_testing", UIConfig,"UIPanelButtonTemplate")
+      resetButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -120, -60)
+      resetButton:SetWidth(70)
+      resetButton:SetHeight(35)
+      resetButton:SetText("Reset all")
+      resetButton:SetNormalFontObject(defaultFont)
       --Reset button events----
-      UIConfig.resetButton:SetScript("OnClick", function ()
+      resetButton:SetScript("OnClick", function ()
       Config:ResetAll()
       end)
+      return resetButton
       end
-      function ScaleSlider()
-      UIConfig.slider = CreateFrame("Slider", "myslider", UIConfig,"OptionsSliderTemplate")
-      UIConfig.slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", 00, -50)
-      UIConfig.slider:SetWidth(100)
-      UIConfig.slider:SetHeight(15)
-      UIConfig.slider:SetMinMaxValues(0.5,1.5)
-      UIConfig.slider:SetValue(trackedActionsFrameScale)
-      UIConfig.slider:SetStepsPerPage(10)      
-      UIConfig.slider:SetScript("OnValueChanged", function (self) 
-                
-          frames[1]:SetScale(self:GetValue())     
-        
+      function ScaleSlider(parentFrame)
+        UIConfig = parentFrame
+      local slider = CreateFrame("Slider", "myslider", UIConfig,"OptionsSliderTemplate")
+      slider:SetPoint("RIGHT", UIConfig.TitleBg, "RIGHT", 00, -50)
+      slider:SetWidth(100)
+      slider:SetHeight(15)
+      slider:SetMinMaxValues(0.5,1.5)
+      slider:SetValue(trackedActionsFrameScale)
+      slider:SetStepsPerPage(10)      
+      slider:SetScript("OnValueChanged", function (self) 
+        for i=1,#frames do
+      frames[i]:SetScale(self:GetValue())   
+        end    
       end)
-      getglobal(UIConfig.slider:GetName() .. 'Low'):SetText('0,5'); --Sets the left-side slider text (default is "Low").
-      getglobal(UIConfig.slider:GetName() .. 'High'):SetText('1,5'); --Sets the right-side slider text (default is "High").
-      getglobal(UIConfig.slider:GetName() .. 'Text'):SetText('Scale'); --Sets the "title" text (top-centre of slider).
+      getglobal(slider:GetName() .. 'Low'):SetText('0,5'); --Sets the left-side slider text (default is "Low").
+      getglobal(slider:GetName() .. 'High'):SetText('1,5'); --Sets the right-side slider text (default is "High").
+      getglobal(slider:GetName() .. 'Text'):SetText('Scale'); --Sets the "title" text (top-centre of slider).
+      return slider
       end
-      function ColumnsWidgets()
-      UIConfig.columnsText = UIConfig:CreateFontString(nil,"ARTWORK");
-      UIConfig.columnsText:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",-30,-30);
-      UIConfig.columnsText:SetFontObject(defaultFont)
-      UIConfig.columnsText:SetText("Columns: ");
-      UIConfig.columnsText2 = UIConfig:CreateFontString(nil,"ARTWORK");
-      UIConfig.columnsText2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",10,-30);
-      UIConfig.columnsText2:SetFontObject(defaultFont)
-      UIConfig.columnsText2:SetText(trackedActionsColumnCount);
+      function ColumnsWidgets(parentFrame)
+        UIConfig = parentFrame
+      local columnsWidget = CreateFrame("Frame","BS_ActionsTracker.Primary",UIConfig) 
+      columnsWidget.text = columnsWidget:CreateFontString(nil,"ARTWORK");
+      columnsWidget.text:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",-30,-30);
+      columnsWidget.text:SetFontObject(defaultFont)
+      columnsWidget.text:SetText("Columns: ");
+      columnsWidget.text = UIConfig:CreateFontString(nil,"ARTWORK");
+      columnsWidget.text:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",10,-30);
+      columnsWidget.text:SetFontObject(defaultFont)
+      columnsWidget.text:SetText(trackedActionsColumnCount);
      
-      UIConfig.minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -35, -60)
-      UIConfig.minusButton:SetSize(35,35)
-      UIConfig.minusButton:SetText("-")
-      UIConfig.minusButton:SetNormalFontObject(defaultFont)    
-      UIConfig.minusButton:SetScript("OnClick", function ()
+      columnsWidget.minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
+      columnsWidget.minusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", -35, -60)
+      columnsWidget.minusButton:SetSize(35,35)
+      columnsWidget.minusButton:SetText("-")
+      columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
+      columnsWidget.minusButton:SetScript("OnClick", function ()
       if trackedActionsColumnCount>= 2 then
         trackedActionsColumnCount = trackedActionsColumnCount -1
-        UIConfig.columnsText2:SetText(trackedActionsColumnCount)
+        columnsWidget.text:SetText(trackedActionsColumnCount)
       end
       end)
      
-      UIConfig.plusButton = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
-      UIConfig.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 0, -60)
-      UIConfig.plusButton:SetSize(35,35)
-      UIConfig.plusButton:SetText("+")
-      UIConfig.plusButton:SetNormalFontObject(defaultFont)    
-      UIConfig.plusButton:SetScript("OnClick", function ()
+      columnsWidget.plusButton = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
+      columnsWidget.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 0, -60)
+      columnsWidget.plusButton:SetSize(35,35)
+      columnsWidget.plusButton:SetText("+")
+      columnsWidget.plusButton:SetNormalFontObject(defaultFont)    
+      columnsWidget.plusButton:SetScript("OnClick", function ()
       if trackedActionsColumnCount<= 12 then
         trackedActionsColumnCount = trackedActionsColumnCount +1
-        UIConfig.columnsText2:SetText(trackedActionsColumnCount)
+        columnsWidget.text:SetText(trackedActionsColumnCount)
       end
       end)
+      return columnsWidget
       end
-      function TrackedBarsWidget()
-        UIConfig.cT = UIConfig:CreateFontString(nil,"ARTWORK");
-        UIConfig.cT:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",120,-30);
-        UIConfig.cT:SetFontObject(defaultFont)
-        UIConfig.cT:SetText("Tracked bars: ");
-        UIConfig.cT2 = UIConfig:CreateFontString(nil,"ARTWORK");
-        UIConfig.cT2:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",170,-30);
-        UIConfig.cT2:SetFontObject(defaultFont)
-        UIConfig.cT2:SetText(trackedActionsFrameCount);
-  
-        UIConfig.minusButton2 = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
-        UIConfig.minusButton2:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 115, -60)
-        UIConfig.minusButton2:SetSize(35,35)
-        UIConfig.minusButton2:SetText("-")
-        UIConfig.minusButton2:SetNormalFontObject(defaultFont)    
-        UIConfig.minusButton2:SetScript("OnClick", function ()
+      function BarsWidget(parentFrame)
+        UIConfig = parentFrame
+        local barsWidget = CreateFrame("Frame","BS_ActionsTracker.Primary",UIConfig) 
+        barsWidget.textStatic = barsWidget:CreateFontString(nil,"ARTWORK");
+        barsWidget.textStatic:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",120,-30);
+        barsWidget.textStatic:SetFontObject(defaultFont)
+        barsWidget.textStatic:SetText("Tracked bars: ");
+        barsWidget.textValue = UIConfig:CreateFontString(nil,"ARTWORK");
+        barsWidget.textValue:SetPoint("CENTER",UIConfig.TitleBg,"CENTER",170,-30);
+        barsWidget.textValue:SetFontObject(defaultFont)
+        barsWidget.textValue:SetText(trackedActionsFrameCount);
+        barsWidget.minusButton = CreateFrame("Button", "bs_minus", UIConfig,"UIPanelButtonTemplate")
+        barsWidget.minusButton :SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 115, -60)
+        barsWidget.minusButton :SetSize(35,35)
+        barsWidget.minusButton :SetText("-")
+        barsWidget.minusButton :SetNormalFontObject(defaultFont)    
+        barsWidget.minusButton :SetScript("OnClick", function ()
         if trackedActionsFrameCount>= 2 then
           trackedActionsFrameCount = trackedActionsFrameCount -1  
           UI:RemoveLastSecondaryFrame()
-          UIConfig.cT2:SetText(trackedActionsFrameCount)      
+          barsWidget.textValue:SetText(trackedActionsFrameCount)      
         end
         end)
   
-        UIConfig.plusButton2 = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
-        UIConfig.plusButton2:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 155, -60)
-        UIConfig.plusButton2:SetSize(35,35)
-        UIConfig.plusButton2:SetText("+")
-        UIConfig.plusButton2:SetNormalFontObject(defaultFont)    
-        UIConfig.plusButton2:SetScript("OnClick", function ()
+        barsWidget.plusButton  = CreateFrame("Button", "bs_plus", UIConfig,"UIPanelButtonTemplate")
+        barsWidget.plusButton:SetPoint("CENTER", UIConfig.TitleBg, "CENTER", 155, -60)
+        barsWidget.plusButton:SetSize(35,35)
+        barsWidget.plusButton:SetText("+")
+        barsWidget.plusButton:SetNormalFontObject(defaultFont)    
+        barsWidget.plusButton:SetScript("OnClick", function ()
         
           if trackedActionsFrameCount<maximumTrackedBars then
-            trackedActionsFrameCount = trackedActionsFrameCount+1         
-            UI:CreateTrackedActionBar(#frames+1)           
-            local xOffset = trackedSpellsFramePosition[#frames][1] 
-            local yOffset = trackedSpellsFramePosition[#frames][2]
-            local point = trackedSpellsFramePosition[#frames][3]
-            local relativePoint = trackedSpellsFramePosition[#frames][4]
-            UI:GetFrame(#frames):SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
-            UIConfig.cT2:SetText(#frames)
+            trackedActionsFrameCount = trackedActionsFrameCount+1        
+            UI:CreateTrackedActionBar(#frames+1) 
+            UI:SetFrameFramePosition(#frames)                                        
+            barsWidget.textValue:SetText(#frames)
             UI:ShowSecondaryFrames()           
           end
        
@@ -178,14 +186,14 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
   
   
       end
-      Frame()
-      StaticTitles()
-      ActionValues()
-      ResetButton()
-      ScaleSlider()
-      ColumnsWidgets()
-      TrackedBarsWidget()        
-      return UIConfig
+     
+      local primaryFrame = Frame()
+      primaryFrame.titles = StaticTitles(primaryFrame)
+      primaryFrame.resetButton =ResetButton(primaryFrame)
+      primaryFrame.scaleSlider =ScaleSlider(primaryFrame)
+      primaryFrame.columnsWidget =ColumnsWidgets(primaryFrame)
+      primaryFrame.barsWidget = BarsWidget(primaryFrame)        
+      return primaryFrame
   end
   primaryFrame = PrimaryFrame()
   secondaryFrame = CreateFrame("Frame","BS_ActionsTracker.secondaryFrame",UIParent);
@@ -223,14 +231,14 @@ local actions = Actions:GetTrackedActions()
 if frames[#frames] ~=nill then
 frames[#frames]:Hide()  
 end
-for k,v in pairs(actions) do
+for k,v in pairs(Actions:GetTrackedActions()) do
   if actions[k][6] == #frames then
-    actions[k][6]=#frames-1  
-    actions[k][3].group.columnsText2:SetText(actions[k][6])
+    actions[k][6]= trackedActionsFrameCount
+    actions[k][3]:SetParent(UI:GetActionBar(trackedActionsFrameCount))
+    actions[k][3].group.columnsText2:SetText(Actions:GetTrackedActions()[k][6])
   end
 end
-frames[#frames] = nill
-
+frames[trackedActionsFrameCount+1] = nill
 end
 function UI:SetFrameMoveable(frame)
   frame:EnableMouse(true)
@@ -241,21 +249,22 @@ function UI:SetFrameMoveable(frame)
   end)
   frame:SetScript("OnDragStop",function ()
   frame:StopMovingOrSizing()
+  Config:SaveConfig()
   end)
 end
 function UI:ShowSecondaryFrames()
   for i=1,#frames do
-  UI:GetFrame(i):SetMovable(true) 
-  UI:GetFrame(i):EnableMouse(true) 
-  UI:GetFrame(i).title:SetAlpha(1)    
-  UI:GetFrame(i):Show()
+  UI:GetActionBar(i):SetMovable(true) 
+  UI:GetActionBar(i):EnableMouse(true) 
+  UI:GetActionBar(i).title:SetAlpha(1)    
+  UI:GetActionBar(i):Show()
   end
 end
 function UI:HideSecondaryFrames()
   for i=1,#frames do
-  UI:GetFrame(i):SetMovable(false) 
-  UI:GetFrame(i):EnableMouse(false) 
-  UI:GetFrame(i).title:SetAlpha(0)    
+  UI:GetActionBar(i):SetMovable(false) 
+  UI:GetActionBar(i):EnableMouse(false) 
+  UI:GetActionBar(i).title:SetAlpha(0)    
   end
 end
 --UI:Actions-------------------------------
@@ -387,8 +396,8 @@ function UI:UpdateUI() ---update all dynamic variables in UI
 local trackedSpellsCount = Actions:GetActions().Tracked()[2];
 local usedSpellsCount = Actions:GetActions().Used()[2];
   --Header Primary frame dynamic values
-  primaryFrame.titleUsedValue:SetText(usedSpellsCount)
-  primaryFrame.titleTrackedValue:SetText(trackedSpellsCount)
+  primaryFrame.titles.usedValue:SetText(usedSpellsCount)
+  primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
   --Secondary Frame size
   for i=1,#frames do
   UI:SetFrameFramePosition(i)
@@ -422,7 +431,7 @@ if actions ~=nill then
     if actions[actionID][5] == Actions:GetCurrentSpecialization() then   
       actions[actionID][3]:Show()
       local start, duration, enable = API:GetActionCooldown(actions[actionID][1])
-      local isUsable, notEnoughMana = IsUsableAction(actions[actionID][1])      
+      local notEnoughMana = API:IsUsableAction(actions[actionID][1])      
       if not configMode then
         if actions[actionID][3].edit ~=nil then
         if enable>0 and duration>1.5 or notEnoughMana then
@@ -443,9 +452,9 @@ if actions ~=nill then
   end
 
   for i=1,#frames do
-  if i~=nill then
+  --if i~=nill then
   UI:SortTrackedActions(actions,i)
-  end
+  --end
   end
 end
 function UI:SortTrackedActions(trackedActions,sortNumber)
@@ -457,8 +466,8 @@ function UI:SortTrackedActions(trackedActions,sortNumber)
   local actionID = k 
   local frameNumber = trackedActions[actionID][6]
   if frameNumber == sortNumber then
-  if trackedActions[actionID][3]:GetAlpha()>0 and trackedActions[actionID][3]:IsVisible() == true then    ----Sort tracked actions
-  trackedActions[actionID][3]:SetPoint("LEFT",UI:GetFrame(frameNumber),"LEFT",startxOffset,startyOffset)
+  if trackedActions[actionID][3]:IsVisible() == true then    ----Sort tracked actions
+  trackedActions[actionID][3]:SetPoint("LEFT",UI:GetActionBar(frameNumber),"LEFT",startxOffset,startyOffset)
   trackedActions[actionID][3].edit:SetPoint("CENTER",trackedActions[actionID][3],"CENTER",2,0)
   startxOffset = startxOffset +50
   count = count + 1
@@ -479,7 +488,7 @@ function UI:RefreshTrackedIcons(trackedActions)
   end
 end
 --Getters & Setters-----------------------------
-function UI:GetFrame(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
+function UI:GetActionBar(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
 return frames[frameIndex]
 end
 function UI:GetFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
@@ -494,20 +503,8 @@ end
 function UI:GetTrackedActionsColumnCount()
 return trackedActionsColumnCount
 end
-function UI:SetTrackedActionsFrameScale(savedScale)  
-  trackedActionsFrameScale = savedScale
-  end
-function UI:SetTrackedActionsColumnCount(columnCount)  
-  trackedActionsColumnCount = columnCount
-  end
-function UI:SetTrackedActionsFramePosition(framePosition)  
-  trackedSpellsFramePosition = framePosition
-end
 function UI:GetTrackedActionsFrameCount()  
-  return trackedActionsFrameCount 
-end
-function UI:SetTrackedActionsFrameCount(frameCount)  
-  trackedActionsFrameCount = frameCount 
+ return trackedActionsFrameCount 
 end
 function UI:GetTrackedActionsFramesPosition()
   for i=1,#frames do
@@ -520,7 +517,13 @@ return primaryFrame
 end
 function UI:GetSecondaryFrame()
   return secondaryFrame
-  end
--- Revision version Build 0004 --
+end
+function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount)
+  trackedActionsColumnCount = columnCount
+  trackedSpellsFramePosition = framePosition
+  trackedActionsFrameCount = frameCount
+  trackedActionsFrameScale = frameScale
+end
+-- Revision version Build 0006 --
 
 

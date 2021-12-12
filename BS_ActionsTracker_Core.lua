@@ -32,7 +32,7 @@ C_Timer.After(5, function()
     local yOfs = -200
     for i=1,UI:GetTrackedActionsFrameCount(),1 do
     UI:CreateTrackedActionBar(i)
-    UI:GetFrame(i):SetPoint("CENTER",UIParent,"CENTER",0,yOfs);
+    UI:GetActionBar(i):SetPoint("CENTER",UIParent,"CENTER",0,yOfs);
     yOfs = (yOfs)-100
     end
     Actions:InitTrackedActions(Actions:GetTrackedActions());

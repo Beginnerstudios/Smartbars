@@ -31,3 +31,8 @@ function API:GetBuildInfo()
     local version,build,date = GetBuildInfo()
     return version  
 end
+function API:IsUsableAction(action)
+    local isUsable, notEnoughMana = IsUsableAction(action) 
+    return notEnoughMana
+end
+

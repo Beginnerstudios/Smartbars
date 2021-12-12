@@ -20,6 +20,7 @@
         "getglobal",
         "GetBuildInfo",
         "GetPrimaryTalentTree",
-        "CreateFontString"
+        "CreateFontString",
+        "WorldFrame"
     ]
 }

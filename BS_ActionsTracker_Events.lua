@@ -51,5 +51,5 @@ function Events:RegisterEvents()
   Config:UpdateUI()        
  end
 end
--- Revision version Build 0004 --
+-- Revision version Build 0006 --
 

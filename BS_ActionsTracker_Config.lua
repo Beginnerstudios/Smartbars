@@ -42,19 +42,14 @@ end
 function Config:SaveConfig()
     TrackedSpellsFramePosition = UI:GetTrackedActionsFramesPosition()
     TrackedActionsColumnCount = UI:GetTrackedActionsColumnCount()
-    TrackedActionsFrameScale = UI:GetFrame(1):GetScale()
+    TrackedActionsFrameScale = UI:GetActionBar(1):GetScale()
     TrackedSpellsCharacter = Actions:GetTrackedActions()
-    TrackedActionsPositionIndex = Actions:GetTrackedActionsPositionIndex()
     TrackedActionsFrameCount = UI:GetTrackedActionsFrameCount()
 end
 function Config:LoadConfig()
+UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount)
 Actions:SetCurrentSpecialization(API:GetSpecialization())
-UI:SetTrackedActionsFramePosition(TrackedSpellsFramePosition)
-UI:SetTrackedActionsColumnCount(TrackedActionsColumnCount)
-UI:SetTrackedActionsFrameScale(TrackedActionsFrameScale)
-Actions:SetTrackedActions(TrackedSpellsCharacter) 
-Actions:SetTrackedActionsPositionIndex(TrackedActionsPositionIndex)   
-UI:SetTrackedActionsFrameCount(TrackedActionsFrameCount)
+Actions:SetTrackedActions(TrackedSpellsCharacter)    
 end
 function Config:SetDefaults()
     if not IsCleared then
@@ -68,11 +63,11 @@ function Config:SetDefaults()
     end
     if not TrackedSpellsFramePosition then
       TrackedSpellsFramePosition ={} 
-      TrackedSpellsFramePosition[1] = {350,100,"CENTER","CENTER"}     
-      TrackedSpellsFramePosition[2] = {350,0,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[3] = {350,-100,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[4] = {350,-200,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[5] = {350,-300,"CENTER","CENTER"}  
+      TrackedSpellsFramePosition[1] = {250,300,"CENTER","CENTER"}     
+      TrackedSpellsFramePosition[2] = {250,200,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[3] = {250,100,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[4] = {250,0,"CENTER","CENTER"} 
+      TrackedSpellsFramePosition[5] = {250,-100,"CENTER","CENTER"}  
     end
     if not TrackedActionsColumnCount then
       TrackedActionsColumnCount = 8       
@@ -113,4 +108,4 @@ function Config:ResetAll()
     TrackedActionsFrameCount=nill
     ReloadUI()
 end
--- Revision version Build 0004 --
+-- Revision version Build 0006 --

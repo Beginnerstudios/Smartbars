@@ -69,7 +69,7 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting)
         curretSpec = API:GetSpecialization()
         trackedFrame = 1        
     end  
-    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetFrame(trackedFrame),true),action[4],curretSpec,trackedFrame} 
+    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetActionBar(trackedFrame),true),action[4],curretSpec,trackedFrame} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
     trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
 end
@@ -91,11 +91,5 @@ end
 function Actions:SetCurrentSpecialization()
     currentSpecialization = API:GetSpecialization()
 end  
-function Actions:SetTrackedActionsPositionIndex(positionIndex)  
-    trackedActionsPositionIndex = positionIndex
-  end
-function Actions:GetTrackedActionsPositionIndex()  
-    return trackedActionsPositionIndex 
-end
 
--- Revision version Build 0004 --
+-- Revision version Build 0006 --
