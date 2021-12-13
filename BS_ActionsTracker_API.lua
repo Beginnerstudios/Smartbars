@@ -36,3 +36,4 @@ function API:IsUsableAction(action)
     return notEnoughMana
 end
 
+

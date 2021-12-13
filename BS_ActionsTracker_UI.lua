@@ -214,7 +214,7 @@ function UI:CreateTrackedActionBar(index)
     end
     function Title()
     SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"OVERLAY");
-    SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"CENTER",25,0);
+    SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"CENTER",0,0);
     SecondaryFrame.title:SetFontObject("GameFontHighlight")
     SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar")   
     SecondaryFrame.title:SetAlpha(0)
@@ -311,12 +311,15 @@ function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate")
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
+ actionWidget.tooltip = UI:CreateTooltip()
+ actionWidget.tooltip = "This is where you place MouseOver Text.";
  local newTexture= API:GetActionTexture(action[1])
  if isTracked then
   actionWidget:SetWidth(50)
   actionWidget:SetHeight(50)
   actionWidget:SetHighlightTexture(nill)
   actionWidget:SetPushedTexture(nill)
+
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
@@ -340,7 +343,7 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
 end
 function UI:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)
 local xOfs = 0
-local yOfs = -25
+local yOfs = -15
 local defaultFont = "GameFontHighlight"
 local newWidget = CreateFrame("Frame", "bs_newpg", parentWidget)
 newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
@@ -391,6 +394,16 @@ end
   
 
 end
+function UI:CreateTooltip()
+  local tooltip =CreateFrame( "GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+  tooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+-- Allow tooltip SetX() methods to dynamically add new lines based on these
+tooltip:AddFontStrings(
+  tooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
+  tooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" ) );
+  return tooltip
+end
+
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
 local trackedSpellsCount = Actions:GetActions().Tracked()[2];
@@ -409,9 +422,6 @@ if usedSpellsCount<12 then
 else
   primaryFrame:SetHeight(usedSpellsCount/12+3*140)
 end
-
-
-
  UI:RefreshTrackedIcons(Actions:GetTrackedActions())
 end
 function UI:SetFrameFramePosition(frameIndex)
@@ -426,27 +436,34 @@ function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table 
   
   local actions = trackedActionsTable
   local configMode = Config:IsConfigMode()
+  local userSpec = Actions:GetCurrentSpecialization()
+   local isResting = IsResting()
+  
 if actions ~=nill then
   for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
-    if actions[actionID][5] == Actions:GetCurrentSpecialization() then   
-      actions[actionID][3]:Show()
-      local start, duration, enable = API:GetActionCooldown(actions[actionID][1])
-      local notEnoughMana = API:IsUsableAction(actions[actionID][1])      
-      if not configMode then
-        if actions[actionID][3].edit ~=nil then
-        if enable>0 and duration>1.5 or notEnoughMana then
-         actions[actionID][3]:Hide()
-        elseif duration<1.5 then      
-       actions[actionID][3]:Show()
-        else      
-        actions[actionID][3]:Show()
-        end
-      end
-      else      
-       actions[actionID][3]:Show()
+    local widget = actions[actionID][3]
+    local slotID = actions[actionID][1]
+    local actionSpec = actions[actionID][5]
+    if UI:IsValueSame(actionSpec,userSpec) then         
+      local start, duration, onCooldown = API:GetActionCooldown(slotID)
+      local notEnoughMana = API:IsUsableAction(slotID)
+      local isUsable,b = IsUsableAction(slotID)
+      local inRange = IsActionInRange(slotID)    
+      if configMode then  
+        widget:Show()
+      else
+        if isResting then  
+          widget:Hide()  
+        else 
+          if onCooldown>0 and duration>1.5 or notEnoughMana or inRange==false or not isUsable then
+          widget:Hide()
+          elseif duration<1.5  then      
+          widget:Show()     
+          end          
+       end    
       end
     else
-    actions[actionID][3]:Hide()
+      widget:Hide()
     end
   end
   end
@@ -485,6 +502,13 @@ function UI:RefreshTrackedIcons(trackedActions)
       local newTexture= API:GetActionTexture(v[1])
       v[3]:SetNormalTexture(newTexture)   
     end
+  end
+end
+function UI:IsValueSame(value1,value2)
+  if value1 == value2 then
+    return true
+  else
+    return false
   end
 end
 --Getters & Setters-----------------------------

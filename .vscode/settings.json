@@ -2,7 +2,8 @@
     "Lua.diagnostics.disable": [
         "undefined-field",
         "redundant-parameter",
-        "empty-block"
+        "empty-block",
+        "undefined-global"
     ],
     "Lua.diagnostics.globals": [
         "SlashCmdList",
