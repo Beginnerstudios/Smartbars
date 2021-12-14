@@ -92,4 +92,4 @@ function Actions:SetCurrentSpecialization()
     currentSpecialization = API:GetSpecialization()
 end  
 
--- Revision version Build 0006 --
+-- Revision version Build 0007 --

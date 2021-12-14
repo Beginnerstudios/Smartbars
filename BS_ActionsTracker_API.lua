@@ -35,5 +35,9 @@ function API:IsUsableAction(action)
     local isUsable, notEnoughMana = IsUsableAction(action) 
     return notEnoughMana
 end
+function API:GetSpellCharges(actionID)
+  local currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetSpellCharges(spellId or "spellName")
+  return currentCharges
+end
 
 

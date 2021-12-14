@@ -33,6 +33,7 @@ function Events:RegisterEvents()
       TrackedActionsFrameScale=nill
       TrackedSpellsCharacter=nill
       TrackedActionsFrameCount=nill
+      TrackedActionsDisplayedInRestZone =nill
       print("BS_ActionsTracker -reseted-")
       IsCleared = true
   end
@@ -51,5 +52,5 @@ function Events:RegisterEvents()
   Config:UpdateUI()        
  end
 end
--- Revision version Build 0006 --
+-- Revision version Build 0007 --
 

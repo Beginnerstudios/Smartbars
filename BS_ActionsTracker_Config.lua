@@ -45,9 +45,10 @@ function Config:SaveConfig()
     TrackedActionsFrameScale = UI:GetActionBar(1):GetScale()
     TrackedSpellsCharacter = Actions:GetTrackedActions()
     TrackedActionsFrameCount = UI:GetTrackedActionsFrameCount()
+    TrackedActionsHideInRestZone =UI:GetTrackedActionsHideInSaveZones()
 end
 function Config:LoadConfig()
-UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount)
+UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone)
 Actions:SetCurrentSpecialization(API:GetSpecialization())
 Actions:SetTrackedActions(TrackedSpellsCharacter)    
 end
@@ -72,6 +73,9 @@ function Config:SetDefaults()
     if not TrackedActionsColumnCount then
       TrackedActionsColumnCount = 8       
     end   
+    if not TrackedActionsDisplayedInRestZone then
+        TrackedActionsDisplayedInRestZone = false
+    end
     if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
     TrackedActionsFrameScale = 1
     end   
@@ -106,6 +110,7 @@ function Config:ResetAll()
     TrackedActionsFrameScale=nill
     TrackedSpellsCharacter=nill
     TrackedActionsFrameCount=nill
+    TrackedActionsDisplayedInRestZone=nill
     ReloadUI()
 end
--- Revision version Build 0006 --
+-- Revision version Build 0007 --

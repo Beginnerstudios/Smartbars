@@ -26,19 +26,17 @@ Actions:SetCurrentSpecialization()
 
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker -loaded-  BUILD0006\n    Type /bs for settings.\n")   
+    print("BS_ActionsTracker -loaded-  BUILD0007\n    Type /bs for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrame();
-    local yOfs = -200
     for i=1,UI:GetTrackedActionsFrameCount(),1 do
     UI:CreateTrackedActionBar(i)
-    UI:GetActionBar(i):SetPoint("CENTER",UIParent,"CENTER",0,yOfs);
-    yOfs = (yOfs)-100
+    UI:SetFrameFramePosition(i)
     end
     Actions:InitTrackedActions(Actions:GetTrackedActions());
     UI:UpdateTrackedActions(Actions:GetTrackedActions()) 
 end)
--- Revision version Build 0004 --
+-- Revision version Build 0007 --
 
 
 
