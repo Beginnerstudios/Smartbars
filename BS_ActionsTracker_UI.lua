@@ -467,6 +467,7 @@ if actions ~=nill then
     local widget = actions[actionID][3]
     local slotID = actions[actionID][1]
     local actionSpec = actions[actionID][5]
+    local isUserBuffedBy= API:GetPlayerAuraBySpellID(actions[actionID][2])
     if UI:IsValueSame(actionSpec,userSpec) then       
       local start, duration, onCooldown = API:GetActionCooldown(slotID)
       local notEnoughMana = API:IsUsableAction(slotID)
@@ -478,11 +479,15 @@ if actions ~=nill then
         if isResting and trackedActionsHideInRestZone then  
           widget:Hide()  
         else 
-          if onCooldown>0 and duration>1.5 or notEnoughMana or inRange==false or not isUsable then
-          widget:Hide()
-          elseif duration<1.5  then      
-          widget:Show()     
-          end          
+          if isUserBuffedBy then
+            widget:Hide()
+          else
+            if onCooldown>0 and duration>1.5 or notEnoughMana or inRange==false or not isUsable or isUserBuffedBy then
+              widget:Hide()
+              elseif duration<1.5  then      
+              widget:Show()     
+              end          
+          end         
        end    
       end
     else

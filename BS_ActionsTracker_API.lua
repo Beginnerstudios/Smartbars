@@ -39,5 +39,26 @@ function API:GetSpellCharges(actionID)
   local currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetSpellCharges(spellId or "spellName")
   return currentCharges
 end
+function API:GetPlayerAuraBySpellID(spellID)
+    local version,build,date = GetBuildInfo()
+    if version == "9.1.5" then
+        if GetPlayerAuraBySpellID(spellID) == nill then
+        return false
+        else 
+        return true
+        end
+    else   
+        local buffIndex
+       for buffIndex=1,40 do
+        local   name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, 
+        buffID, canApply = UnitBuff("player", buffIndex)     
+        if buffID ~=nill then 
+            if buffID ==spellID then       
+                return true
+            end               
+        end      
+    end
+end       
+end
 
 
