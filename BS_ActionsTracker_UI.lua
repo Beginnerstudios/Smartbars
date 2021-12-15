@@ -219,6 +219,13 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
   secondaryFrame:SetSize(100,100)
   secondaryFrame:SetScript("OnUpdate", function ()
     UI:UpdateTrackedActions(Actions:GetTrackedActions())
+
+    local frameIndex = 1
+    while frames[frameIndex] do
+      UI:SortTrackedActions(Actions:GetTrackedActions(),frameIndex)
+      frameIndex = frameIndex +1 
+    end
+
     end)
 end
 function UI:CreateTrackedActionBar(index)
@@ -233,9 +240,9 @@ function UI:CreateTrackedActionBar(index)
     end
     function Title()
     SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"OVERLAY");
-    SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"CENTER",0,0);
+    SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"RIGHT",0,0);
     SecondaryFrame.title:SetFontObject("GameFontHighlight")
-    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar")   
+    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar,check to display only when BOOSTED.")   
     SecondaryFrame.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
     end
@@ -300,8 +307,7 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
       end
     end
   end
-  for k,v in pairs(actions) do
-   
+  for k,v in pairs(actions) do 
     actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
     actions[k][3]:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
     xOffstet = xOffstet+50;
@@ -326,20 +332,15 @@ displayedActions = actions
  UI:UpdateUI()
 end
 --UI:Widgets-------------------------------
-function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with correct size and textures
+function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate")
+actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
- actionWidget.tooltip = UI:CreateTooltip()
- actionWidget.tooltip = "This is where you place MouseOver Text.";
  local newTexture= API:GetActionTexture(action[1])
  if isTracked then
-  actionWidget:SetWidth(50)
-  actionWidget:SetHeight(50)
   actionWidget:SetHighlightTexture(nill)
-  actionWidget:SetPushedTexture(nill)
- -- UI:CreateFontString(actionWidget,API:GetSpellCharges(action[2]))
-
+  actionWidget:SetPushedTexture(nill)  
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
@@ -349,7 +350,7 @@ function UI:CreateActionWidget(action,parentFrame,isTracked)--Return widget with
 end
 function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
   local edit = CreateFrame("EditBox",nil, parentWidget, "UICheckButtonTemplate")
-  edit:SetPoint("CENTER",UIParent,"CENTER",0,0)
+  edit:SetPoint("CENTER",parentWidget,"CENTER",2,0)
   edit:SetSize(50,50)
   edit:SetText(valueToSave[4])
   edit:SetAutoFocus(false)
@@ -372,6 +373,18 @@ newWidget.columnsText2 =newWidget:CreateFontString(nil,"ARTWORK");
 newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",15,yOfs);
 newWidget.columnsText2:SetFontObject(defaultFont)
 newWidget.columnsText2:SetText(valueToSave[6]);
+
+newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,"UICheckButtonTemplate")
+newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
+newWidget.showWhenBoosted:SetSize(20,20)
+newWidget.showWhenBoosted:SetChecked(valueToSave[8])
+newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)   
+newWidget.showWhenBoosted:SetScript("OnClick", function (self) 
+ valueToSave[8]=self:GetChecked()
+end)
+
+
+
 
 newWidget.minusButton = CreateFrame("Button", "bs_minus2", newWidget,"UIPanelButtonTemplate")
 newWidget.minusButton:SetPoint("CENTER", parentWidget, "CENTER", -15,yOfs)
@@ -467,40 +480,40 @@ if actions ~=nill then
     local widget = actions[actionID][3]
     local slotID = actions[actionID][1]
     local actionSpec = actions[actionID][5]
-    local isUserBuffedBy= API:GetPlayerAuraBySpellID(actions[actionID][2])
-    if UI:IsValueSame(actionSpec,userSpec) then       
-      local start, duration, onCooldown = API:GetActionCooldown(slotID)
-      local notEnoughMana = API:IsUsableAction(slotID)
-      local isUsable,b = IsUsableAction(slotID)
-      local inRange = IsActionInRange(slotID)    
-      if configMode then  
+    local isBoosted = actions[actionID][7]
+    local displayOnlyWhenBoosted =actions[actionID][8]
+    if UI:IsValueSame(actionSpec,userSpec) then               
+      if configMode or isBoosted then 
         widget:Show()
-      else
-        if isResting and trackedActionsHideInRestZone then  
+      else             
+        if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
-        else 
-          if isUserBuffedBy then
-            widget:Hide()
-          else
-            if onCooldown>0 and duration>1.5 or notEnoughMana or inRange==false or not isUsable or isUserBuffedBy then
-              widget:Hide()
-              elseif duration<1.5  then      
-              widget:Show()     
-              end          
+        else          
+          local start, duration, onCooldown = API:GetActionCooldown(slotID)
+          local notEnoughMana = API:IsUsableAction(slotID)
+          local isUsable,b = IsUsableAction(slotID)
+          local inRange = IsActionInRange(slotID)
+          if notEnoughMana or onCooldown>0 and duration>1.5 or inRange==false or not isUsable then
+            widget:Hide()                  
+          else           
+            local isUserBuffedBy= API:GetPlayerAuraBySpellID(actions[actionID][2])
+            if isUserBuffedBy then
+              widget:Hide()           
+            else
+              widget:Show() 
+            end                                                            
           end         
-       end    
-      end
+       end 
+     
+      
+    end
     else
       widget:Hide()
     end
   end
   end
 
-  for i=1,#frames do
-  --if i~=nill then
-  UI:SortTrackedActions(actions,i)
-  --end
-  end
+   
 end
 function UI:SortTrackedActions(trackedActions,sortNumber)
   local startxOffset =0
@@ -510,10 +523,11 @@ function UI:SortTrackedActions(trackedActions,sortNumber)
   for k,v in pairs(trackedActions) do
   local actionID = k 
   local frameNumber = trackedActions[actionID][6]
+  local widget = trackedActions[actionID][3]
   if frameNumber == sortNumber then
-  if trackedActions[actionID][3]:IsVisible() == true then    ----Sort tracked actions
-  trackedActions[actionID][3]:SetPoint("LEFT",UI:GetActionBar(frameNumber),"LEFT",startxOffset,startyOffset)
-  trackedActions[actionID][3].edit:SetPoint("CENTER",trackedActions[actionID][3],"CENTER",2,0)
+  if widget:IsVisible() == true then    ----Sort tracked actions
+  widget:SetPoint("LEFT",UI:GetActionBar(frameNumber),"LEFT",startxOffset,startyOffset)
+  --widget.edit:SetPoint("CENTER",widget,"CENTER",2,0)
   startxOffset = startxOffset +50
   count = count + 1
   if(startxOffset== trackedActionsColumnCount*50) then
@@ -579,6 +593,9 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsFrameCount = frameCount
   trackedActionsFrameScale = frameScale
   trackedActionsHideInRestZone = hiddenInRestZone
+end
+function UI:GetFrames()
+  return frames
 end
 -- Revision version Build 0007 --
 

@@ -73,8 +73,8 @@ function Config:SetDefaults()
     if not TrackedActionsColumnCount then
       TrackedActionsColumnCount = 8       
     end   
-    if not TrackedActionsDisplayedInRestZone then
-        TrackedActionsDisplayedInRestZone = false
+    if not TrackedActionsHideInRestZone then
+        TrackedActionsHideInRestZone = false
     end
     if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
     TrackedActionsFrameScale = 1
@@ -110,7 +110,7 @@ function Config:ResetAll()
     TrackedActionsFrameScale=nill
     TrackedSpellsCharacter=nill
     TrackedActionsFrameCount=nill
-    TrackedActionsDisplayedInRestZone=nill
+    TrackedActionsHideInRestZone=nill
     ReloadUI()
 end
 -- Revision version Build 0007 --

@@ -53,7 +53,7 @@ end
 function Actions:InitTrackedActions(actions)
     if actions ~=nill then                 
     for actionID,v in pairs(actions) do                     
-    Actions:CreateTrackedAction(actions[actionID],false,true)  
+    Actions:CreateTrackedAction(actions[actionID],false,true)
     end       
     end
     UI:UpdateUI()
@@ -62,16 +62,21 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting)
     local actionID = action[2] 
     local curretSpec = nill
     local trackedFrame = nill
-    if isExisting then
+    local isBoosted = false
+    local showOnlyWhenBoosted = nill
+    if isExisting==true then
         curretSpec = action[5]
         trackedFrame = action[6]
-    else
+        showOnlyWhenBoosted = action[8]
+    else  
         curretSpec = API:GetSpecialization()
-        trackedFrame = 1        
+        trackedFrame = 1   
+        showOnlyWhenBoosted = false
     end  
-    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetActionBar(trackedFrame),true),action[4],curretSpec,trackedFrame} 
+    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
+    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)
+    
 end
 function Actions:DeleteTrackedAction(action)
     local actionID = action[2]

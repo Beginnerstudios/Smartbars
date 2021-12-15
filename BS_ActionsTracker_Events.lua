@@ -20,6 +20,8 @@ function Events:RegisterEvents()
 
   if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+  frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+  frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
   end
   
   frame:SetScript("OnEvent", function(this, event, ...)
@@ -27,7 +29,7 @@ function Events:RegisterEvents()
   end)
 
   function MyAddon:PLAYER_LOGIN() 
-    if  IsCleared ~=true then
+    if  IsCleared ==true then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
       TrackedActionsFrameScale=nill
@@ -35,7 +37,7 @@ function Events:RegisterEvents()
       TrackedActionsFrameCount=nill
       TrackedActionsDisplayedInRestZone =nill
       print("BS_ActionsTracker -reseted-")
-      IsCleared = true
+      IsCleared = false
   end
    
 
@@ -50,7 +52,26 @@ function Events:RegisterEvents()
   Config:ToggleConfigMode()
   end
   Config:UpdateUI()        
- end
+  end
+  function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
+    local a = ...
+        local trackedActions = Actions:GetTrackedActions()          
+      for actionID,v in pairs(trackedActions) do                     
+      if actionID == a then
+        trackedActions[actionID][7] = true
+      end 
+    end
+
+  end
+  function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
+    local a = ... 
+    local trackedActions = Actions:GetTrackedActions()          
+    for actionID,v in pairs(trackedActions) do                     
+    if actionID == a then
+      trackedActions[actionID][7] = false
+    end 
+  end
+  end
 end
 -- Revision version Build 0007 --
 

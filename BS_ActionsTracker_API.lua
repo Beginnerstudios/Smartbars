@@ -49,7 +49,7 @@ function API:GetPlayerAuraBySpellID(spellID)
         end
     else   
         local buffIndex
-       for buffIndex=1,40 do
+       for buffIndex=1,32 do
         local   name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, 
         buffID, canApply = UnitBuff("player", buffIndex)     
         if buffID ~=nill then 
@@ -58,7 +58,9 @@ function API:GetPlayerAuraBySpellID(spellID)
             end               
         end      
     end
-end       
+end
+   
+      
 end
 
 
