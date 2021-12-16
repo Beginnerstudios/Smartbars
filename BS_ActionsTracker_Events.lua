@@ -73,5 +73,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version Build 0008 ---
+-- Revision version v0.8 ---
 

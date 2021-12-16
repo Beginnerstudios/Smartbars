@@ -9,6 +9,7 @@
         "SlashCmdList",
         "nill",
         "ReloadUI",
+        "Nil",
         "C_Timer",
         "CreateFrame",
         "UIParent",
