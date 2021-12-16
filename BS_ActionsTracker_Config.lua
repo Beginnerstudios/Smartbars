@@ -113,4 +113,4 @@ function Config:ResetAll()
     TrackedActionsHideInRestZone=nill
     ReloadUI()
 end
--- Revision version Build 0007 --
+-- Revision version Build 0008 ---

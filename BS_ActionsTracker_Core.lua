@@ -36,7 +36,7 @@ C_Timer.After(5, function()
     Actions:InitTrackedActions(Actions:GetTrackedActions());
     UI:UpdateTrackedActions(Actions:GetTrackedActions()) 
 end)
--- Revision version Build 0007 --
+-- Revision version Build 0008 ---
 
 
 

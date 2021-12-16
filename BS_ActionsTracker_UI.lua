@@ -597,6 +597,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsFrameScale = frameScale
   trackedActionsHideInRestZone = hiddenInRestZone
 end
--- Revision version Build 0008 --
+-- Revision version Build 0008 ---
 
 
