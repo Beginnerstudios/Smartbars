@@ -4,7 +4,7 @@ BS_ActionsTracker.API ={};
 local API = BS_ActionsTracker.API;
 --Init------------------------------------
 function API:Init()
-   -- UI = BS_ActionsTracker.UI
+   Config = BS_ActionsTracker.Config
 end
 --Variables--------------------------------
 local trackedActions = {}
@@ -35,10 +35,6 @@ function API:IsUsableAction(action)
     local isUsable, notEnoughMana = IsUsableAction(action) 
     return notEnoughMana
 end
-function API:GetSpellCharges(actionID)
-  local currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetSpellCharges(spellId or "spellName")
-  return currentCharges
-end
 function API:GetPlayerAuraBySpellID(spellID)
     local version,build,date = GetBuildInfo()
     if version == "9.1.5" then
@@ -61,6 +57,18 @@ function API:GetPlayerAuraBySpellID(spellID)
 end
    
       
+end
+function API:GetActionCharges(slotID)
+ if Config:IsCurrentPatch() then
+  local currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetActionCharges(slotID)
+  if currentCharges == 0 then
+      return ""
+  else
+    return currentCharges
+  end
+ else
+    return ""
+ end
 end
 
 

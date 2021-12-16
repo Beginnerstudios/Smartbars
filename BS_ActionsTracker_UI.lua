@@ -175,7 +175,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
           if trackedActionsFrameCount<maximumTrackedBars then
             trackedActionsFrameCount = trackedActionsFrameCount+1        
             UI:CreateTrackedActionBar(#frames+1) 
-            UI:SetFrameFramePosition(#frames)                                        
+            UI:PositionFrame(#frames)                                        
             barsWidget.textValue:SetText(#frames)
             UI:ShowSecondaryFrames()           
           end
@@ -213,20 +213,25 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       return primaryFrame
   end
-  primaryFrame = PrimaryFrame()
-  secondaryFrame = CreateFrame("Frame","BS_ActionsTracker.secondaryFrame",UIParent);
-  secondaryFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
-  secondaryFrame:SetSize(100,100)
-  secondaryFrame:SetScript("OnUpdate", function ()
-    UI:UpdateTrackedActions(Actions:GetTrackedActions())
+  function SecondaryFrame()
+    secondaryFrame = CreateFrame("Frame","BS_ActionsTracker.secondaryFrame",UIParent);
+    secondaryFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
+    secondaryFrame:SetSize(100,100)
+    secondaryFrame:SetScript("OnUpdate", function ()
+      UI:UpdateTrackedActions(Actions:GetTrackedActions())
+  
+      local frameIndex = 1
+      while frames[frameIndex] do
+        UI:SortTrackedActions(Actions:GetTrackedActions(),frameIndex)
+        frameIndex = frameIndex +1 
+      end
+  
+      end)
+      return secondaryFrame
+  end
+ primaryFrame = PrimaryFrame()
+ secondaryFrame = SecondaryFrame()
 
-    local frameIndex = 1
-    while frames[frameIndex] do
-      UI:SortTrackedActions(Actions:GetTrackedActions(),frameIndex)
-      frameIndex = frameIndex +1 
-    end
-
-    end)
 end
 function UI:CreateTrackedActionBar(index)
   local function SecondaryFrame()
@@ -242,7 +247,11 @@ function UI:CreateTrackedActionBar(index)
     SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"OVERLAY");
     SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"RIGHT",0,0);
     SecondaryFrame.title:SetFontObject("GameFontHighlight")
-    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar,check to display only when BOOSTED.")   
+    if Config:IsCurrentPatch() then
+    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar,check to display only when BOOSTED.")
+    else
+    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar.") 
+    end   
     SecondaryFrame.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
     end
@@ -252,6 +261,14 @@ function UI:CreateTrackedActionBar(index)
   end 
   frames[#frames+1] = SecondaryFrame()
 end
+function UI:PositionFrame(frameIndex)
+  local i = frameIndex  
+  local xOffset = trackedSpellsFramePosition[i][1] 
+  local yOffset = trackedSpellsFramePosition[i][2]
+  local point = trackedSpellsFramePosition[i][3]
+  local relativePoint = trackedSpellsFramePosition[i][4]
+  frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+  end
 function UI:RemoveLastSecondaryFrame()
 local actions = Actions:GetTrackedActions()
 if frames[#frames] ~=nill then
@@ -362,6 +379,13 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
   end)
   return edit
 end
+function UI:CreateFontString(parentWidget,valueToSave,isEnabled)
+local fontString =parentWidget:CreateFontString(nil,"ARTWORK");
+fontString:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
+fontString:SetFont("Fonts\\FRIZQT__.TTF", 15,nil)
+fontString:SetText("Test");
+return fontString
+end
 function UI:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)
 local xOfs = 0
 local yOfs = -15
@@ -370,10 +394,10 @@ local newWidget = CreateFrame("Frame", "bs_newpg", parentWidget)
 newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
 
 newWidget.columnsText2 =newWidget:CreateFontString(nil,"ARTWORK");
-newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",15,yOfs);
-newWidget.columnsText2:SetFontObject(defaultFont)
+newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
+newWidget.columnsText2:SetFont("Fonts\\FRIZQT__.TTF", 15,"OUTLINE")
 newWidget.columnsText2:SetText(valueToSave[6]);
-
+if Config:IsCurrentPatch() then
 newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,"UICheckButtonTemplate")
 newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
 newWidget.showWhenBoosted:SetSize(20,20)
@@ -382,7 +406,7 @@ newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)
 newWidget.showWhenBoosted:SetScript("OnClick", function (self) 
  valueToSave[8]=self:GetChecked()
 end)
-
+end
 
 
 
@@ -413,38 +437,30 @@ if not isDisplayed then
 end
 return newWidget
 end
-function UI:ToggleEditbox(value)--Toggle edit boxes for edit in tracked actions
+function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
   for k,v in pairs(Actions:GetActions():Tracked()[1]) do
    if v[3]~=nill then
    v[3].edit:SetEnabled(value) 
    if value == true then
     v[3].group:Show()
+    v[3].charges:Hide()
    else
     v[3].group:Hide()
+    v[3].charges:Show()
    end
   end
 end
   
 
 end
-function UI:CreateTooltip()
-  local tooltip =CreateFrame( "GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
-  tooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
--- Allow tooltip SetX() methods to dynamically add new lines based on these
-tooltip:AddFontStrings(
-  tooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
-  tooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" ) );
-  return tooltip
+function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
+  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+  local function round2(num, numDecimalPlaces)
+    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+  end
+  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
+  
 end
-function UI:CreateFontString(parentWidget,text)
-  local fontString = parentWidget:CreateFontString(nil,"OVERLAY");
-  fontString:SetPoint("CENTER",parentWidget,"CENTER",0,0);
-  fontString:SetFontObject("GameFontHighlight")
-  fontString:SetText(text)   
-  fontString:SetAlpha(0)
-  return fontString
-end
-
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
 local trackedSpellsCount = Actions:GetActions().Tracked()[2];
@@ -460,14 +476,6 @@ else
 end
  UI:RefreshTrackedIcons(Actions:GetTrackedActions())
 end
-function UI:SetFrameFramePosition(frameIndex)
-local i = frameIndex  
-local xOffset = trackedSpellsFramePosition[i][1] 
-local yOffset = trackedSpellsFramePosition[i][2]
-local point = trackedSpellsFramePosition[i][3]
-local relativePoint = trackedSpellsFramePosition[i][4]
-frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
-end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
   
   local actions = trackedActionsTable
@@ -482,7 +490,13 @@ if actions ~=nill then
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
-    if UI:IsValueSame(actionSpec,userSpec) then               
+    
+    if UI:IsValueSame(actionSpec,userSpec) then
+      local chargesText = API:GetActionCharges(slotID)
+      if chargesText then
+        widget.charges:SetText(chargesText)
+      end
+                 
       if configMode or isBoosted then 
         widget:Show()
       else             
@@ -557,35 +571,24 @@ end
 function UI:GetActionBar(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
 return frames[frameIndex]
 end
-function UI:GetFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
-  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
-  local function round2(num, numDecimalPlaces)
-    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-  end
-  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-  
+function UI:GetPrimaryFrame()
+  return primaryFrame
 end
 --Saved Variables------
 function UI:GetTrackedActionsColumnCount()
 return trackedActionsColumnCount
 end
-function UI:GetTrackedActionsFrameCount()  
+function UI:GetTrackedActionsFrameCount()  ---
  return trackedActionsFrameCount 
 end
 function UI:GetTrackedActionsFramesPosition()
   for i=1,#frames do
-  trackedSpellsFramePosition[i]=UI:GetFramePosition(i)
+  trackedSpellsFramePosition[i]=UI:CalculateFramePosition(i)
   end
   return trackedSpellsFramePosition
 end
 function UI:GetTrackedActionsHideInSaveZones()
   return trackedActionsHideInRestZone
-end
-function UI:GetPrimaryFrame()
-return primaryFrame
-end
-function UI:GetSecondaryFrame()
-  return secondaryFrame
 end
 function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hiddenInRestZone)
   trackedActionsColumnCount = columnCount
@@ -594,9 +597,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsFrameScale = frameScale
   trackedActionsHideInRestZone = hiddenInRestZone
 end
-function UI:GetFrames()
-  return frames
-end
--- Revision version Build 0007 --
+-- Revision version Build 0008 --
 
 

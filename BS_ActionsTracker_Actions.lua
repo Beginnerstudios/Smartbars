@@ -45,20 +45,19 @@ function Actions:AddTrackedAction(action)
     if  trackedActions[actionID]then              
       Actions:DeleteTrackedAction(action)
     else  
-      Actions:CreateTrackedAction(action,true,false)      
+      Actions:CreateTrackedAction(action,true,false,false)      
     end          
-    UI:UpdateUI()
-    
+    UI:UpdateUI()    
 end                                                               
 function Actions:InitTrackedActions(actions)
     if actions ~=nill then                 
     for actionID,v in pairs(actions) do                     
-    Actions:CreateTrackedAction(actions[actionID],false,true)
+    Actions:CreateTrackedAction(actions[actionID],false,true,true)
     end       
     end
     UI:UpdateUI()
 end  
-function Actions:CreateTrackedAction(action,isEnabled,isExisting)
+function Actions:CreateTrackedAction(action,isEnabled,isExisting,isDisplayed)
     local actionID = action[2] 
     local curretSpec = nill
     local trackedFrame = nill
@@ -75,26 +74,27 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting)
     end  
     trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)
-    
+    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)    
+    trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],trackedActions[actionID],isDisplayed)    
 end
 function Actions:DeleteTrackedAction(action)
     local actionID = action[2]
     trackedActions[actionID][3]:Hide() 
     trackedActions[actionID]=nill
-end
+end  
 --Getters & Setters,Reset-----------------------------
-function Actions:SetTrackedActions(tActions)
-    trackedActions = tActions
-end   
-function Actions:GetTrackedActions()
-    return trackedActions
-end   
 function Actions:GetCurrentSpecialization()
     return currentSpecialization
 end  
 function Actions:SetCurrentSpecialization()
     currentSpecialization = API:GetSpecialization()
 end  
+--Saved Variables-----------------------------
+function Actions:SetTrackedActions(tActions)
+    trackedActions = tActions
+end   
+function Actions:GetTrackedActions()
+    return trackedActions
+end 
 
--- Revision version Build 0007 --
+-- Revision version Build 0008 --

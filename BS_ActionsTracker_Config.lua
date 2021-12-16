@@ -28,11 +28,11 @@ function Config:ToggleConfigMode()
     UI:GetPrimaryFrame():Show()
     UI:ShowSecondaryFrames()
     isConfigMode = true       
-    UI:ToggleEditbox(true)    
+    UI:ToggleWidgets(true)    
     else
         UI:GetPrimaryFrame():Hide()
         UI:HideSecondaryFrames()                                           
-        UI:ToggleEditbox(false)
+        UI:ToggleWidgets(false)
         Config:SaveConfig()
         isPrimaryFrameVisible = false
         isConfigMode = false  

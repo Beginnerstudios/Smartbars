@@ -26,12 +26,12 @@ Actions:SetCurrentSpecialization()
 
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker -loaded-  BUILD0007\n    Type /bs for settings.\n")   
+    print("BS_ActionsTracker v0.8 - /bs for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrame();
     for i=1,UI:GetTrackedActionsFrameCount(),1 do
     UI:CreateTrackedActionBar(i)
-    UI:SetFrameFramePosition(i)
+    UI:PositionFrame(i)
     end
     Actions:InitTrackedActions(Actions:GetTrackedActions());
     UI:UpdateTrackedActions(Actions:GetTrackedActions()) 
