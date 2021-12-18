@@ -70,5 +70,8 @@ function API:GetActionCharges(slotID)
     return ""
  end
 end
+function API:GetSpellInfo(spellID)
+    return GetSpellInfo(spellID)
+end
 -- Revision version v0.8 ---
 

@@ -43,7 +43,7 @@ end
 function Actions:AddTrackedAction(action)
     local actionID = action[2]  
     if  trackedActions[actionID]then              
-      Actions:DeleteTrackedAction(action)
+      Actions:DeleteAction(actionID)
     else  
       Actions:CreateTrackedAction(action,true,false,false)      
     end          
@@ -77,11 +77,26 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting,isDisplayed)
     trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)    
     trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],trackedActions[actionID],isDisplayed)    
 end
-function Actions:DeleteTrackedAction(action)
-    local actionID = action[2]
-    trackedActions[actionID][3]:Hide() 
-    trackedActions[actionID]=nill
-end  
+function Actions:FindSpellIDbySlotID(slotID) 
+    local tA = trackedActions
+    local spellID = nill
+    for k,v in pairs(tA) do              
+        if tA[k][1] == slotID then
+            spellID = tA[k][2]                
+        end
+    end
+    return spellID
+end
+function Actions:DeleteAction(spellID)
+    if trackedActions[spellID] ~=nill then 
+    trackedActions[spellID][3]:Hide() 
+    trackedActions[spellID]=nill 
+    local spellName = API:GetSpellInfo(spellID)
+    print ("BS_ActionsTracker - Tracked action removed - "..spellName.." - you changed spell position in action bar.") 
+    end
+    Config:ToggleConfigMode()
+    Config:ToggleConfigMode()
+end
 --Getters & Setters,Reset-----------------------------
 function Actions:GetCurrentSpecialization()
     return currentSpecialization

@@ -10,6 +10,7 @@ Config = BS_ActionsTracker.Config
 UI = BS_ActionsTracker.UI
 end
 --Variables-------------------------------
+local changingSlot = nill
 --Events:Functions------------------------
 
 function Events:RegisterEvents()
@@ -17,6 +18,7 @@ function Events:RegisterEvents()
   local frame = CreateFrame("Frame")
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
+  frame:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 
   if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
@@ -42,6 +44,18 @@ function Events:RegisterEvents()
    
 
   Config:SetDefaults()
+  end
+  function MyAddon:ACTIONBAR_SLOT_CHANGED(...) 
+  local slotID = ...
+   if changingSlot == nill then
+     changingSlot = slotID
+   elseif changingSlot == slotID then
+    changingSlot = nill
+   elseif changingSlot~=slotID and changingSlot ~=nill then
+    local spellID = Actions:FindSpellIDbySlotID(changingSlot)
+    Actions:DeleteAction(spellID)
+    changingSlot = nill
+   end     
   end
   function MyAddon:PLAYER_LOGOUT()   
   --when player logout
