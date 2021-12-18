@@ -10,6 +10,8 @@ function Config:Init()
     Global = BS_ActionsTracker.Global
 end
 --Config:Functions------------------------
+local isConfigMode = false
+--Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
     SlashCmdList["BS"] = function(msg)
@@ -18,16 +20,18 @@ function Config:CreateCommands()
 end
 function Config:ToggleConfigMode()
     local primaryFrame = UI:Get():PrimaryFrame()
-    local usedActions = Actions.Get():Used()[1]
+    local usedActions = Actions:GetUsed()
 
     if not primaryFrame:IsVisible() then    
         UI:DisplayActions(usedActions,primaryFrame);  
-        primaryFrame:Show()              
+        primaryFrame:Show()   
+        isConfigMode =true           
         UI:ToggleWidgets(true)            
     else
         primaryFrame:Hide()                                               
         UI:ToggleWidgets(false)
         Config:SaveConfig()
+        isConfigMode =false 
 end
 UI:UpdateUI()
 end
@@ -35,7 +39,7 @@ function Config:SaveConfig()
     TrackedSpellsFramePosition = UI:Get():ActionBarsPositions()
     TrackedActionsColumnCount = UI:Get():ColumnCount()
     TrackedActionsFrameScale = UI:Get():ActionBar(1):GetScale()
-    TrackedSpellsCharacter = Actions:Get():Tracked()[1]
+    TrackedSpellsCharacter = Actions:GetTracked()
     TrackedActionsFrameCount = UI:Get():ActionBarCount()
     TrackedActionsHideInRestZone =UI:Get():HideInSaveZone()
 end
@@ -78,6 +82,9 @@ if API:GetBuildInfo() == "9.1.5" or API:GetBuildInfo() == "9.2.0" then
 else
     return false
 end
+end
+function Config:IsConfigMode()
+ return isConfigMode
 end
 function Config:ResetAll()
     TrackedSpellsFramePosition = nill

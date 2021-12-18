@@ -55,7 +55,7 @@ function Events:RegisterEvents()
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
-        local trackedActions = Actions:Get():Tracked()[1]          
+        local trackedActions = Actions:GetTracked()         
       for actionID,v in pairs(trackedActions) do                     
       if actionID == a then
         trackedActions[actionID][7] = true
@@ -65,7 +65,7 @@ function Events:RegisterEvents()
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
-    local trackedActions = Actions:Get():Tracked()[1]          
+    local trackedActions = Actions:GetTracked()               
     for actionID,v in pairs(trackedActions) do                     
     if actionID == a then
       trackedActions[actionID][7] = false

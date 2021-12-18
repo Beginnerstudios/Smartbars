@@ -27,7 +27,7 @@ C_Timer.After(5, function()
     UI:CreateTrackedActionBar(i)
     UI:PositionFrame(i)
     end
-    Actions:Load(Actions:Get():Tracked()[1]);
+    Actions:Load(Actions:GetTracked());
 end)
 -- Revision version v0.8.2 ---
 

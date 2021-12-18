@@ -11,38 +11,29 @@ end
 local trackedActions = {}
 local currentSpecialization =0
 --Actions:Functions-----------------------
-function Actions:Get()                         
- local returnTable =
-        {                         
-            Used = function(self)
-                local slotCount = 120
-                local allSlotTable = {}
-                for i=1,slotCount do
-                local actionType,actionID,subType = API:GetActionInfo(i)
-                if actionID ~=nil then
+function Actions:GetUsed()                                                           
+local slotCount = 120
+local allSlotTable = {}
+    for i=1,slotCount do
+        local actionType,actionID,subType = API:GetActionInfo(i)
+             if actionID ~=nil then
                 allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization}           --- [1]slot id [2]spellID
             end
-          end
-          local count = 0
-          for _ in pairs(allSlotTable) do count = count + 1 end    
-         return {allSlotTable,count}
-                               
-            end,        
-            Tracked = function(self)                                              
-                local count = 0
-                for _,v in pairs(trackedActions) do
-                    if v[5] == API:GetSpecialization() then
-                    count = count + 1 
-                    end                  
-                end                            
-                return  {trackedActions,count}  
-            end,
-            CurrentSpec = function(self)                                              
-                                         
-                return  currentSpecialization
-            end
-        }
-return returnTable
+    end     
+return allSlotTable
+end
+function Actions:GetTracked()
+    return trackedActions
+end
+function Actions:GetTableCount(tableArg)
+    local count = 0
+    if tableArg ~=nill then
+        for _ in pairs(tableArg) do count = count + 1 end    
+    end
+    return count      
+end
+function Actions:GetSpec()
+    return  currentSpecialization  
 end
 function Actions:Add(action)
     local actionID = action[2]  

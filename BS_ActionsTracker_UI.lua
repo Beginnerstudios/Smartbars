@@ -222,13 +222,13 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
     secondaryFrame:SetSize(100,100)
     secondaryFrame:SetScript("OnUpdate", function ()
 
-      local tActions = Actions:Get():Tracked()[1]
-      UI:UpdateTrackedActions(tActions)
+      local tActions = Actions:GetTracked()
+       UI:UpdateTrackedActions(tActions)
   
-      local frameIndex = 1
-      while frames[frameIndex] do
-        UI:SortTrackedActions(tActions,frameIndex)
-        frameIndex = frameIndex +1 
+     local frameIndex = 1
+    while frames[frameIndex] do
+       UI:SortTrackedActions(tActions,frameIndex)
+      frameIndex = frameIndex +1 
       end
   
       end)
@@ -275,15 +275,15 @@ function UI:PositionFrame(frameIndex)
   frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
   end
 function UI:RemoveLastSecondaryFrame()
-local actions = Actions:Get():Tracked()[1]
+local actions = Actions:GetTracked()
 if frames[#frames] ~=nill then
 frames[#frames]:Hide()  
 end
-for k,v in pairs(Actions:Get():Tracked()[1]) do
+for k,v in pairs(Actions:GetTracked()) do
   if actions[k][6] == #frames then
     actions[k][6]= trackedActionsFrameCount
     actions[k][3]:SetParent(UI:Get():ActionBar(trackedActionsFrameCount))
-    actions[k][3].group.columnsText2:SetText(Actions:Get():Tracked()[1][k][6])
+    actions[k][3].group.columnsText2:SetText(Actions:GetTracked()[k][6])
   end
 end
 frames[trackedActionsFrameCount+1] = nill
@@ -308,7 +308,6 @@ function UI:CalculateFramePosition(frameIndex)  --return frame from table "frame
   return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
   
 end
-
 --UI:Actions-------------------------------
 function UI:DisplayActions(actions,frame) --Create widgets for selected actions under selected frame parent
   local xOffstet = 0;
@@ -335,8 +334,8 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     count=0
     end
     --Compare widgets with tracked actions
-    for q,v in pairs(Actions:Get():Tracked()[1]) do
-    if UI:IsValueSame(actions[k][2],v[2]) and UI:IsValueSame(v[5],Actions:Get():CurrentSpec()) then
+    for q,v in pairs(Actions:GetTracked()) do
+    if UI:IsValueSame(actions[k][2],v[2]) and UI:IsValueSame(v[5],Actions:GetSpec()) then
       actions[k][3]:SetChecked(true)
      end
     end
@@ -437,7 +436,7 @@ end
 return newWidget
 end
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
-  for k,v in pairs(Actions:Get():Tracked()[1]) do
+  for k,v in pairs(Actions:GetTracked()) do
    if v[3]~=nill then
    v[3].edit:SetEnabled(value) 
    if value == true then
@@ -464,9 +463,9 @@ end
 
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
-local trackedSpellsCount = Actions:Get().Tracked()[2];
-local usedSpellsCount = Actions:Get().Used()[2];
-local trackedActions = Actions:Get().Tracked()[1]
+local trackedSpellsCount = Actions:GetTableCount(Actions:GetTracked());
+local usedSpellsCount = Actions:GetTableCount(Actions:GetUsed());
+local trackedActions = Actions:GetTracked()
   --Header Primary frame dynamic values
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
   primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
@@ -490,8 +489,8 @@ end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
   
   local actions = trackedActionsTable
-  local configMode = UI:Get():PrimaryFrame():IsVisible()
-  local userSpec = Actions:Get():CurrentSpec()
+  local configMode = Config:IsConfigMode()
+  local userSpec = Actions:GetSpec()
   local isResting = IsResting()
   
 if actions ~=nill then
