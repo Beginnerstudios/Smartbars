@@ -21,6 +21,9 @@ local trackedActionsFrameCount = 1--SV
 local maximumTrackedBars =5
 local trackedActionsHideInRestZone --SV
 
+
+
+
 --UI:Frames-------------------------------
 function UI:CreatePrimaryFrame()  --create primary/secondary frame config/trackedaction bars 
   local function PrimaryFrame()
@@ -177,7 +180,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
             UI:CreateTrackedActionBar(#frames+1) 
             UI:PositionFrame(#frames)                                        
             barsWidget.textValue:SetText(#frames)
-            UI:ShowSecondaryFrames()           
+            UI:ToggleWidgets(true)           
           end
         end)
         return barsWidget
@@ -218,11 +221,13 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
     secondaryFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
     secondaryFrame:SetSize(100,100)
     secondaryFrame:SetScript("OnUpdate", function ()
-      UI:UpdateTrackedActions(Actions:GetTrackedActions())
+
+      local tActions = Actions:Get():Tracked()[1]
+      UI:UpdateTrackedActions(tActions)
   
       local frameIndex = 1
       while frames[frameIndex] do
-        UI:SortTrackedActions(Actions:GetTrackedActions(),frameIndex)
+        UI:SortTrackedActions(tActions,frameIndex)
         frameIndex = frameIndex +1 
       end
   
@@ -239,7 +244,7 @@ function UI:CreateTrackedActionBar(index)
     function Frame()
     SecondaryFrame:SetScale(trackedActionsFrameScale)
     UI:SetFrameMoveable(SecondaryFrame)
-    SecondaryFrame:SetMovable(false)
+    SecondaryFrame:SetMovable(true)
     SecondaryFrame:SetSize(150,75);
    -- SecondaryFrame:SetPoint("CENTER",secondaryFrame,"CENTER",300,(trackedActionsFrameCount*200)*-1);
     end
@@ -270,15 +275,15 @@ function UI:PositionFrame(frameIndex)
   frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
   end
 function UI:RemoveLastSecondaryFrame()
-local actions = Actions:GetTrackedActions()
+local actions = Actions:Get():Tracked()[1]
 if frames[#frames] ~=nill then
 frames[#frames]:Hide()  
 end
-for k,v in pairs(Actions:GetTrackedActions()) do
+for k,v in pairs(Actions:Get():Tracked()[1]) do
   if actions[k][6] == #frames then
     actions[k][6]= trackedActionsFrameCount
-    actions[k][3]:SetParent(UI:GetActionBar(trackedActionsFrameCount))
-    actions[k][3].group.columnsText2:SetText(Actions:GetTrackedActions()[k][6])
+    actions[k][3]:SetParent(UI:Get():ActionBar(trackedActionsFrameCount))
+    actions[k][3].group.columnsText2:SetText(Actions:Get():Tracked()[1][k][6])
   end
 end
 frames[trackedActionsFrameCount+1] = nill
@@ -295,21 +300,15 @@ function UI:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
-function UI:ShowSecondaryFrames()
-  for i=1,#frames do
-  UI:GetActionBar(i):SetMovable(true) 
-  UI:GetActionBar(i):EnableMouse(true) 
-  UI:GetActionBar(i).title:SetAlpha(1)    
-  UI:GetActionBar(i):Show()
+function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
+  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+  local function round2(num, numDecimalPlaces)
+    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
   end
+  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
+  
 end
-function UI:HideSecondaryFrames()
-  for i=1,#frames do
-  UI:GetActionBar(i):SetMovable(false) 
-  UI:GetActionBar(i):EnableMouse(false) 
-  UI:GetActionBar(i).title:SetAlpha(0)    
-  end
-end
+
 --UI:Actions-------------------------------
 function UI:DisplayActions(actions,frame) --Create widgets for selected actions under selected frame parent
   local xOffstet = 0;
@@ -336,14 +335,14 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     count=0
     end
     --Compare widgets with tracked actions
-    for q,v in pairs(Actions:GetActions():Tracked()[1]) do
-    if actions[k][2] == v[2] and v[5] == Actions:GetCurrentSpecialization() then
+    for q,v in pairs(Actions:Get():Tracked()[1]) do
+    if UI:IsValueSame(actions[k][2],v[2]) and UI:IsValueSame(v[5],Actions:Get():CurrentSpec()) then
       actions[k][3]:SetChecked(true)
      end
     end
     -- ACTION WIDGETS -- EVENTS
     actions[k][3]:SetScript("OnClick",function (self) 
-    Actions:AddTrackedAction(actions[k]) end)
+    Actions:Add(actions[k]) end)
   end  
 displayedActions = actions
  UI:UpdateUI()
@@ -438,7 +437,7 @@ end
 return newWidget
 end
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
-  for k,v in pairs(Actions:GetActions():Tracked()[1]) do
+  for k,v in pairs(Actions:Get():Tracked()[1]) do
    if v[3]~=nill then
    v[3].edit:SetEnabled(value) 
    if value == true then
@@ -449,22 +448,25 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     v[3].charges:Show()
    end
   end
+  for i=1,#frames do
+    frames[i]:SetMovable(value) 
+    frames[i]:EnableMouse(value) 
+      if value == true then
+        frames[i].title:SetAlpha(1) 
+      else
+        frames[i].title:SetAlpha(0) 
+      end
+  end
 end
   
 
 end
-function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
-  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
-  local function round2(num, numDecimalPlaces)
-    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-  end
-  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-  
-end
+
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
-local trackedSpellsCount = Actions:GetActions().Tracked()[2];
-local usedSpellsCount = Actions:GetActions().Used()[2];
+local trackedSpellsCount = Actions:Get().Tracked()[2];
+local usedSpellsCount = Actions:Get().Used()[2];
+local trackedActions = Actions:Get().Tracked()[1]
   --Header Primary frame dynamic values
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
   primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
@@ -472,15 +474,24 @@ local usedSpellsCount = Actions:GetActions().Used()[2];
 if usedSpellsCount<12 then
   primaryFrame:SetHeight(400)
 else
+
   primaryFrame:SetHeight(usedSpellsCount/6*60+150)
 end
- UI:RefreshTrackedIcons(Actions:GetTrackedActions())
+  function RefreshTrackedIcons()
+  for k,v in pairs(trackedActions) do
+    if v[3]~=nill then
+      local newTexture= API:GetActionTexture(v[1])
+      v[3]:SetNormalTexture(newTexture)   
+    end
+  end
+  end
+RefreshTrackedIcons()
 end
 function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
   
   local actions = trackedActionsTable
-  local configMode = Config:IsConfigMode()
-  local userSpec = Actions:GetCurrentSpecialization()
+  local configMode = UI:Get():PrimaryFrame():IsVisible()
+  local userSpec = Actions:Get():CurrentSpec()
   local isResting = IsResting()
   
 if actions ~=nill then
@@ -490,13 +501,12 @@ if actions ~=nill then
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
-    
+     
     if UI:IsValueSame(actionSpec,userSpec) then
-      local chargesText = API:GetActionCharges(slotID)
-      if chargesText then
-        widget.charges:SetText(chargesText)
-      end
-                 
+      local chargesText = API:GetActionCharges(slotID)    
+      widget.charges:SetText(chargesText)
+    
+              
       if configMode or isBoosted then 
         widget:Show()
       else             
@@ -540,7 +550,7 @@ function UI:SortTrackedActions(trackedActions,sortNumber)
   local widget = trackedActions[actionID][3]
   if frameNumber == sortNumber then
   if widget:IsVisible() == true then    ----Sort tracked actions
-  widget:SetPoint("LEFT",UI:GetActionBar(frameNumber),"LEFT",startxOffset,startyOffset)
+  widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
   --widget.edit:SetPoint("CENTER",widget,"CENTER",2,0)
   startxOffset = startxOffset +50
   count = count + 1
@@ -552,14 +562,6 @@ end
 end
 end
 end
-function UI:RefreshTrackedIcons(trackedActions)
-  for k,v in pairs(trackedActions) do
-    if v[3]~=nill then
-      local newTexture= API:GetActionTexture(v[1])
-      v[3]:SetNormalTexture(newTexture)   
-    end
-  end
-end
 function UI:IsValueSame(value1,value2)
   if value1 == value2 then
     return true
@@ -568,27 +570,35 @@ function UI:IsValueSame(value1,value2)
   end
 end
 --Getters & Setters-----------------------------
-function UI:GetActionBar(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
-return frames[frameIndex]
-end
-function UI:GetPrimaryFrame()
-  return primaryFrame
-end
---Saved Variables------
-function UI:GetTrackedActionsColumnCount()
-return trackedActionsColumnCount
-end
-function UI:GetTrackedActionsFrameCount()  ---
- return trackedActionsFrameCount 
-end
-function UI:GetTrackedActionsFramesPosition()
-  for i=1,#frames do
-  trackedSpellsFramePosition[i]=UI:CalculateFramePosition(i)
-  end
-  return trackedSpellsFramePosition
-end
-function UI:GetTrackedActionsHideInSaveZones()
-  return trackedActionsHideInRestZone
+function UI:Get()                         
+  local returnTable =
+         {                         
+             ActionBar = function(self,barIndex)             
+                return frames[barIndex]                             
+             end,        
+             ColumnCount = function(self)                                                             
+                return trackedActionsColumnCount
+             end,
+             CurrentSpec = function(self)                                                                                    
+                return  currentSpecialization
+             end,
+             ActionBarCount = function(self)                                                                                    
+              return  trackedActionsFrameCount
+             end,
+             ActionBarsPositions = function(self) 
+              for i=1,#frames do
+                trackedSpellsFramePosition[i]=UI:CalculateFramePosition(i)
+                end
+                return trackedSpellsFramePosition         
+             end,
+             HideInSaveZone = function(self)                                                                                    
+              return  trackedActionsHideInRestZone
+             end,
+             PrimaryFrame = function(self)                                                                                    
+              return  primaryFrame
+             end            
+         }
+ return returnTable
 end
 function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hiddenInRestZone)
   trackedActionsColumnCount = columnCount

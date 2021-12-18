@@ -10,15 +10,12 @@ Config = BS_ActionsTracker.Config
 UI = BS_ActionsTracker.UI
 end
 --Variables-------------------------------
-local changingSlot = nill
 --Events:Functions------------------------
-
 function Events:RegisterEvents()
   MyAddon = { }
   local frame = CreateFrame("Frame")
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
-  frame:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 
   if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
@@ -31,7 +28,7 @@ function Events:RegisterEvents()
   end)
 
   function MyAddon:PLAYER_LOGIN() 
-    if  IsCleared ==true then
+    if IsCleared ==true or IsCleared == nill then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
       TrackedActionsFrameScale=nill
@@ -45,31 +42,20 @@ function Events:RegisterEvents()
 
   Config:SetDefaults()
   end
-  function MyAddon:ACTIONBAR_SLOT_CHANGED(...) 
-  local slotID = ...
-   if changingSlot == nill then
-     changingSlot = slotID
-   elseif changingSlot == slotID then
-    changingSlot = nill
-   elseif changingSlot~=slotID and changingSlot ~=nill then
-    local spellID = Actions:FindSpellIDbySlotID(changingSlot)
-    Actions:DeleteAction(spellID)
-    changingSlot = nill
-   end     
-  end
   function MyAddon:PLAYER_LOGOUT()   
   --when player logout
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
-  if Config:IsPrimaryFrameVisible() then
+  local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
+  if primaryIsVisible then
   Config:ToggleConfigMode()
   end
-  Config:UpdateUI()        
+  UI:UpdateUI()        
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
-        local trackedActions = Actions:GetTrackedActions()          
+        local trackedActions = Actions:Get():Tracked()[1]          
       for actionID,v in pairs(trackedActions) do                     
       if actionID == a then
         trackedActions[actionID][7] = true
@@ -79,7 +65,7 @@ function Events:RegisterEvents()
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
-    local trackedActions = Actions:GetTrackedActions()          
+    local trackedActions = Actions:Get():Tracked()[1]          
     for actionID,v in pairs(trackedActions) do                     
     if actionID == a then
       trackedActions[actionID][7] = false
@@ -87,5 +73,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8 ---
+-- Revision version v0.8.2 ---
 

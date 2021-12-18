@@ -17,26 +17,19 @@ Config:Init()
 Events:Init()
 API:Init()
 --Program run-----------------------------
-
-
-
 Events:RegisterEvents()
-Actions:SetCurrentSpecialization()
-
-
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker v0.8.1 - /bs for settings.\n")   
+    print("BS_ActionsTracker v0.8.2 - /bs for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrame();
-    for i=1,UI:GetTrackedActionsFrameCount(),1 do
+    for i=1,UI:Get():ActionBarCount(),1 do
     UI:CreateTrackedActionBar(i)
     UI:PositionFrame(i)
     end
-    Actions:InitTrackedActions(Actions:GetTrackedActions());
-    UI:UpdateTrackedActions(Actions:GetTrackedActions()) 
+    Actions:Load(Actions:Get():Tracked()[1]);
 end)
--- Revision version v0.8 ---
+-- Revision version v0.8.2 ---
 
 
 

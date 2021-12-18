@@ -11,7 +11,7 @@ end
 local trackedActions = {}
 local currentSpecialization =0
 --Actions:Functions-----------------------
-function Actions:GetActions()                         
+function Actions:Get()                         
  local returnTable =
         {                         
             Used = function(self)
@@ -36,28 +36,32 @@ function Actions:GetActions()
                     end                  
                 end                            
                 return  {trackedActions,count}  
-            end                                           
+            end,
+            CurrentSpec = function(self)                                              
+                                         
+                return  currentSpecialization
+            end
         }
 return returnTable
 end
-function Actions:AddTrackedAction(action)
+function Actions:Add(action)
     local actionID = action[2]  
     if  trackedActions[actionID]then              
-      Actions:DeleteAction(actionID)
+      Actions:Delete(actionID)
     else  
-      Actions:CreateTrackedAction(action,true,false,false)      
+      Actions:Create(action,true,false,false)      
     end          
     UI:UpdateUI()    
 end                                                               
-function Actions:InitTrackedActions(actions)
+function Actions:Load(actions)
     if actions ~=nill then                 
-    for actionID,v in pairs(actions) do                     
-    Actions:CreateTrackedAction(actions[actionID],false,true,true)
-    end       
+        for actionID in pairs(actions) do                     
+        Actions:Create(actions[actionID],false,true,true)
+        end       
     end
     UI:UpdateUI()
 end  
-function Actions:CreateTrackedAction(action,isEnabled,isExisting,isDisplayed)
+function Actions:Create(action,isEnabled,isExisting,isDisplayed)
     local actionID = action[2] 
     local curretSpec = nill
     local trackedFrame = nill
@@ -72,44 +76,22 @@ function Actions:CreateTrackedAction(action,isEnabled,isExisting,isDisplayed)
         trackedFrame = 1   
         showOnlyWhenBoosted = false
     end  
-    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:GetActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted} 
+    trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted} 
     trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled)    
-    trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],trackedActions[actionID],isDisplayed)    
+    trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled) 
+    trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],trackedActions[actionID],isDisplayed)   
+
 end
-function Actions:FindSpellIDbySlotID(slotID) 
-    local tA = trackedActions
-    local spellID = nill
-    for k,v in pairs(tA) do              
-        if tA[k][1] == slotID then
-            spellID = tA[k][2]                
-        end
-    end
-    return spellID
-end
-function Actions:DeleteAction(spellID)
-    if trackedActions[spellID] ~=nill then 
-    trackedActions[spellID][3]:Hide() 
-    trackedActions[spellID]=nill 
-    local spellName = API:GetSpellInfo(spellID)
-    print ("BS_ActionsTracker - Tracked action removed - "..spellName.." - you changed spell position in action bar.") 
-    end
-    Config:ToggleConfigMode()
-    Config:ToggleConfigMode()
-end
---Getters & Setters,Reset-----------------------------
-function Actions:GetCurrentSpecialization()
-    return currentSpecialization
+function Actions:Delete(actionID)
+    trackedActions[actionID][3]:Hide() 
+    trackedActions[actionID]=nill
+   
 end  
-function Actions:SetCurrentSpecialization()
-    currentSpecialization = API:GetSpecialization()
+--Getters & Setters,Reset----------------------------- 
+function Actions:SetCurrentSpecialization(spec)
+    currentSpecialization = spec
 end  
---Saved Variables-----------------------------
 function Actions:SetTrackedActions(tActions)
     trackedActions = tActions
 end   
-function Actions:GetTrackedActions()
-    return trackedActions
-end 
-
--- Revision version v0.8 ---
+-- Revision version v0.8.2 --

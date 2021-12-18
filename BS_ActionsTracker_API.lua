@@ -35,9 +35,8 @@ function API:IsUsableAction(action)
     local isUsable, notEnoughMana = IsUsableAction(action) 
     return notEnoughMana
 end
-function API:GetPlayerAuraBySpellID(spellID)
-    local version,build,date = GetBuildInfo()
-    if version == "9.1.5" then
+function API:GetPlayerAuraBySpellID(spellID)   
+    if Config:IsCurrentPatch() then
         if GetPlayerAuraBySpellID(spellID) == nill then
         return false
         else 
@@ -70,8 +69,5 @@ function API:GetActionCharges(slotID)
     return ""
  end
 end
-function API:GetSpellInfo(spellID)
-    return GetSpellInfo(spellID)
-end
--- Revision version v0.8 ---
+-- Revision version v0.8.2 ---
 

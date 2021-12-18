@@ -9,10 +9,6 @@ function Config:Init()
     Actions = BS_ActionsTracker.Actions
     Global = BS_ActionsTracker.Global
 end
---Config:Variables------------------------
-local isConfigMode = false
-local isPrimaryFrameVisible = false
-
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -21,31 +17,27 @@ function Config:CreateCommands()
     end
 end
 function Config:ToggleConfigMode()
-    if not Config:IsPrimaryFrameVisible() then    
-    isPrimaryFrameVisible = true
-    UI:UpdateUI()
-    UI:DisplayActions(Actions.GetActions():Used()[1],UI:GetPrimaryFrame());  
-    UI:GetPrimaryFrame():Show()
-    UI:ShowSecondaryFrames()
-    isConfigMode = true       
-    UI:ToggleWidgets(true)    
+    local primaryFrame = UI:Get():PrimaryFrame()
+    local usedActions = Actions.Get():Used()[1]
+
+    if not primaryFrame:IsVisible() then    
+        UI:DisplayActions(usedActions,primaryFrame);  
+        primaryFrame:Show()              
+        UI:ToggleWidgets(true)            
     else
-        UI:GetPrimaryFrame():Hide()
-        UI:HideSecondaryFrames()                                           
+        primaryFrame:Hide()                                               
         UI:ToggleWidgets(false)
         Config:SaveConfig()
-        isPrimaryFrameVisible = false
-        isConfigMode = false  
-    end
-
+end
+UI:UpdateUI()
 end
 function Config:SaveConfig()
-    TrackedSpellsFramePosition = UI:GetTrackedActionsFramesPosition()
-    TrackedActionsColumnCount = UI:GetTrackedActionsColumnCount()
-    TrackedActionsFrameScale = UI:GetActionBar(1):GetScale()
-    TrackedSpellsCharacter = Actions:GetTrackedActions()
-    TrackedActionsFrameCount = UI:GetTrackedActionsFrameCount()
-    TrackedActionsHideInRestZone =UI:GetTrackedActionsHideInSaveZones()
+    TrackedSpellsFramePosition = UI:Get():ActionBarsPositions()
+    TrackedActionsColumnCount = UI:Get():ColumnCount()
+    TrackedActionsFrameScale = UI:Get():ActionBar(1):GetScale()
+    TrackedSpellsCharacter = Actions:Get():Tracked()[1]
+    TrackedActionsFrameCount = UI:Get():ActionBarCount()
+    TrackedActionsHideInRestZone =UI:Get():HideInSaveZone()
 end
 function Config:LoadConfig()
 UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone)
@@ -80,23 +72,6 @@ function Config:SetDefaults()
     TrackedActionsFrameScale = 1
     end   
 end
-function Config:UpdateUI()
-UI:UpdateUI()
-end
-function Config:IsPrimaryFrameVisible()
-    if isPrimaryFrameVisible then
-    return true
-    else
-    return false
-    end
-end
-function Config:IsConfigMode()
-    if isConfigMode then
-        return true
-        else
-        return false
-        end 
-end
 function Config:IsCurrentPatch()
 if API:GetBuildInfo() == "9.1.5" or API:GetBuildInfo() == "9.2.0" then
     return true
@@ -113,4 +88,4 @@ function Config:ResetAll()
     TrackedActionsHideInRestZone=nill
     ReloadUI()
 end
--- Revision version v0.8 ---
+-- Revision version v0.8.2 ---
