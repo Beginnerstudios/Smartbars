@@ -122,7 +122,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
         alphaWidget.slider:SetWidth(100)
         alphaWidget.slider:SetHeight(15)
         alphaWidget.slider:SetMinMaxValues(0.3,1)
-        alphaWidget.slider:SetValue(trackedActionsFrameScale)
+        alphaWidget.slider:SetValue(trackedActionsFrameAlpha)
         alphaWidget.slider:SetStepsPerPage(10)             
         alphaWidget.slider:SetScript("OnValueChanged", function (self) 
         for i=1,#frames do   
