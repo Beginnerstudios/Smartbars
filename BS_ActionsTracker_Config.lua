@@ -23,7 +23,7 @@ function Config:ToggleConfigMode()
     local usedActions = Actions:GetUsed()
 
     if not primaryFrame:IsVisible() then    
-        UI:DisplayActions(usedActions,primaryFrame);  
+        UI:DisplayActions(usedActions,primaryFrame,true);  
         primaryFrame:Show()   
         isConfigMode =true           
         UI:ToggleWidgets(true)            
@@ -44,9 +44,8 @@ function Config:SaveConfig()
     TrackedActionsHideInRestZone =UI:Get():HideInSaveZone()
 end
 function Config:LoadConfig()
-UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone)
-Actions:SetCurrentSpecialization(API:GetSpecialization())
-Actions:SetTrackedActions(TrackedSpellsCharacter)    
+UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone)    
+Actions:SetSavedVariables(TrackedSpellsCharacter,API:GetSpecialization())
 end
 function Config:SetDefaults()
     if not IsCleared then
@@ -95,4 +94,19 @@ function Config:ResetAll()
     TrackedActionsHideInRestZone=nill
     ReloadUI()
 end
+-- Utils--------------------------------
+function Config:GetTableCount(tableArg)
+    local count = 0
+    if tableArg ~=nill then
+        for _ in pairs(tableArg) do count = count + 1 end    
+    end
+    return count      
+end
+function Config:IsValueSame(value1,value2)
+    if value1 == value2 then
+      return true
+    else
+      return false
+    end
+  end
 -- Revision version v0.8.2 ---

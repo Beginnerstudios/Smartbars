@@ -22,8 +22,6 @@ local maximumTrackedBars =5
 local trackedActionsHideInRestZone --SV
 
 
-
-
 --UI:Frames-------------------------------
 function UI:CreatePrimaryFrame()  --create primary/secondary frame config/trackedaction bars 
   local function PrimaryFrame()
@@ -222,12 +220,12 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
     secondaryFrame:SetSize(100,100)
     secondaryFrame:SetScript("OnUpdate", function ()
 
-      local tActions = Actions:GetTracked()
-       UI:UpdateTrackedActions(tActions)
+      local tA = Actions:GetTracked()
+       UI:UpdateTrackedActions(tA)
   
      local frameIndex = 1
     while frames[frameIndex] do
-       UI:SortTrackedActions(tActions,frameIndex)
+       UI:SortTrackedActions(tA,frameIndex)
       frameIndex = frameIndex +1 
       end
   
@@ -321,6 +319,7 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
       displayedActions[k][3] = nill
       end
     end
+    displayedActions = nill
   end
   for k,v in pairs(actions) do 
     actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
@@ -335,7 +334,7 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     end
     --Compare widgets with tracked actions
     for q,v in pairs(Actions:GetTracked()) do
-    if UI:IsValueSame(actions[k][2],v[2]) and UI:IsValueSame(v[5],Actions:GetSpec()) then
+    if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],Actions:GetSpec()) then
       actions[k][3]:SetChecked(true)
      end
     end
@@ -344,7 +343,7 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     Actions:Add(actions[k]) end)
   end  
 displayedActions = actions
- UI:UpdateUI()
+UI:UpdateUI()
 end
 --UI:Widgets-------------------------------
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
@@ -402,7 +401,7 @@ newWidget.showWhenBoosted:SetSize(20,20)
 newWidget.showWhenBoosted:SetChecked(valueToSave[8])
 newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)   
 newWidget.showWhenBoosted:SetScript("OnClick", function (self) 
- valueToSave[8]=self:GetChecked()
+valueToSave[8]=self:GetChecked()
 end)
 end
 
@@ -460,11 +459,10 @@ end
   
 
 end
-
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
-local trackedSpellsCount = Actions:GetTableCount(Actions:GetTracked());
-local usedSpellsCount = Actions:GetTableCount(Actions:GetUsed());
+local trackedSpellsCount = Config:GetTableCount(Actions:GetTracked());
+local usedSpellsCount = Config:GetTableCount(Actions:GetUsed());
 local trackedActions = Actions:GetTracked()
   --Header Primary frame dynamic values
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
@@ -473,7 +471,6 @@ local trackedActions = Actions:GetTracked()
 if usedSpellsCount<12 then
   primaryFrame:SetHeight(400)
 else
-
   primaryFrame:SetHeight(usedSpellsCount/6*60+150)
 end
   function RefreshTrackedIcons()
@@ -501,7 +498,7 @@ if actions ~=nill then
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
      
-    if UI:IsValueSame(actionSpec,userSpec) then
+    if Config:IsValueSame(actionSpec,userSpec) then
       local chargesText = API:GetActionCharges(slotID)    
       widget.charges:SetText(chargesText)
     
@@ -561,13 +558,6 @@ end
 end
 end
 end
-function UI:IsValueSame(value1,value2)
-  if value1 == value2 then
-    return true
-  else
-    return false
-  end
-end
 --Getters & Setters-----------------------------
 function UI:Get()                         
   local returnTable =
@@ -606,6 +596,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsFrameScale = frameScale
   trackedActionsHideInRestZone = hiddenInRestZone
 end
--- Revision version v0.8 ---
+-- Revision version v0.8.2 ---
 
 

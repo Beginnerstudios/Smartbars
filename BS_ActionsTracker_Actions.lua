@@ -25,13 +25,6 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
-function Actions:GetTableCount(tableArg)
-    local count = 0
-    if tableArg ~=nill then
-        for _ in pairs(tableArg) do count = count + 1 end    
-    end
-    return count      
-end
 function Actions:GetSpec()
     return  currentSpecialization  
 end
@@ -63,7 +56,7 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed)
         trackedFrame = action[6]
         showOnlyWhenBoosted = action[8]
     else  
-        curretSpec = API:GetSpecialization()
+        curretSpec = currentSpecialization
         trackedFrame = 1   
         showOnlyWhenBoosted = false
     end  
@@ -78,11 +71,9 @@ function Actions:Delete(actionID)
     trackedActions[actionID]=nill
    
 end  
---Getters & Setters,Reset----------------------------- 
-function Actions:SetCurrentSpecialization(spec)
-    currentSpecialization = spec
-end  
-function Actions:SetTrackedActions(tActions)
+--Getters & Setters,Reset-----------------------------  
+function Actions:SetSavedVariables(tActions,spec)
     trackedActions = tActions
-end   
+    currentSpecialization = spec
+end
 -- Revision version v0.8.2 --
