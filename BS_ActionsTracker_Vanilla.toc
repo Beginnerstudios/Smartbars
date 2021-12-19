@@ -3,7 +3,7 @@
 ## Notes: Tracking your actions.
 ## Author: BeginnerStudios
 ## Version:0.8.2
-## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone
+## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha
 
 BS_ActionsTracker_Global.lua
 BS_ActionsTracker_UI.lua

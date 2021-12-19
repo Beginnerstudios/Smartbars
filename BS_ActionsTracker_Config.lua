@@ -42,9 +42,11 @@ function Config:SaveConfig()
     TrackedSpellsCharacter = Actions:GetTracked()
     TrackedActionsFrameCount = UI:Get():ActionBarCount()
     TrackedActionsHideInRestZone =UI:Get():HideInSaveZone()
+    TrackedActionsFrameAlpha = UI:Get():ActionBar(1):GetAlpha()
+   
 end
 function Config:LoadConfig()
-UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone)    
+UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha)    
 Actions:SetSavedVariables(TrackedSpellsCharacter,API:GetSpecialization())
 end
 function Config:SetDefaults()
@@ -73,6 +75,9 @@ function Config:SetDefaults()
     end
     if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
     TrackedActionsFrameScale = 1
+    end
+    if not TrackedActionsFrameAlpha then
+        TrackedActionsFrameAlpha = 1     
     end   
 end
 function Config:IsCurrentPatch()

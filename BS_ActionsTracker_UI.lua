@@ -18,8 +18,10 @@ local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
 local trackedActionsFrameCount = 1--SV
+local trackedActionsFrameAlpha =0
 local maximumTrackedBars =5
 local trackedActionsHideInRestZone --SV
+local primaryFrameMinimuHeight
 
 
 --UI:Frames-------------------------------
@@ -106,9 +108,29 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       frames[i]:SetScale(self:GetValue())   
         end    
       end)
-      getglobal(scaleWidget.slider:GetName() .. 'Low'):SetText(''); --Sets the left-side slider text (default is "Low").
-      getglobal(scaleWidget.slider:GetName() .. 'High'):SetText(''); --Sets the right-side slider text (default is "High").
+     
       return scaleWidget
+      end
+      function AlphaSlider()           
+        local alphaWidget = CreateFrame("Frame", "dasd")
+        alphaWidget.title = alphaWidget:CreateFontString(nil,"OVERLAY");
+        alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
+        alphaWidget.title:SetFontObject("GameFontHighlight")
+        alphaWidget.title:SetText("Transparency:")  
+        alphaWidget.slider = CreateFrame("Slider", "myslider", alphaWidget,"OptionsSliderTemplate")
+        alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-30);
+        alphaWidget.slider:SetWidth(100)
+        alphaWidget.slider:SetHeight(15)
+        alphaWidget.slider:SetMinMaxValues(0.3,1)
+        alphaWidget.slider:SetValue(trackedActionsFrameScale)
+        alphaWidget.slider:SetStepsPerPage(10)             
+        alphaWidget.slider:SetScript("OnValueChanged", function (self) 
+        for i=1,#frames do   
+        frames[i]:SetAlpha(self:GetValue())   
+        end    
+      end)
+    
+      return alphaWidget
       end
       function ColumnsWidgets()
       local columnsWidget = CreateFrame("Frame","BS_Options_Columns") 
@@ -204,13 +226,14 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       local primaryFrame = Frame()
       primaryFrame.titles = StaticTitles(primaryFrame)
-      local optionsWidgets = {ResetButton(),ScaleSlider(),ColumnsWidgets(),BarsWidget(),RestZoneWidget()}   
+      local optionsWidgets = {ResetButton(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),BarsWidget(),RestZoneWidget()}   
       local xOfs =50
       for k in pairs(optionsWidgets) do
         optionsWidgets[k]:SetPoint("CENTER", primaryFrame.TitleBg, "CENTER", 150, (xOfs)*-1)
         optionsWidgets[k]:SetParent(primaryFrame)
         optionsWidgets[k]:SetSize(100,100)
-        xOfs = xOfs+60      
+        xOfs = xOfs+60   
+        primaryFrameMinimuHeight = xOfs +50   
       end
       return primaryFrame
   end
@@ -241,6 +264,7 @@ function UI:CreateTrackedActionBar(index)
     SecondaryFrame = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
     function Frame()
     SecondaryFrame:SetScale(trackedActionsFrameScale)
+    SecondaryFrame:SetAlpha(trackedActionsFrameAlpha)
     UI:SetFrameMoveable(SecondaryFrame)
     SecondaryFrame:SetMovable(true)
     SecondaryFrame:SetSize(150,75);
@@ -469,9 +493,15 @@ local trackedActions = Actions:GetTracked()
   primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
   --Primary Frame size
 if usedSpellsCount<12 then
-  primaryFrame:SetHeight(400)
+  primaryFrame:SetHeight(primaryFrameMinimuHeight)
 else
-  primaryFrame:SetHeight(usedSpellsCount/6*60+150)
+  local actionsHeight = usedSpellsCount/6*60+165
+  if primaryFrameMinimuHeight < actionsHeight then
+    primaryFrame:SetHeight(actionsHeight)
+  else
+    primaryFrame:SetHeight(primaryFrameMinimuHeight)
+  end
+  
 end
   function RefreshTrackedIcons()
   for k,v in pairs(trackedActions) do
@@ -589,12 +619,13 @@ function UI:Get()
          }
  return returnTable
 end
-function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hiddenInRestZone)
+function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hiddenInRestZone,frameAlpha)
   trackedActionsColumnCount = columnCount
   trackedSpellsFramePosition = framePosition
   trackedActionsFrameCount = frameCount
   trackedActionsFrameScale = frameScale
   trackedActionsHideInRestZone = hiddenInRestZone
+  trackedActionsFrameAlpha = frameAlpha
 end
 -- Revision version v0.8.2 ---
 
