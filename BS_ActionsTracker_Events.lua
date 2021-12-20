@@ -17,6 +17,7 @@ function Events:RegisterEvents()
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
 
+
   if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
   frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")

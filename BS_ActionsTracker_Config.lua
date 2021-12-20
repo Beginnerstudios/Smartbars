@@ -11,6 +11,7 @@ function Config:Init()
 end
 --Config:Functions------------------------
 local isConfigMode = false
+local currentSpecialization
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -20,7 +21,7 @@ function Config:CreateCommands()
 end
 function Config:ToggleConfigMode()
     local primaryFrame = UI:Get():PrimaryFrame()
-    local usedActions = Actions:GetUsed()
+    local usedActions = API:GetUserActions()
 
     if not primaryFrame:IsVisible() then    
         UI:DisplayActions(usedActions,primaryFrame,true);  
@@ -47,7 +48,8 @@ function Config:SaveConfig()
 end
 function Config:LoadConfig()
 UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha)    
-Actions:SetSavedVariables(TrackedSpellsCharacter,API:GetSpecialization())
+Actions:SetSavedVariables(TrackedSpellsCharacter)
+Config:SetSpec(API:GetSpecialization())
 end
 function Config:SetDefaults()
     if not IsCleared then
@@ -98,6 +100,17 @@ function Config:ResetAll()
     TrackedActionsFrameCount=nill
     TrackedActionsHideInRestZone=nill
     ReloadUI()
+end
+
+--Getter
+function Config:GetSpec()
+    return currentSpecialization   
+end
+function Config:GetResting()
+    return API:IsResting()
+end
+function Config:SetSpec(currentSpec)
+    currentSpecialization = currentSpec    
 end
 -- Utils--------------------------------
 function Config:GetTableCount(tableArg)

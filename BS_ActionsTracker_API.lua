@@ -8,14 +8,14 @@ function API:Init()
 end
 --Variables--------------------------------
 local trackedActions = {}
-local currentSpecialization =0
 --API:Functions-----------------------
 function API:GetSpecialization()
     local version,build,date = GetBuildInfo()
     if version == "9.1.5" then
-    return GetSpecialization()
-    else
-    return 0
+     GetSpecialization()    
+    return  GetSpecialization()  
+    else   
+    return 0 
     end
 end
 function API:GetActionInfo(slotID)   
@@ -33,7 +33,7 @@ function API:GetBuildInfo()
 end
 function API:IsUsableAction(action)
     local isUsable, notEnoughMana = IsUsableAction(action) 
-    return notEnoughMana
+    return isUsable,notEnoughMana
 end
 function API:GetPlayerAuraBySpellID(spellID)   
     if Config:IsCurrentPatch() then
@@ -69,5 +69,20 @@ function API:GetActionCharges(slotID)
     return ""
  end
 end
+function API:GetUserActions()                                                           
+    local slotCount = 120
+    local allSlotTable = {}
+        for i=1,slotCount do
+            local actionType,actionID,subType = API:GetActionInfo(i)
+                 if actionID ~=nil then
+                    allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization}           --- [1]slot id [2]spellID
+                end
+        end     
+    return allSlotTable
+end
+function API:IsResting()
+    return IsResting()
+end
+
 -- Revision version v0.8.2 ---
 

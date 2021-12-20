@@ -28,6 +28,7 @@ local primaryFrameMinimuHeight
 function UI:CreatePrimaryFrame()  --create primary/secondary frame config/trackedaction bars 
   local function PrimaryFrame()
     local defaultFont = "GameFontHighlight"
+    local defaultLayer = "OVERLAY"
    
       function Frame()
     local primaryFrame = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
@@ -43,32 +44,32 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       function StaticTitles(parentFrame)
        UIConfig = parentFrame
        local titles = CreateFrame("Frame","BS_ActionsTracker.Primary",UIConfig) 
-       titles.frame = titles:CreateFontString(nil,"OVERLAY");
+       titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("BS_ActionsTracker");
+       titles.frame:SetText("BS_ActionsTracker v - 0.8.3");
 
-       titles.usedStatic = titles:CreateFontString(nil,"OVERLAY");
+       titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
        titles.usedStatic:SetFontObject(defaultFont)
        titles.usedStatic:SetText("Used actions:");
     
-       titles.trackedStatic = titles:CreateFontString(nil,"OVERLAY");
+       titles.trackedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.trackedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-50);
        titles.trackedStatic:SetFontObject(defaultFont)
        titles.trackedStatic:SetText("Tracked actions:");
 
-       titles.actionsStatic = titles:CreateFontString(nil,"ARTWORK");
+       titles.actionsStatic = titles:CreateFontString(nil,defaultLayer);
        titles.actionsStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-70);
        titles.actionsStatic:SetFontObject(defaultFont)
        titles.actionsStatic:SetText("Used actions in action bars:");
        
-       titles.trackedValue = titles:CreateFontString(nil,"OVERLAY");
+       titles.trackedValue = titles:CreateFontString(nil,defaultLayer);
        titles.trackedValue:SetPoint("LEFT",titles.trackedStatic,"LEFT",100,0);
        titles.trackedValue:SetFontObject(defaultFont)
        titles.trackedValue:SetText("0");
        
-       titles.usedValue = titles:CreateFontString(nil,"OVERLAY");
+       titles.usedValue = titles:CreateFontString(nil,defaultLayer);
        titles.usedValue:SetPoint("LEFT",titles.usedStatic,"LEFT",100,0);
        titles.usedValue:SetFontObject(defaultFont)
        titles.usedValue:SetText("0");
@@ -76,11 +77,11 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       function ResetButton()
       local resetWidget = CreateFrame("Frame", "only_for_testing")
-      resetWidget.title = resetWidget:CreateFontString(nil,"OVERLAY");
+      resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
       resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
       resetWidget.title:SetFontObject("GameFontHighlight")
       resetWidget.title:SetText("Reset all:")  
-      resetWidget.resetButton = CreateFrame("Button", "sadsd", resetWidget,"UIPanelButtonTemplate")
+      resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
       resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
       resetWidget.resetButton:SetSize(50,35)
       resetWidget.resetButton:SetText("Reset")
@@ -92,7 +93,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       function ScaleSlider()           
         local scaleWidget = CreateFrame("Frame", "dasd")
-        scaleWidget.title = scaleWidget:CreateFontString(nil,"OVERLAY");
+        scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
         scaleWidget.title:SetPoint("LEFT",scaleWidget,"CENTER",-50,0);
         scaleWidget.title:SetFontObject("GameFontHighlight")
         scaleWidget.title:SetText("Scale:")  
@@ -113,7 +114,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       function AlphaSlider()           
         local alphaWidget = CreateFrame("Frame", "dasd")
-        alphaWidget.title = alphaWidget:CreateFontString(nil,"OVERLAY");
+        alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer);
         alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
         alphaWidget.title:SetFontObject("GameFontHighlight")
         alphaWidget.title:SetText("Transparency:")  
@@ -134,11 +135,11 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       function ColumnsWidgets()
       local columnsWidget = CreateFrame("Frame","BS_Options_Columns") 
-      columnsWidget.text = columnsWidget:CreateFontString(nil,"ARTWORK");
+      columnsWidget.text = columnsWidget:CreateFontString(nil,defaultLayer);
       columnsWidget.text:SetPoint("LEFT",columnsWidget,"CENTER",-50,0);
       columnsWidget.text:SetFontObject(defaultFont)
       columnsWidget.text:SetText("Columns: ");
-      columnsWidget.text2 = columnsWidget:CreateFontString(nil,"ARTWORK");
+      columnsWidget.text2 = columnsWidget:CreateFontString(nil,defaultLayer);
       columnsWidget.text2:SetPoint("CENTER",columnsWidget,"CENTER",35,0);
       columnsWidget.text2:SetFontObject(defaultFont)
       columnsWidget.text2:SetText(trackedActionsColumnCount);    
@@ -168,11 +169,11 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
       end
       function BarsWidget()
         local barsWidget = CreateFrame("Frame","BS_Options_Bars") 
-        barsWidget.textStatic = barsWidget:CreateFontString(nil,"ARTWORK");
+        barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultFont);
         barsWidget.textStatic:SetPoint("LEFT",barsWidget,"CENTER",-50,0);
         barsWidget.textStatic:SetFontObject(defaultFont)
         barsWidget.textStatic:SetText("Tracked bars: ");
-        barsWidget.textValue = barsWidget:CreateFontString(nil,"ARTWORK");
+        barsWidget.textValue = barsWidget:CreateFontString(nil,defaultFont);
         barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",35,0);
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(trackedActionsFrameCount);
@@ -218,7 +219,7 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
         local restState = self:GetChecked()
         trackedActionsHideInRestZone = restState
       end)  
-      restZoneWidget.title = restZoneWidget:CreateFontString(nil,"OVERLAY");
+      restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
       restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
       restZoneWidget.title:SetFontObject("GameFontHighlight")
       restZoneWidget.title:SetText("Hide in rest zone:")   
@@ -239,16 +240,16 @@ function UI:CreatePrimaryFrame()  --create primary/secondary frame config/tracke
   end
   function SecondaryFrame()
     secondaryFrame = CreateFrame("Frame","BS_ActionsTracker.secondaryFrame",UIParent);
-    secondaryFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
+    secondaryFrame:SetPoint("LEFT",UIParent,"LEFT",0,0);
     secondaryFrame:SetSize(100,100)
     secondaryFrame:SetScript("OnUpdate", function ()
 
       local tA = Actions:GetTracked()
-       UI:UpdateTrackedActions(tA)
+       UI:UpdateBars(tA)
   
      local frameIndex = 1
     while frames[frameIndex] do
-       UI:SortTrackedActions(tA,frameIndex)
+      UI:SortTrackedActions(tA,frameIndex)
       frameIndex = frameIndex +1 
       end
   
@@ -268,22 +269,37 @@ function UI:CreateTrackedActionBar(index)
     UI:SetFrameMoveable(SecondaryFrame)
     SecondaryFrame:SetMovable(true)
     SecondaryFrame:SetSize(150,75);
-   -- SecondaryFrame:SetPoint("CENTER",secondaryFrame,"CENTER",300,(trackedActionsFrameCount*200)*-1);
     end
     function Title()
-    SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"OVERLAY");
-    SecondaryFrame.title:SetPoint("CENTER",SecondaryFrame,"RIGHT",0,0);
+    SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"ARTWORK");
+    SecondaryFrame.title:SetPoint("LEFT",SecondaryFrame,"LEFT",0,-1);
     SecondaryFrame.title:SetFontObject("GameFontHighlight")
     if Config:IsCurrentPatch() then
-    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar,check to display only when BOOSTED.")
+    SecondaryFrame.title:SetText("BAR: "..index)
     else
-    SecondaryFrame.title:SetText("BAR: "..index .." - move ,edit text,change bar.") 
+    SecondaryFrame.title:SetText("BAR: "..index) 
     end   
     SecondaryFrame.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
     end
+    function Info()
+      SecondaryFrame.info = CreateFrame("Button",nill,secondaryFrame,"UIPanelButtonTemplate","ARTWORK");
+      SecondaryFrame.info:SetPoint("LEFT",SecondaryFrame,"Center",0,-1);   
+      SecondaryFrame.info:SetSize(20,20)    
+      if Config:IsCurrentPatch() then
+      SecondaryFrame.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-.\nDisplay only when spell is boosted: Check checkbox."
+      else
+        SecondaryFrame.info.tooltipText ="Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-"
+      end   
+      SecondaryFrame.info:SetAlpha(0)
+      SecondaryFrame.info.text = SecondaryFrame.info:CreateFontString(nil,"BORDER");
+      SecondaryFrame.info.text:SetPoint("CENTER",SecondaryFrame.info,"CENTER",0,0);
+      SecondaryFrame.info.text:SetFontObject("GameFontHighlight")
+      SecondaryFrame.info.text:SetText("i")
+    end
     Frame()
     Title()
+    Info()
     return SecondaryFrame
   end 
   frames[#frames+1] = SecondaryFrame()
@@ -300,6 +316,7 @@ function UI:RemoveLastSecondaryFrame()
 local actions = Actions:GetTracked()
 if frames[#frames] ~=nill then
 frames[#frames]:Hide()  
+frames[#frames].info:Hide()
 end
 for k,v in pairs(Actions:GetTracked()) do
   if actions[k][6] == #frames then
@@ -340,7 +357,7 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     for k,v in pairs(displayedActions) do
       if displayedActions[k]~=nill then
       displayedActions[k][3]:Hide()
-      displayedActions[k][3] = nill
+      displayedActions[k][3] = nill      
       end
     end
     displayedActions = nill
@@ -358,23 +375,31 @@ function UI:DisplayActions(actions,frame) --Create widgets for selected actions 
     end
     --Compare widgets with tracked actions
     for q,v in pairs(Actions:GetTracked()) do
-    if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],Actions:GetSpec()) then
+    if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],API:GetSpecialization()) then
       actions[k][3]:SetChecked(true)
      end
     end
     -- ACTION WIDGETS -- EVENTS
+   
     actions[k][3]:SetScript("OnClick",function (self) 
     Actions:Add(actions[k]) end)
+    actions[k][3]:SetScript("OnEnter",function ()
+  --    actions[k][3].tooltip:Show()
+    end)
+    actions[k][3]:SetScript("OnEnter",function ()
+   --   actions[k][3].tooltip:Hide()
+     end)
   end  
 displayedActions = actions
 UI:UpdateUI()
 end
 --UI:Widgets-------------------------------
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
- local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate")
+ local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate", "ARTWORK")
 actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
+ actionWidget.tooltipText = "test"
  local newTexture= API:GetActionTexture(action[1])
  if isTracked then
   actionWidget:SetHighlightTexture(nill)
@@ -387,7 +412,7 @@ actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
  return actionWidget
 end
 function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
-  local edit = CreateFrame("EditBox",nil, parentWidget, "UICheckButtonTemplate")
+  local edit = CreateFrame("EditBox",nil, parentWidget, "UICheckButtonTemplate","ARTWORK")
   edit:SetPoint("CENTER",parentWidget,"CENTER",2,0)
   edit:SetSize(50,50)
   edit:SetText(valueToSave[4])
@@ -458,6 +483,9 @@ if not isDisplayed then
 end
 return newWidget
 end
+function UI:CreateTooltip()
+   
+end
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
   for k,v in pairs(Actions:GetTracked()) do
    if v[3]~=nill then
@@ -475,8 +503,10 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     frames[i]:EnableMouse(value) 
       if value == true then
         frames[i].title:SetAlpha(1) 
+        frames[i].info:SetAlpha(1) 
       else
         frames[i].title:SetAlpha(0) 
+        frames[i].info:SetAlpha(0) 
       end
   end
 end
@@ -486,7 +516,7 @@ end
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
 local trackedSpellsCount = Config:GetTableCount(Actions:GetTracked());
-local usedSpellsCount = Config:GetTableCount(Actions:GetUsed());
+local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
 local trackedActions = Actions:GetTracked()
   --Header Primary frame dynamic values
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
@@ -513,50 +543,48 @@ end
   end
 RefreshTrackedIcons()
 end
-function UI:UpdateTrackedActions(trackedActionsTable) --parameter list of table of tracked actions
+function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions
   
-  local actions = trackedActionsTable
+  local actions = barsToupdate
   local configMode = Config:IsConfigMode()
-  local userSpec = Actions:GetSpec()
-  local isResting = IsResting()
+  local userSpec = Config:GetSpec()
+  local isResting = Config:GetResting()
   
 if actions ~=nill then
-  for actionID,v in pairs(actions) do  ---Handle tracked actions visibility
+  for actionID in pairs(actions) do  ---Handle tracked actions visibility
     local widget = actions[actionID][3]
     local slotID = actions[actionID][1]
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
      
-    if Config:IsValueSame(actionSpec,userSpec) then
-      local chargesText = API:GetActionCharges(slotID)    
-      widget.charges:SetText(chargesText)
-    
-              
-      if configMode or isBoosted then 
+    if Config:IsValueSame(actionSpec,userSpec) then       
+      local chargesText = API:GetActionCharges(slotID) 
+      local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
+      local start, duration, onCooldown = API:GetActionCooldown(slotID)        
+      widget.charges:SetText(chargesText)          
+      if configMode or isBoosted and isUsable==true and duration<1.1 and notEnoughMana==false  then 
         widget:Show()
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
-        else          
-          local start, duration, onCooldown = API:GetActionCooldown(slotID)
-          local notEnoughMana = API:IsUsableAction(slotID)
-          local isUsable,b = IsUsableAction(slotID)
+        else                 
           local inRange = IsActionInRange(slotID)
           if notEnoughMana or onCooldown>0 and duration>1.5 or inRange==false or not isUsable then
-            widget:Hide()                  
+            widget:Hide()                                           
           else           
             local isUserBuffedBy= API:GetPlayerAuraBySpellID(actions[actionID][2])
             if isUserBuffedBy then
-              widget:Hide()           
+              widget:Hide()                     
             else
               widget:Show() 
             end                                                            
           end         
        end 
      
-      
-    end
+      end
+
+  
     else
       widget:Hide()
     end
@@ -566,8 +594,8 @@ if actions ~=nill then
    
 end
 function UI:SortTrackedActions(trackedActions,sortNumber)
-  local startxOffset =0
-  local startyOffset =-40
+  local startxOffset =-2
+  local startyOffset =-37
   local count = 0
  
   for k,v in pairs(trackedActions) do
@@ -576,14 +604,14 @@ function UI:SortTrackedActions(trackedActions,sortNumber)
   local widget = trackedActions[actionID][3]
   if frameNumber == sortNumber then
   if widget:IsVisible() == true then    ----Sort tracked actions
-  widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
-  --widget.edit:SetPoint("CENTER",widget,"CENTER",2,0)
-  startxOffset = startxOffset +50
-  count = count + 1
-  if(startxOffset== trackedActionsColumnCount*50) then
-  startxOffset =0
-  startyOffset  = startyOffset-52
-  end
+    widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
+    startxOffset = startxOffset +50
+    count = count + 1
+    if(startxOffset== trackedActionsColumnCount*50) then
+      startxOffset =0
+      startyOffset  = startyOffset-50
+    end
+    --frames[frameNumber]:SetWidth(count*51.4)
 end
 end
 end

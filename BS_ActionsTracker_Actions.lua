@@ -11,23 +11,6 @@ end
 local trackedActions = {}
 local currentSpecialization =0
 --Actions:Functions-----------------------
-function Actions:GetUsed()                                                           
-local slotCount = 120
-local allSlotTable = {}
-    for i=1,slotCount do
-        local actionType,actionID,subType = API:GetActionInfo(i)
-             if actionID ~=nil then
-                allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization}           --- [1]slot id [2]spellID
-            end
-    end     
-return allSlotTable
-end
-function Actions:GetTracked()
-    return trackedActions
-end
-function Actions:GetSpec()
-    return  currentSpecialization  
-end
 function Actions:Add(action)
     local actionID = action[2]  
     if  trackedActions[actionID]then              
@@ -37,7 +20,8 @@ function Actions:Add(action)
     end          
     UI:UpdateUI()    
 end                                                               
-function Actions:Load(actions)
+function Actions:Load()
+    local actions = trackedActions
     if actions ~=nill then                 
         for actionID in pairs(actions) do                     
         Actions:Create(actions[actionID],false,true,true)
@@ -56,7 +40,7 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed)
         trackedFrame = action[6]
         showOnlyWhenBoosted = action[8]
     else  
-        curretSpec = currentSpecialization
+        curretSpec = Config:GetSpec()
         trackedFrame = 1   
         showOnlyWhenBoosted = false
     end  
@@ -72,8 +56,10 @@ function Actions:Delete(actionID)
    
 end  
 --Getters & Setters,Reset-----------------------------  
-function Actions:SetSavedVariables(tActions,spec)
+function Actions:SetSavedVariables(tActions)
     trackedActions = tActions
-    currentSpecialization = spec
+end
+function Actions:GetTracked()
+    return trackedActions
 end
 -- Revision version v0.8.2 --

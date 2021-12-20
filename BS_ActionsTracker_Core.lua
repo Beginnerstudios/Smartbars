@@ -20,14 +20,14 @@ API:Init()
 Events:RegisterEvents()
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker v 0.8.2 - /bs for settings.\n")   
+    print("BS_ActionsTracker - /bs for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrame();
     for i=1,UI:Get():ActionBarCount(),1 do
     UI:CreateTrackedActionBar(i)
     UI:PositionFrame(i)
     end
-    Actions:Load(Actions:GetTracked());
+    Actions:Load();
 end)
 -- Revision version v0.8.2 ---
 
