@@ -127,4 +127,9 @@ function Config:IsValueSame(value1,value2)
       return false
     end
   end
+  function Config:JoinNumber(x, y)
+    local z = tostring(x) .. tostring(y);
+    return tonumber(z);
+    end
+    
 -- Revision version v0.8.3 ---

@@ -72,7 +72,7 @@ function API:GetUserActions()
     local allSlotTable = {}
         for i=1,slotCount do
             local actionType,actionID,subType = API:GetActionInfo(i)
-                 if actionID ~=nil then
+                 if actionID ~=nil and strmatch(actionID,"%d")  then
                     allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization}           --- [1]slot id [2]spellID
                 end
         end     

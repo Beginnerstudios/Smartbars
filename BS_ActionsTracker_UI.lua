@@ -47,7 +47,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("BS_ActionsTracker v - 0.8.3");
+       titles.frame:SetText("BS_ActionsTracker v - 0.8.4 ALPHA");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -557,12 +557,12 @@ function UI:UpdateBars(barsToupdate) --parameter list of table of tracked action
   
 if barsToupdate ~=nill then
   for actionID in pairs(actions) do  ---Handle tracked actions visibility
-    local widget = actions[actionID][3]
     local slotID = actions[actionID][1]
+    local spellID = actions[actionID][2]
+    local widget = actions[actionID][3]
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
-    local spellID = actions[actionID][2]
      
     if Config:IsValueSame(actionSpec,userSpec)  then       
       local chargesText = API:GetActionCharges(slotID) 
@@ -579,7 +579,7 @@ if barsToupdate ~=nill then
           if notEnoughMana or onCooldown>0 and duration>1.5 or inRange==false or not isUsable then
             widget:Hide()                                           
           else           
-            local isUserBuffedBy= API:GetPlayerAuraBySpellID(actions[actionID][2])
+            local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
             if isUserBuffedBy then
               widget:Hide()                     
             else
@@ -595,32 +595,29 @@ if barsToupdate ~=nill then
       widget:Hide()
     end
   end
-  end
-
-   
+  end   
 end
 function UI:SortTrackedActions(trackedActions,sortNumber)
-  local startxOffset =-2
+  local startxOffset = 0
   local startyOffset =-37
   local count = 0
  
   for k,v in pairs(trackedActions) do
-  local actionID = k 
-  local frameNumber = trackedActions[actionID][6]
-  local widget = trackedActions[actionID][3]
-  if frameNumber == sortNumber then
-  if widget:IsVisible() == true then    ----Sort tracked actions
-    widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
-    startxOffset = startxOffset +50
-    count = count + 1
-    if(startxOffset== trackedActionsColumnCount*50) then
+    local actionID = k 
+    local frameNumber = trackedActions[actionID][6]
+    local widget = trackedActions[actionID][3]
+    if frameNumber == sortNumber then
+      if widget:IsVisible() == true then    ----Sort tracked actions
+        widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
+        startxOffset = startxOffset +50
+        count = count + 1
+          if(startxOffset== trackedActionsColumnCount*50) then
       startxOffset =0
       startyOffset  = startyOffset-50
+          end
+      end
     end
-    --frames[frameNumber]:SetWidth(count*51.4)
-end
-end
-end
+  end
 end
 --Getters & Setters-----------------------------
 function UI:Get()                         
