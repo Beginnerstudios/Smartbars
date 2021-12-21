@@ -47,7 +47,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("BS_ActionsTracker v - 0.8.4 ALPHA");
+       titles.frame:SetText("BS_ActionsTracker v - 0.8.4 ");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -561,7 +561,7 @@ if barsToupdate ~=nill then
     local spellID = actions[actionID][2]
     local widget = actions[actionID][3]
     local actionSpec = actions[actionID][5]
-    local isBoosted = actions[actionID][7]
+    local isBoosted = actions[actionID][7]   
     local displayOnlyWhenBoosted =actions[actionID][8]
      
     if Config:IsValueSame(actionSpec,userSpec)  then       
@@ -569,8 +569,9 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and duration<1.1 and notEnoughMana==false  then 
+      if configMode or isBoosted and isUsable==true and duration<1.5 and notEnoughMana==false  then 
         widget:Show()
+       
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
