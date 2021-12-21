@@ -25,7 +25,7 @@ local primaryFrameMinimuHeight
 
 
 --UI:Frames-------------------------------
-function UI:CreatePrimaryFrame()  --create primary/secondary frame config/trackedaction bars 
+function UI:CreateFrames()  
   local function PrimaryFrame()
     local defaultFont = "GameFontHighlight"
     local defaultLayer = "OVERLAY"
@@ -311,7 +311,7 @@ function UI:PositionFrame(frameIndex)
   local point = trackedSpellsFramePosition[i][3]
   local relativePoint = trackedSpellsFramePosition[i][4]
   frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
-  end
+end
 function UI:RemoveLastSecondaryFrame()
 local actions = Actions:GetTracked()
 if frames[#frames] ~=nill then
@@ -498,9 +498,12 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     v[3].charges:Show()
    end
   end
+  
+  end
   for i=1,#frames do
     frames[i]:SetMovable(value) 
     frames[i]:EnableMouse(value) 
+    
       if value == true then
         frames[i].title:SetAlpha(1) 
         frames[i].info:SetAlpha(1) 
@@ -509,15 +512,17 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
         frames[i].info:SetAlpha(0) 
       end
   end
-end
-  
 
 end
 --UI:Update-----------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
-local trackedSpellsCount = Config:GetTableCount(Actions:GetTracked());
+local trackedSpellsCount =0
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
 local trackedActions = Actions:GetTracked()
+
+
+
+
   --Header Primary frame dynamic values
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
   primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
@@ -550,15 +555,16 @@ function UI:UpdateBars(barsToupdate) --parameter list of table of tracked action
   local userSpec = Config:GetSpec()
   local isResting = Config:GetResting()
   
-if actions ~=nill then
+if barsToupdate ~=nill then
   for actionID in pairs(actions) do  ---Handle tracked actions visibility
     local widget = actions[actionID][3]
     local slotID = actions[actionID][1]
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]
     local displayOnlyWhenBoosted =actions[actionID][8]
+    local spellID = actions[actionID][2]
      
-    if Config:IsValueSame(actionSpec,userSpec) then       
+    if Config:IsValueSame(actionSpec,userSpec)  then       
       local chargesText = API:GetActionCharges(slotID) 
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        

@@ -29,7 +29,7 @@ function Events:RegisterEvents()
   end)
 
   function MyAddon:PLAYER_LOGIN() 
-    if IsCleared ==true or IsCleared == nill then
+    if IsCleared ==false or IsCleared == nill then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
       TrackedActionsFrameScale=nill
@@ -37,7 +37,7 @@ function Events:RegisterEvents()
       TrackedActionsFrameCount=nill
       TrackedActionsDisplayedInRestZone =nill
       print("BS_ActionsTracker -reseted-")
-      IsCleared = false
+      IsCleared = true
   end
    
 

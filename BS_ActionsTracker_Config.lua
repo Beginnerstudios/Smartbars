@@ -23,9 +23,9 @@ function Config:ToggleConfigMode()
     local primaryFrame = UI:Get():PrimaryFrame()
     local usedActions = API:GetUserActions()
 
-    if not primaryFrame:IsVisible() then    
+    if  isConfigMode==false then    
         UI:DisplayActions(usedActions,primaryFrame,true);  
-        primaryFrame:Show()   
+        primaryFrame:Show()                
         isConfigMode =true           
         UI:ToggleWidgets(true)            
     else
@@ -127,4 +127,4 @@ function Config:IsValueSame(value1,value2)
       return false
     end
   end
--- Revision version v0.8.2 ---
+-- Revision version v0.8.3 ---

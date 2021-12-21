@@ -9,9 +9,8 @@ function Actions:Init()
 end
 --Variables--------------------------------
 local trackedActions = {}
-local currentSpecialization =0
 --Actions:Functions-----------------------
-function Actions:Add(action)
+function Actions:Add(action) 
     local actionID = action[2]  
     if  trackedActions[actionID]then              
       Actions:Delete(actionID)
@@ -23,15 +22,19 @@ end
 function Actions:Load()
     local actions = trackedActions
     if actions ~=nill then                 
-        for actionID in pairs(actions) do                     
-        Actions:Create(actions[actionID],false,true,true)
+        for actionID,v in pairs(actions) do                     
+        Actions:Create(actions[actionID],false,true,true,actionID)  
         end       
     end
     UI:UpdateUI()
 end  
-function Actions:Create(action,isEnabled,isExisting,isDisplayed)
-    local actionID = action[2] 
-    local curretSpec = nill
+function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
+    local curretSpec  
+    function JoinNumber(x, y)
+    local z = tostring(x) .. tostring(y);
+    return tonumber(z);
+    end
+    local actionID 
     local trackedFrame = nill
     local isBoosted = false
     local showOnlyWhenBoosted = nill
@@ -39,8 +42,11 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed)
         curretSpec = action[5]
         trackedFrame = action[6]
         showOnlyWhenBoosted = action[8]
+        actionID = key
+       
     else  
-        curretSpec = Config:GetSpec()
+        actionID= JoinNumber(action[2],Config:GetSpec())
+        curretSpec= API:GetSpecialization()
         trackedFrame = 1   
         showOnlyWhenBoosted = false
     end  
@@ -62,4 +68,4 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
--- Revision version v0.8.2 --
+-- Revision version v0.8.3 --

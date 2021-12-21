@@ -6,8 +6,6 @@ local API = BS_ActionsTracker.API;
 function API:Init()
    Config = BS_ActionsTracker.Config
 end
---Variables--------------------------------
-local trackedActions = {}
 --API:Functions-----------------------
 function API:GetSpecialization()
     local version,build,date = GetBuildInfo()
@@ -83,6 +81,5 @@ end
 function API:IsResting()
     return IsResting()
 end
-
--- Revision version v0.8.2 ---
+-- Revision version v0.8.3 ---
 
