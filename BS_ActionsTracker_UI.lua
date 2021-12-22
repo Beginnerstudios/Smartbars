@@ -545,9 +545,8 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false  then 
-        widget:Show()
-       
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1 then 
+        widget:Show()       
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
