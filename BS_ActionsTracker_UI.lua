@@ -13,16 +13,14 @@ end
 local primaryFrame   -- hold only primary config frame
 local secondaryFrame --holds all tracked action bars (OnUpdate runs on this frame)
 local frames = {};   -- hold all tracked bars as childs of secondaryFrame
-local displayedActions={};
 local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
 local trackedActionsFrameCount = 1--SV
 local trackedActionsFrameAlpha =0
-local maximumTrackedBars =5
 local trackedActionsHideInRestZone --SV
 local primaryFrameMinimuHeight
-
+local trackedBarsMaximum = 10
 
 --UI:Frames-------------------------------
 function UI:CreateFrames()  
@@ -106,7 +104,8 @@ function UI:CreateFrames()
         scaleWidget.slider:SetStepsPerPage(10)      
         scaleWidget.slider:SetScript("OnValueChanged", function (self) 
         for i=1,#frames do
-      frames[i]:SetScale(self:GetValue())   
+        frames[i]:SetScale(self:GetValue())  
+        trackedActionsFrameScale = self:GetValue()
         end    
       end)
      
@@ -177,32 +176,28 @@ function UI:CreateFrames()
         barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",35,0);
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(trackedActionsFrameCount);
+
         barsWidget.minusButton = CreateFrame("Button", "bs_minus", barsWidget,"UIPanelButtonTemplate")
         barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 0, -30)
         barsWidget.minusButton :SetSize(35,35)
         barsWidget.minusButton :SetText("-")
         barsWidget.minusButton :SetNormalFontObject(defaultFont)    
         barsWidget.minusButton :SetScript("OnClick", function ()
-        if trackedActionsFrameCount>= 2 then
-          trackedActionsFrameCount = trackedActionsFrameCount -1  
-          UI:RemoveLastSecondaryFrame()
-          barsWidget.textValue:SetText(trackedActionsFrameCount)      
-        end
+        UI:DeleteActionBar()
+        barsWidget.textValue:SetText(trackedActionsFrameCount);
         end) 
+
         barsWidget.plusButton  = CreateFrame("Button", "bs_plus", barsWidget,"UIPanelButtonTemplate")
         barsWidget.plusButton:SetPoint("CENTER", barsWidget, "CENTER", 35, -30)
-      barsWidget.plusButton:SetSize(35,35)
+       barsWidget.plusButton:SetSize(35,35)
         barsWidget.plusButton:SetText("+")
         barsWidget.plusButton:SetNormalFontObject(defaultFont)    
-        barsWidget.plusButton:SetScript("OnClick", function ()
-        
-          if trackedActionsFrameCount<maximumTrackedBars then
-            trackedActionsFrameCount = trackedActionsFrameCount+1        
-            UI:CreateTrackedActionBar(#frames+1) 
-            UI:PositionFrame(#frames)                                        
-            barsWidget.textValue:SetText(#frames)
-            UI:ToggleWidgets(true)           
-          end
+        barsWidget.plusButton:SetScript("OnClick", function ()        
+  
+          UI:AddActionBar()                                     
+          barsWidget.textValue:SetText(trackedActionsFrameCount)
+          UI:ToggleWidgets(true)           
+           
         end)
         return barsWidget
   
@@ -243,7 +238,6 @@ function UI:CreateFrames()
     secondaryFrame:SetPoint("LEFT",UIParent,"LEFT",0,0);
     secondaryFrame:SetSize(100,100)
     secondaryFrame:SetScript("OnUpdate", function ()
-
       local tA = Actions:GetTracked()
        UI:UpdateBars(tA)
   
@@ -251,7 +245,7 @@ function UI:CreateFrames()
     while frames[frameIndex] do
       UI:SortTrackedActions(tA,frameIndex)
       frameIndex = frameIndex +1 
-      end
+     end
   
       end)
       return secondaryFrame
@@ -260,8 +254,8 @@ function UI:CreateFrames()
  secondaryFrame = SecondaryFrame()
 
 end
-function UI:CreateTrackedActionBar(index)
-  local function SecondaryFrame()
+function UI:CreateActionBar(index)
+    local function SecondaryFrame()
     SecondaryFrame = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
     function Frame()
     SecondaryFrame:SetScale(trackedActionsFrameScale)
@@ -283,7 +277,7 @@ function UI:CreateTrackedActionBar(index)
      --SECONDARY FRAME -EVENTS   
     end
     function Info()
-      SecondaryFrame.info = CreateFrame("Button",nill,secondaryFrame,"UIPanelButtonTemplate","ARTWORK");
+      SecondaryFrame.info = CreateFrame("Button",nill,SecondaryFrame,"UIPanelButtonTemplate","ARTWORK");
       SecondaryFrame.info:SetPoint("LEFT",SecondaryFrame,"Center",0,-1);   
       SecondaryFrame.info:SetSize(20,20)    
       if Config:IsCurrentPatch() then
@@ -301,31 +295,61 @@ function UI:CreateTrackedActionBar(index)
     Title()
     Info()
     return SecondaryFrame
+    end 
+    frames[index] = SecondaryFrame()
+   
+end
+function UI:PositionActionBar(frameIndex)
+   local i = frameIndex 
+   local rowCount =5
+ 
+  if not trackedSpellsFramePosition[i]  then
+    local xOffset = 250   
+    local yOffset = 400 - (#frames*100)
+    local point = "CENTER"
+    local relativePoint = "CENTER"
+    if i>rowCount then
+      xOffset= xOffset*2
+      yOffset = 400 - ((#frames-rowCount)*100)    
+    end
+    frames[frameIndex]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+  else
+    local xOffset = trackedSpellsFramePosition[i][1] 
+    local yOffset = trackedSpellsFramePosition[i][2]
+    local point = trackedSpellsFramePosition[i][3]
+    local relativePoint = trackedSpellsFramePosition[i][4]
+    frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
   end 
-  frames[#frames+1] = SecondaryFrame()
 end
-function UI:PositionFrame(frameIndex)
-  local i = frameIndex  
-  local xOffset = trackedSpellsFramePosition[i][1] 
-  local yOffset = trackedSpellsFramePosition[i][2]
-  local point = trackedSpellsFramePosition[i][3]
-  local relativePoint = trackedSpellsFramePosition[i][4]
-  frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+function UI:DeleteActionBar()
+  if frames then 
+    if #frames >1 then
+      local lastIndex = #frames
+      frames[#frames]:Hide()  
+      frames[#frames] = nill
+      UI:MoveActionWidgets(lastIndex)
+      trackedActionsFrameCount = trackedActionsFrameCount-1
+    end
+  end  
 end
-function UI:RemoveLastSecondaryFrame()
-local actions = Actions:GetTracked()
-if frames[#frames] ~=nill then
-frames[#frames]:Hide()  
-frames[#frames].info:Hide()
-end
-for k,v in pairs(Actions:GetTracked()) do
-  if actions[k][6] == #frames then
-    actions[k][6]= trackedActionsFrameCount
-    actions[k][3]:SetParent(UI:Get():ActionBar(trackedActionsFrameCount))
-    actions[k][3].group.columnsText2:SetText(Actions:GetTracked()[k][6])
+function UI:AddActionBar()
+  if #frames < trackedBarsMaximum then
+  UI:CreateActionBar(#frames+1)
+  UI:PositionActionBar(#frames)
+  UI:ToggleWidgets(true)
+  trackedActionsFrameCount = trackedActionsFrameCount +1
   end
 end
-frames[trackedActionsFrameCount+1] = nill
+function UI:MoveActionWidgets(lastIndex)
+  local tA = Actions:GetTracked()
+
+  for k,v in pairs(tA) do
+    if tA[k][6]>1 and tA[k][6]==lastIndex then
+      tA[k][6] =  tA[k][6] -1
+      tA[k][3]:SetParent(frames[tA[k][6]])
+      tA[k][3].group.barNumberText:SetText(tA[k][6])  
+    end  
+  end
 end
 function UI:SetFrameMoveable(frame)
   frame:EnableMouse(true)
@@ -347,56 +371,10 @@ function UI:CalculateFramePosition(frameIndex)  --return frame from table "frame
   return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
   
 end
---UI:Actions-------------------------------
-function UI:DisplayActions(actions,frame) --Create widgets for selected actions under selected frame parent
-  local xOffstet = 0;
-  local yOffset = -10;
-  local count = 0
-
-  if displayedActions~=nill then
-    for k,v in pairs(displayedActions) do
-      if displayedActions[k]~=nill then
-      displayedActions[k][3]:Hide()
-      displayedActions[k][3] = nill      
-      end
-    end
-    displayedActions = nill
-  end
-  for k,v in pairs(actions) do 
-    actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
-    actions[k][3]:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
-    xOffstet = xOffstet+50;
-     count = count +1
-   --Next line after 12 spells
-    if(count==6) then
-    yOffset = yOffset -55;
-    xOffstet = 0;
-    count=0
-    end
-    --Compare widgets with tracked actions
-    for q,v in pairs(Actions:GetTracked()) do
-    if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],API:GetSpecialization()) then
-      actions[k][3]:SetChecked(true)
-     end
-    end
-    -- ACTION WIDGETS -- EVENTS
-   
-    actions[k][3]:SetScript("OnClick",function (self) 
-    Actions:Add(actions[k]) end)
-    actions[k][3]:SetScript("OnEnter",function ()
-  --    actions[k][3].tooltip:Show()
-    end)
-    actions[k][3]:SetScript("OnEnter",function ()
-   --   actions[k][3].tooltip:Hide()
-     end)
-  end  
-displayedActions = actions
-UI:UpdateUI()
-end
 --UI:Widgets-------------------------------
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate", "ARTWORK")
-actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
+ actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
  actionWidget.tooltipText = "test"
@@ -439,10 +417,10 @@ local defaultFont = "GameFontHighlight"
 local newWidget = CreateFrame("Frame", "bs_newpg", parentWidget)
 newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
 
-newWidget.columnsText2 =newWidget:CreateFontString(nil,"ARTWORK");
-newWidget.columnsText2:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
-newWidget.columnsText2:SetFont("Fonts\\FRIZQT__.TTF", 15,"OUTLINE")
-newWidget.columnsText2:SetText(valueToSave[6]);
+newWidget.barNumberText =newWidget:CreateFontString(nil,"ARTWORK");
+newWidget.barNumberText:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
+newWidget.barNumberText:SetFont("Fonts\\FRIZQT__.TTF", 15,"OUTLINE")
+newWidget.barNumberText:SetText(valueToSave[6]);
 if Config:IsCurrentPatch() then
 newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,"UICheckButtonTemplate")
 newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
@@ -464,7 +442,7 @@ newWidget.minusButton:SetNormalFontObject(defaultFont)
 newWidget.minusButton:SetScript("OnClick", function () 
   if  valueToSave[6]>1 then
   valueToSave[6] = valueToSave[6]-1
-  newWidget.columnsText2:SetText(valueToSave[6]);
+  newWidget.barNumberText:SetText(valueToSave[6]);
   end
 end)
 newWidget.plusButton = CreateFrame("Button", "bs_plus2", newWidget,"UIPanelButtonTemplate")
@@ -475,16 +453,13 @@ newWidget.plusButton:SetNormalFontObject(defaultFont)
 newWidget.plusButton:SetScript("OnClick", function ()
   if valueToSave[6]< trackedActionsFrameCount then
   valueToSave[6] = valueToSave[6]+1
-  newWidget.columnsText2:SetText(valueToSave[6]);
+  newWidget.barNumberText:SetText(valueToSave[6]);
   end  
 end)
 if not isDisplayed then
   newWidget:Hide()
 end
 return newWidget
-end
-function UI:CreateTooltip()
-   
 end
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
   for k,v in pairs(Actions:GetTracked()) do
@@ -520,7 +495,11 @@ local trackedSpellsCount =0
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
 local trackedActions = Actions:GetTracked()
 
-
+for actionID in pairs(trackedActions) do 
+  if trackedActions[actionID][5] == Config:GetSpec() then
+    trackedSpellsCount = trackedSpellsCount +1
+  end
+end
 
 
   --Header Primary frame dynamic values
@@ -548,8 +527,7 @@ end
   end
 RefreshTrackedIcons()
 end
-function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions
-  
+function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions  
   local actions = barsToupdate
   local configMode = Config:IsConfigMode()
   local userSpec = Config:GetSpec()
@@ -569,7 +547,7 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and duration<1.5 and notEnoughMana==false  then 
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false  then 
         widget:Show()
        
       else             
@@ -659,6 +637,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.2 ---
+-- Revision version v0.8.5 ---
 
 

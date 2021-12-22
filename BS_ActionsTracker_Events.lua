@@ -67,7 +67,7 @@ function Events:RegisterEvents()
     local a = ... 
     local trackedActions = Actions:GetTracked()               
     for actionID,v in pairs(trackedActions) do                     
-    if trackedActions[actionID][2] then
+    if trackedActions[actionID][2] ==a then
       trackedActions[actionID][7] = false
     end 
   end

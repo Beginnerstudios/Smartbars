@@ -24,7 +24,7 @@ function Config:ToggleConfigMode()
     local usedActions = API:GetUserActions()
 
     if  isConfigMode==false then    
-        UI:DisplayActions(usedActions,primaryFrame,true);  
+        Actions:Display(usedActions,primaryFrame,true);  
         primaryFrame:Show()                
         isConfigMode =true           
         UI:ToggleWidgets(true)            
@@ -62,20 +62,15 @@ function Config:SetDefaults()
         TrackedActionsFrameCount = 1     
     end
     if not TrackedSpellsFramePosition then
-      TrackedSpellsFramePosition ={} 
-      TrackedSpellsFramePosition[1] = {250,300,"CENTER","CENTER"}     
-      TrackedSpellsFramePosition[2] = {250,200,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[3] = {250,100,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[4] = {250,0,"CENTER","CENTER"} 
-      TrackedSpellsFramePosition[5] = {250,-100,"CENTER","CENTER"}  
+      TrackedSpellsFramePosition ={}         
     end
     if not TrackedActionsColumnCount then
-      TrackedActionsColumnCount = 8       
+      TrackedActionsColumnCount = 6       
     end   
     if not TrackedActionsHideInRestZone then
         TrackedActionsHideInRestZone = false
     end
-    if not TrackedActionsFrameScale or TrackedActionsFrameScale == 0 then
+    if not TrackedActionsFrameScale then
     TrackedActionsFrameScale = 1
     end
     if not TrackedActionsFrameAlpha then

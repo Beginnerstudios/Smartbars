@@ -24,8 +24,8 @@ C_Timer.After(5, function()
     Config:CreateCommands();
     UI:CreateFrames();
     for i=1,UI:Get():ActionBarCount(),1 do
-    UI:CreateTrackedActionBar(i)
-    UI:PositionFrame(i)
+    UI:CreateActionBar(i)
+    UI:PositionActionBar(i)
     end
     Actions:Load();
 end)
