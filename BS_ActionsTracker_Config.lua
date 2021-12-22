@@ -65,7 +65,7 @@ function Config:SetDefaults()
       TrackedSpellsFramePosition ={}         
     end
     if not TrackedActionsColumnCount then
-      TrackedActionsColumnCount = 6       
+      TrackedActionsColumnCount = 5       
     end   
     if not TrackedActionsHideInRestZone then
         TrackedActionsHideInRestZone = false
@@ -96,8 +96,7 @@ function Config:ResetAll()
     TrackedActionsHideInRestZone=nill
     ReloadUI()
 end
-
---Getter
+--Getter&Setter----------------------------
 function Config:GetSpec()
     return currentSpecialization   
 end
@@ -107,7 +106,7 @@ end
 function Config:SetSpec(currentSpec)
     currentSpecialization = currentSpec    
 end
--- Utils--------------------------------
+-- Utils-----------------------------------
 function Config:GetTableCount(tableArg)
     local count = 0
     if tableArg ~=nill then
@@ -121,10 +120,9 @@ function Config:IsValueSame(value1,value2)
     else
       return false
     end
-  end
+end
   function Config:JoinNumber(x, y)
     local z = tostring(x) .. tostring(y);
     return tonumber(z);
-    end
-    
--- Revision version v0.8.3 ---
+end  
+-- Revision version v0.8.5 ---

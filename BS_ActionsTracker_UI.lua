@@ -33,7 +33,7 @@ function UI:CreateFrames()
     UI:SetFrameMoveable(primaryFrame)  
     primaryFrame:Hide()
     primaryFrame:SetSize(500,0);
-    primaryFrame:SetPoint("CENTER",UIParent,"CENTER",-200,100);
+    primaryFrame:SetPoint("CENTER",UIParent,"CENTER",-400,100);
     primaryFrame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
@@ -45,7 +45,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("BS_ActionsTracker v - 0.8.4 ");
+       titles.frame:SetText("BS_ActionsTracker v - 0.8.5");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -183,7 +183,7 @@ function UI:CreateFrames()
         barsWidget.minusButton :SetText("-")
         barsWidget.minusButton :SetNormalFontObject(defaultFont)    
         barsWidget.minusButton :SetScript("OnClick", function ()
-        UI:DeleteActionBar()
+        UI:RemoveLastActionBar()
         barsWidget.textValue:SetText(trackedActionsFrameCount);
         end) 
 
@@ -304,13 +304,13 @@ function UI:PositionActionBar(frameIndex)
    local rowCount =5
  
   if not trackedSpellsFramePosition[i]  then
-    local xOffset = 250   
+    local xOffset = 0   
     local yOffset = 400 - (#frames*100)
     local point = "CENTER"
     local relativePoint = "CENTER"
     if i>rowCount then
-      xOffset= xOffset*2
-      yOffset = 400 - ((#frames-rowCount)*100)    
+      xOffset=300
+      yOffset=400 - ((#frames-rowCount)*100)    
     end
     frames[frameIndex]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
   else
@@ -321,13 +321,19 @@ function UI:PositionActionBar(frameIndex)
     frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
   end 
 end
-function UI:DeleteActionBar()
+function UI:RemoveLastActionBar()
   if frames then 
     if #frames >1 then
       local lastIndex = #frames
       frames[#frames]:Hide()  
       frames[#frames] = nill
-      UI:MoveActionWidgets(lastIndex)
+      local tA = Actions:GetTracked()
+      for k,v in pairs(tA) do
+        local barNumber = tA[k][6]
+        if barNumber>1 and barNumber==lastIndex then         
+        UI:MoveActionWidgets(tA[k],-1)
+        end  
+      end
       trackedActionsFrameCount = trackedActionsFrameCount-1
     end
   end  
@@ -340,16 +346,10 @@ function UI:AddActionBar()
   trackedActionsFrameCount = trackedActionsFrameCount +1
   end
 end
-function UI:MoveActionWidgets(lastIndex)
-  local tA = Actions:GetTracked()
-
-  for k,v in pairs(tA) do
-    if tA[k][6]>1 and tA[k][6]==lastIndex then
-      tA[k][6] =  tA[k][6] -1
-      tA[k][3]:SetParent(frames[tA[k][6]])
-      tA[k][3].group.barNumberText:SetText(tA[k][6])  
-    end  
-  end
+function UI:MoveActionWidgets(trackedAction,value)
+  trackedAction[6] = trackedAction[6] +(value)
+  trackedAction[3]:SetParent(frames[trackedAction[6]])
+  trackedAction[3].group.barNumberText:SetText(trackedAction[6])  
 end
 function UI:SetFrameMoveable(frame)
   frame:EnableMouse(true)
@@ -441,8 +441,7 @@ newWidget.minusButton:SetText("-")
 newWidget.minusButton:SetNormalFontObject(defaultFont)    
 newWidget.minusButton:SetScript("OnClick", function () 
   if  valueToSave[6]>1 then
-  valueToSave[6] = valueToSave[6]-1
-  newWidget.barNumberText:SetText(valueToSave[6]);
+  UI:MoveActionWidgets(valueToSave,-1)
   end
 end)
 newWidget.plusButton = CreateFrame("Button", "bs_plus2", newWidget,"UIPanelButtonTemplate")
@@ -452,8 +451,7 @@ newWidget.plusButton:SetText("+")
 newWidget.plusButton:SetNormalFontObject(defaultFont)    
 newWidget.plusButton:SetScript("OnClick", function ()
   if valueToSave[6]< trackedActionsFrameCount then
-  valueToSave[6] = valueToSave[6]+1
-  newWidget.barNumberText:SetText(valueToSave[6]);
+    UI:MoveActionWidgets(valueToSave,1)
   end  
 end)
 if not isDisplayed then
@@ -489,7 +487,7 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
   end
 
 end
---UI:Update-----------------------------------
+--UI:Update-------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI
 local trackedSpellsCount =0
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());

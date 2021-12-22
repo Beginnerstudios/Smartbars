@@ -9,7 +9,6 @@ Core = BS_ActionsTracker.Core
 Config = BS_ActionsTracker.Config
 UI = BS_ActionsTracker.UI
 end
---Variables-------------------------------
 --Events:Functions------------------------
 function Events:RegisterEvents()
   MyAddon = { }
@@ -29,7 +28,7 @@ function Events:RegisterEvents()
   end)
 
   function MyAddon:PLAYER_LOGIN() 
-    if IsCleared ==false or IsCleared == nill then
+    if IsCleared==false or IsCleared == nill then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
       TrackedActionsFrameScale=nill
@@ -44,7 +43,7 @@ function Events:RegisterEvents()
   Config:SetDefaults()
   end
   function MyAddon:PLAYER_LOGOUT()   
-  --when player logout
+  Config:SaveConfig()
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
@@ -73,5 +72,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8.2 ---
+-- Revision version v0.8.5 ---
 

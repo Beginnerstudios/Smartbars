@@ -81,5 +81,5 @@ end
 function API:IsResting()
     return IsResting()
 end
--- Revision version v0.8.3 ---
+-- Revision version v0.8.5 ---
 
