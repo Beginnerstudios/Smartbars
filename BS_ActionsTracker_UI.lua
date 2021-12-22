@@ -299,8 +299,8 @@ function UI:CreateActionBar(index)
     frames[index] = SecondaryFrame()
    
 end
-function UI:PositionActionBar(frameIndex)
-   local i = frameIndex 
+function UI:PositionActionBar(index)
+   local i = index
    local rowCount =5
  
   if not trackedSpellsFramePosition[i]  then
@@ -363,8 +363,8 @@ function UI:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
-function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
-  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+function UI:CalculateFramePosition(index)  --return frame from table "frames" [1]primary [2]secondary
+  local point, relativeTo, relativePoint, xOfs, yOfs = frames[index]:GetPoint(1)
   local function round2(num, numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
   end
@@ -545,7 +545,7 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1 then 
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 then 
         widget:Show()       
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
