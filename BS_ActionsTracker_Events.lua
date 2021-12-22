@@ -43,7 +43,6 @@ function Events:RegisterEvents()
   Config:SetDefaults()
   end
   function MyAddon:PLAYER_LOGOUT()   
-  Config:SaveConfig()
   end
   function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()

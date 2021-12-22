@@ -523,7 +523,7 @@ end
     end
   end
   end
-RefreshTrackedIcons()
+--RefreshTrackedIcons()
 end
 function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions  
   local actions = barsToupdate
