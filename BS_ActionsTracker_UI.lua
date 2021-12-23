@@ -515,24 +515,18 @@ else
   end
   
 end
-  function RefreshTrackedIcons()
-  for k,v in pairs(trackedActions) do
-    if v[3]~=nill then
-      local newTexture= API:GetActionTexture(v[1])
-      v[3]:SetNormalTexture(newTexture)   
-    end
-  end
-  end
-RefreshTrackedIcons()
+
+UI:RefreshTrackedIcons()
 end
-function UI:RefreshTrackedIcons(trackedActions)
-  for k,v in pairs(trackedActions) do
-    if v[3]~=nill then
-      local newTexture= API:GetActionTexture(v[1])
-      v[3]:SetNormalTexture(newTexture)   
+function UI:RefreshTrackedIcons()
+  local tA = Actions:GetTracked()
+  for actionID in pairs(tA) do
+    if tA[actionID][3]~=nill then
+      local newTexture= API:GetActionTexture(tA[actionID][1])
+      tA[actionID][3]:SetNormalTexture(newTexture)   
     end
   end
-  end
+end
 function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions  
   local actions = barsToupdate
   local configMode = Config:IsConfigMode()

@@ -51,7 +51,7 @@ function Events:RegisterEvents()
   Config:ToggleConfigMode()
   end
   UI:UpdateUI() 
-  UI:RefreshTrackedIcons(trackedActions)       
+  UI:RefreshTrackedIcons()       
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
