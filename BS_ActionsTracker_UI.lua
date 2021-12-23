@@ -10,9 +10,9 @@ Core = BS_ActionsTracker.Core
 Config = BS_ActionsTracker.Config
 end
 --Variables-------------------------------
-local primaryFrame   -- hold only primary config frame
-local secondaryFrame --holds all tracked action bars (OnUpdate runs on this frame)
-local frames = {};   -- hold all tracked bars as childs of secondaryFrame
+local primaryFrame   
+local secondaryFrame 
+local frames = {};  
 local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
@@ -126,7 +126,8 @@ function UI:CreateFrames()
         alphaWidget.slider:SetStepsPerPage(10)             
         alphaWidget.slider:SetScript("OnValueChanged", function (self) 
         for i=1,#frames do   
-        frames[i]:SetAlpha(self:GetValue())   
+        frames[i]:SetAlpha(self:GetValue()) 
+        trackedActionsFrameAlpha = self:GetValue() 
         end    
       end)
     
@@ -211,8 +212,7 @@ function UI:CreateFrames()
       restZoneWidget.checkBox:SetSize(35,35)
       restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
       restZoneWidget.checkBox:SetScript("OnClick",function (self)
-        local restState = self:GetChecked()
-        trackedActionsHideInRestZone = restState
+        trackedActionsHideInRestZone = self:GetChecked()
       end)  
       restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
       restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
@@ -247,60 +247,59 @@ function UI:CreateFrames()
       frameIndex = frameIndex +1 
      end
   
-      end)
-      return secondaryFrame
+    end)
+  return secondaryFrame
   end
  primaryFrame = PrimaryFrame()
  secondaryFrame = SecondaryFrame()
 
 end
 function UI:CreateActionBar(index)
-    local function SecondaryFrame()
-    SecondaryFrame = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
+    local function ActionBar()
+    local actionBar = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
     function Frame()
-    SecondaryFrame:SetScale(trackedActionsFrameScale)
-    SecondaryFrame:SetAlpha(trackedActionsFrameAlpha)
-    UI:SetFrameMoveable(SecondaryFrame)
-    SecondaryFrame:SetMovable(true)
-    SecondaryFrame:SetSize(150,75);
+      actionBar:SetScale(trackedActionsFrameScale)
+      actionBar:SetAlpha(trackedActionsFrameAlpha)
+    UI:SetFrameMoveable(actionBar)
+    actionBar:SetMovable(true)
+    actionBar:SetSize(150,75);
     end
     function Title()
-    SecondaryFrame.title = SecondaryFrame:CreateFontString(nil,"ARTWORK");
-    SecondaryFrame.title:SetPoint("LEFT",SecondaryFrame,"LEFT",0,-1);
-    SecondaryFrame.title:SetFontObject("GameFontHighlight")
+      actionBar.title = actionBar:CreateFontString(nil,"ARTWORK");
+      actionBar.title:SetPoint("LEFT",actionBar,"LEFT",0,-1);
+      actionBar.title:SetFontObject("GameFontHighlight")
     if Config:IsCurrentPatch() then
-    SecondaryFrame.title:SetText("BAR: "..index)
+      actionBar.title:SetText("BAR: "..index)
     else
-    SecondaryFrame.title:SetText("BAR: "..index) 
+      actionBar.title:SetText("BAR: "..index) 
     end   
-    SecondaryFrame.title:SetAlpha(0)
+    actionBar.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
     end
     function Info()
-      SecondaryFrame.info = CreateFrame("Button",nill,SecondaryFrame,"UIPanelButtonTemplate","ARTWORK");
-      SecondaryFrame.info:SetPoint("LEFT",SecondaryFrame,"Center",0,-1);   
-      SecondaryFrame.info:SetSize(20,20)    
+      actionBar.info = CreateFrame("Button",nill,actionBar,"UIPanelButtonTemplate","ARTWORK");
+      actionBar.info:SetPoint("LEFT",actionBar,"Center",0,-1);   
+      actionBar.info:SetSize(20,20)    
       if Config:IsCurrentPatch() then
-      SecondaryFrame.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-.\nDisplay only when spell is boosted: Check checkbox."
+        actionBar.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-.\nDisplay only when spell is boosted: Check checkbox."
       else
-        SecondaryFrame.info.tooltipText ="Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-"
+        actionBar.info.tooltipText ="Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-"
       end   
-      SecondaryFrame.info:SetAlpha(0)
-      SecondaryFrame.info.text = SecondaryFrame.info:CreateFontString(nil,"BORDER");
-      SecondaryFrame.info.text:SetPoint("CENTER",SecondaryFrame.info,"CENTER",0,0);
-      SecondaryFrame.info.text:SetFontObject("GameFontHighlight")
-      SecondaryFrame.info.text:SetText("i")
+      actionBar.info:SetAlpha(0)
+      actionBar.info.text = actionBar.info:CreateFontString(nil,"BORDER");
+      actionBar.info.text:SetPoint("CENTER",actionBar.info,"CENTER",0,0);
+      actionBar.info.text:SetFontObject("GameFontHighlight")
+      actionBar.info.text:SetText("i")
     end
     Frame()
     Title()
     Info()
-    return SecondaryFrame
+    return actionBar
     end 
-    frames[index] = SecondaryFrame()
-   
+    frames[index] = ActionBar()   
 end
-function UI:PositionActionBar(index)
-   local i = index
+function UI:PositionActionBar(frameIndex)
+   local i = frameIndex 
    local rowCount =5
  
   if not trackedSpellsFramePosition[i]  then
@@ -363,8 +362,8 @@ function UI:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
-function UI:CalculateFramePosition(index)  --return frame from table "frames" [1]primary [2]secondary
-  local point, relativeTo, relativePoint, xOfs, yOfs = frames[index]:GetPoint(1)
+function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
+  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
   local function round2(num, numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
   end
@@ -504,14 +503,15 @@ end
   primaryFrame.titles.usedValue:SetText(usedSpellsCount)
   primaryFrame.titles.trackedValue:SetText(trackedSpellsCount)
   --Primary Frame size
+  local minimumHeight =primaryFrameMinimuHeight
 if usedSpellsCount<12 then
-  primaryFrame:SetHeight(primaryFrameMinimuHeight)
+  primaryFrame:SetHeight(minimumHeight)
 else
   local actionsHeight = usedSpellsCount/6*60+165
-  if primaryFrameMinimuHeight < actionsHeight then
+  if minimumHeight < actionsHeight then
     primaryFrame:SetHeight(actionsHeight)
   else
-    primaryFrame:SetHeight(primaryFrameMinimuHeight)
+    primaryFrame:SetHeight(minimumHeight)
   end
   
 end
@@ -523,8 +523,16 @@ end
     end
   end
   end
---RefreshTrackedIcons()
+RefreshTrackedIcons()
 end
+function UI:RefreshTrackedIcons(trackedActions)
+  for k,v in pairs(trackedActions) do
+    if v[3]~=nill then
+      local newTexture= API:GetActionTexture(v[1])
+      v[3]:SetNormalTexture(newTexture)   
+    end
+  end
+  end
 function UI:UpdateBars(barsToupdate) --parameter list of table of tracked actions  
   local actions = barsToupdate
   local configMode = Config:IsConfigMode()
@@ -545,7 +553,7 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 then 
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.0 then 
         widget:Show()       
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  

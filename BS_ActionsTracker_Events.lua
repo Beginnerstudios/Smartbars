@@ -50,7 +50,8 @@ function Events:RegisterEvents()
   if primaryIsVisible then
   Config:ToggleConfigMode()
   end
-  UI:UpdateUI()        
+  UI:UpdateUI() 
+  UI:RefreshTrackedIcons(trackedActions)       
   end
   function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
