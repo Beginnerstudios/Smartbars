@@ -1,15 +1,17 @@
 ## Interface: 11401
-## Title: BS_ActionsTracker
+## Title: SmartBars
 ## Notes: Tracking your actions.
-## Author: BeginnerStudios
+## Author: BStudios
 ## Version:0.8.5
 ## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha
 
-BS_ActionsTracker_Global.lua
-BS_ActionsTracker_UI.lua
-BS_ActionsTracker_Actions.lua
-BS_ActionsTracker_Config.lua
-BS_ActionsTracker_Events.lua
-BS_ActionsTracker_API.lua
-BS_ActionsTracker_Core.lua
+SmartBars_Global.lua
+SmartBars_UI.lua
+SmartBars_Actions.lua
+SmartBars_Config.lua
+SmartBars_Events.lua
+SmartBars_API.lua
+SmartBars_Core.lua
+
+
 

@@ -1,13 +1,13 @@
 
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.Core ={};
-local Core = BS_ActionsTracker.Core
-UI = BS_ActionsTracker.UI
-Actions = BS_ActionsTracker.Actions
-Config = BS_ActionsTracker.Config
-Events = BS_ActionsTracker.Events
-API = BS_ActionsTracker.API
+local _,SmartBars = ...;
+SmartBars.Core ={};
+local Core = SmartBars.Core
+UI = SmartBars.UI
+Actions = SmartBars.Actions
+Config = SmartBars.Config
+Events = SmartBars.Events
+API = SmartBars.API
 --LoadingMessage--------------------------
 --Core:Functions--------------------------
 --Init------------------------------------
@@ -20,7 +20,7 @@ API:Init()
 Events:RegisterEvents()
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("BS_ActionsTracker - /bs for settings.\n")   
+    print("SmartBars - /bs or /sb for settings.\n")   
     Config:CreateCommands();
     UI:CreateFrames();
     for i=1,UI:Get():ActionBarCount(),1 do
@@ -29,7 +29,7 @@ C_Timer.After(5, function()
     end
     Actions:Load();
 end)
--- Revision version v0.8.5 ---
+-- Revision version v0.8.6 ---
 
 
 

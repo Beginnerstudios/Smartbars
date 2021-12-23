@@ -1,13 +1,13 @@
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.Config ={};
-local Config = BS_ActionsTracker.Config;
+local _,SmartBars = ...;
+SmartBars.Config ={};
+local Config = SmartBars.Config;
 --Init------------------------------------
 function Config:Init()
-    UI = BS_ActionsTracker.UI
-    Core = BS_ActionsTracker.Core
-    Actions = BS_ActionsTracker.Actions
-    Global = BS_ActionsTracker.Global
+    UI = SmartBars.UI
+    Core = SmartBars.Core
+    Actions = SmartBars.Actions
+    Global = SmartBars.Global
 end
 --Config:Functions------------------------
 local isConfigMode = false
@@ -15,7 +15,11 @@ local currentSpecialization
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
+    SLASH_SB1 = "/sb"
     SlashCmdList["BS"] = function(msg)
+    Config:ToggleConfigMode()
+    end
+    SlashCmdList["SB"] = function(msg)
     Config:ToggleConfigMode()
     end
 end
@@ -125,4 +129,4 @@ end
     local z = tostring(x) .. tostring(y);
     return tonumber(z);
 end  
--- Revision version v0.8.5 ---
+-- Revision version v0.8.6 ---

@@ -1,13 +1,13 @@
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.Events ={};
-local Events=BS_ActionsTracker.Events;
+local _,SmartBars = ...;
+SmartBars.Events ={};
+local Events=SmartBars.Events;
 --Init------------------------------------
 function Events:Init()
-Actions = BS_ActionsTracker.Actions
-Core = BS_ActionsTracker.Core
-Config = BS_ActionsTracker.Config
-UI = BS_ActionsTracker.UI
+Actions = SmartBars.Actions
+Core = SmartBars.Core
+Config = SmartBars.Config
+UI = SmartBars.UI
 end
 --Events:Functions------------------------
 function Events:RegisterEvents()
@@ -35,7 +35,7 @@ function Events:RegisterEvents()
       TrackedSpellsCharacter=nill
       TrackedActionsFrameCount=nill
       TrackedActionsDisplayedInRestZone =nill
-      print("BS_ActionsTracker -reseted-")
+      print("SmartBars -reseted-")
       IsCleared = true
   end
    
@@ -72,5 +72,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8.5 ---
+-- Revision version v0.8.6 ---
 

@@ -1,11 +1,11 @@
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.Actions ={};
-local Actions = BS_ActionsTracker.Actions;
+local _,SmartBars = ...;
+SmartBars.Actions ={};
+local Actions = SmartBars.Actions;
 --Init------------------------------------
 function Actions:Init()
-    UI = BS_ActionsTracker.UI
-    API = BS_ActionsTracker.API
+    UI = SmartBars.UI
+    API = SmartBars.API
 end
 --Variables--------------------------------
 local trackedActions = {}
@@ -116,4 +116,4 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
--- Revision version v0.8.5 --
+-- Revision version v0.8.6 --

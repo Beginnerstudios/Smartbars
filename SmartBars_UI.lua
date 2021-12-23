@@ -1,13 +1,13 @@
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.UI ={};
-local UI=BS_ActionsTracker.UI;
+local _,SmartBars = ...;
+SmartBars.UI ={};
+local UI=SmartBars.UI;
 local Actions
 --Init------------------------------------
 function UI:Init()
-Actions = BS_ActionsTracker.Actions
-Core = BS_ActionsTracker.Core
-Config = BS_ActionsTracker.Config
+Actions = SmartBars.Actions
+Core = SmartBars.Core
+Config = SmartBars.Config
 end
 --Variables-------------------------------
 local primaryFrame   
@@ -636,6 +636,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.5 ---
+-- Revision version v0.8.6 ---
 
 

@@ -1,10 +1,10 @@
 --NameSpaces------------------------------
-local _,BS_ActionsTracker = ...;
-BS_ActionsTracker.API ={};
-local API = BS_ActionsTracker.API;
+local _,SmartBars = ...;
+SmartBars.API ={};
+local API = SmartBars.API;
 --Init------------------------------------
 function API:Init()
-   Config = BS_ActionsTracker.Config
+   Config = SmartBars.Config
 end
 --API:Functions-----------------------
 function API:GetSpecialization()
@@ -81,5 +81,5 @@ end
 function API:IsResting()
     return IsResting()
 end
--- Revision version v0.8.5 ---
+-- Revision version v0.8.6 ---
 
