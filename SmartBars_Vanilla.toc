@@ -1,8 +1,8 @@
-## Interface:20502
+## Interface: 11401
 ## Title: SmartBars
 ## Notes: Tracking your actions.
 ## Author: BStudios
-## Version:0.8.5
+## Version:0.8.6
 ## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha
 
 SmartBars_Global.lua
@@ -12,5 +12,6 @@ SmartBars_Config.lua
 SmartBars_Events.lua
 SmartBars_API.lua
 SmartBars_Core.lua
+
 
 

@@ -11,13 +11,12 @@ Config = SmartBars.Config
 end
 --Variables-------------------------------
 local primaryFrame   
-local secondaryFrame 
 local frames = {};  
 local trackedActionsColumnCount=0 --SV
 local trackedSpellsFramePosition ={};--SV
 local trackedActionsFrameScale =0--SV
 local trackedActionsFrameCount = 1--SV
-local trackedActionsFrameAlpha =0
+local trackedActionsFrameAlpha =0--SV
 local trackedActionsHideInRestZone --SV
 local primaryFrameMinimuHeight
 local trackedBarsMaximum = 10
@@ -45,7 +44,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("BS_ActionsTracker v - 0.8.5");
+       titles.frame:SetText("SmartBars v - 0.8.6");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -234,10 +233,10 @@ function UI:CreateFrames()
       return primaryFrame
   end
   function SecondaryFrame()
-    secondaryFrame = CreateFrame("Frame","BS_ActionsTracker.secondaryFrame",UIParent);
-    secondaryFrame:SetPoint("LEFT",UIParent,"LEFT",0,0);
-    secondaryFrame:SetSize(100,100)
-    secondaryFrame:SetScript("OnUpdate", function ()
+    local frameholder = CreateFrame("Frame",nil,UIParent);
+    frameholder:SetPoint("LEFT",UIParent,"LEFT",0,0);
+    frameholder:SetSize(100,100)
+    frameholder:SetScript("OnUpdate", function ()
       local tA = Actions:GetTracked()
        UI:UpdateBars(tA)
   
@@ -248,10 +247,10 @@ function UI:CreateFrames()
      end
   
     end)
-  return secondaryFrame
+  return frameholder
   end
  primaryFrame = PrimaryFrame()
- secondaryFrame = SecondaryFrame()
+ SecondaryFrame()
 
 end
 function UI:CreateActionBar(index)
@@ -547,7 +546,7 @@ if barsToupdate ~=nill then
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.0 then 
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 then 
         widget:Show()       
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="4EjrFteb6AxKR3UikeAs" name="Page-1">
-        <mxGraphModel dx="1738" dy="1995" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1465" dy="1747" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -45,7 +45,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="bBtUMvfZaDXqP1AEkA8x-9" value="&lt;div&gt;SmartBars_Events&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="40" width="400" height="40" as="geometry"/>
+                    <mxGeometry x="40" width="410" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="bBtUMvfZaDXqP1AEkA8x-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-11" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>

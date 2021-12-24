@@ -9,7 +9,7 @@ end
 --API:Functions-----------------------
 function API:GetSpecialization()
     local version,build,date = GetBuildInfo()
-    if version == "9.1.5" then
+    if version == "9.1.5" or version == "9.2.0" then
      GetSpecialization()    
     return  GetSpecialization()  
     else   

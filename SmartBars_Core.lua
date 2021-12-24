@@ -29,7 +29,7 @@ C_Timer.After(5, function()
     end
     Actions:Load();
 end)
--- Revision version v0.8.6 ---
+-- Revision version v0.8.6 ----
 
 
 
