@@ -109,11 +109,11 @@ function Actions:Delete(actionID)
     trackedActions[actionID]=nill
    
 end  
---Getters & Setters,Reset-----------------------------  
+--Getters & Setters,Reset-----------------------------
 function Actions:SetSavedVariables(tActions)
     trackedActions = tActions
 end
 function Actions:GetTracked()
     return trackedActions
 end
--- Revision version v0.8.6 ---
+-- Revision version v0.8.7 ---

@@ -45,7 +45,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="bBtUMvfZaDXqP1AEkA8x-9" value="&lt;div&gt;SmartBars_Events&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="40" width="410" height="40" as="geometry"/>
+                    <mxGeometry x="35" width="410" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="bBtUMvfZaDXqP1AEkA8x-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="bBtUMvfZaDXqP1AEkA8x-11" target="bBtUMvfZaDXqP1AEkA8x-7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -64,6 +64,9 @@
                         <mxPoint x="570" y="100" as="sourcePoint"/>
                         <mxPoint x="620" y="40" as="targetPoint"/>
                     </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="&lt;div&gt;v - 0.8.7&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-30" y="340" width="140" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

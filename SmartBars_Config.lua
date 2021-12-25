@@ -129,4 +129,4 @@ function Config:JoinNumber(x, y)
     local z = tostring(x) .. tostring(y);
     return tonumber(z);
 end  
--- Revision version v0.8.6 -----
+-- Revision version v0.8.7 -----

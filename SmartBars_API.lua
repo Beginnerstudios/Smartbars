@@ -81,5 +81,8 @@ end
 function API:IsResting()
     return IsResting()
 end
--- Revision version v0.8.6 ---
+function API:IsActionInRange(slotID)
+    return IsActionInRange(slotID)
+end
+-- Revision version v0.8.7 ---
 

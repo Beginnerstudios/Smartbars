@@ -28,10 +28,10 @@ function UI:CreateFrames()
     local defaultLayer = "OVERLAY"
    
       function Frame()
-    local primaryFrame = CreateFrame("Frame","BS_ActionsTracker.Primary",UIParent,"BasicFrameTemplateWithInset");
+    local primaryFrame = CreateFrame("Frame",nill,UIParent,"BasicFrameTemplateWithInset");
     UI:SetFrameMoveable(primaryFrame)  
     primaryFrame:Hide()
-    primaryFrame:SetSize(500,0);
+    primaryFrame:SetSize(450,0);
     primaryFrame:SetPoint("CENTER",UIParent,"CENTER",-400,100);
     primaryFrame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
@@ -40,7 +40,7 @@ function UI:CreateFrames()
       end     
       function StaticTitles(parentFrame)
        UIConfig = parentFrame
-       local titles = CreateFrame("Frame","BS_ActionsTracker.Primary",UIConfig) 
+       local titles = CreateFrame("Frame",nill,UIConfig) 
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
@@ -73,7 +73,7 @@ function UI:CreateFrames()
        return titles
       end
       function ResetButton()
-      local resetWidget = CreateFrame("Frame", "only_for_testing")
+      local resetWidget = CreateFrame("Frame",nil)
       resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
       resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
       resetWidget.title:SetFontObject("GameFontHighlight")
@@ -89,12 +89,12 @@ function UI:CreateFrames()
       return resetWidget
       end
       function ScaleSlider()           
-        local scaleWidget = CreateFrame("Frame", "dasd")
+        local scaleWidget = CreateFrame("Frame",nil)
         scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
         scaleWidget.title:SetPoint("LEFT",scaleWidget,"CENTER",-50,0);
         scaleWidget.title:SetFontObject("GameFontHighlight")
         scaleWidget.title:SetText("Scale:")  
-        scaleWidget.slider = CreateFrame("Slider", "myslider", scaleWidget,"OptionsSliderTemplate")
+        scaleWidget.slider = CreateFrame("Slider",nil, scaleWidget,"OptionsSliderTemplate")
         scaleWidget.slider:SetPoint("CENTER",scaleWidget,"CENTER",0,-30);
         scaleWidget.slider:SetWidth(100)
         scaleWidget.slider:SetHeight(15)
@@ -106,8 +106,7 @@ function UI:CreateFrames()
         frames[i]:SetScale(self:GetValue())  
         trackedActionsFrameScale = self:GetValue()
         end    
-      end)
-     
+      end)    
       return scaleWidget
       end
       function AlphaSlider()           
@@ -133,7 +132,7 @@ function UI:CreateFrames()
       return alphaWidget
       end
       function ColumnsWidgets()
-      local columnsWidget = CreateFrame("Frame","BS_Options_Columns") 
+      local columnsWidget = CreateFrame("Frame",nil) 
       columnsWidget.text = columnsWidget:CreateFontString(nil,defaultLayer);
       columnsWidget.text:SetPoint("LEFT",columnsWidget,"CENTER",-50,0);
       columnsWidget.text:SetFontObject(defaultFont)
@@ -153,7 +152,7 @@ function UI:CreateFrames()
         columnsWidget.text2:SetText(trackedActionsColumnCount)
       end
       end)   
-      columnsWidget.plusButton = CreateFrame("Button", "bs_plus", columnsWidget,"UIPanelButtonTemplate")
+      columnsWidget.plusButton = CreateFrame("Button",nil, columnsWidget,"UIPanelButtonTemplate")
       columnsWidget.plusButton:SetPoint("CENTER", columnsWidget, "CENTER", 35, -30)
       columnsWidget.plusButton:SetSize(35,35)
       columnsWidget.plusButton:SetText("+")
@@ -167,7 +166,7 @@ function UI:CreateFrames()
       return columnsWidget
       end
       function BarsWidget()
-        local barsWidget = CreateFrame("Frame","BS_Options_Bars") 
+        local barsWidget = CreateFrame("Frame",nil) 
         barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultFont);
         barsWidget.textStatic:SetPoint("LEFT",barsWidget,"CENTER",-50,0);
         barsWidget.textStatic:SetFontObject(defaultFont)
@@ -177,7 +176,7 @@ function UI:CreateFrames()
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(trackedActionsFrameCount);
 
-        barsWidget.minusButton = CreateFrame("Button", "bs_minus", barsWidget,"UIPanelButtonTemplate")
+        barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate")
         barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 0, -30)
         barsWidget.minusButton :SetSize(35,35)
         barsWidget.minusButton :SetText("-")
@@ -187,7 +186,7 @@ function UI:CreateFrames()
         barsWidget.textValue:SetText(trackedActionsFrameCount);
         end) 
 
-        barsWidget.plusButton  = CreateFrame("Button", "bs_plus", barsWidget,"UIPanelButtonTemplate")
+        barsWidget.plusButton  = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate")
         barsWidget.plusButton:SetPoint("CENTER", barsWidget, "CENTER", 35, -30)
        barsWidget.plusButton:SetSize(35,35)
         barsWidget.plusButton:SetText("+")
@@ -205,7 +204,7 @@ function UI:CreateFrames()
   
       end
       function RestZoneWidget()
-      local restZoneWidget = CreateFrame("Frame","BS_ActionsTracker.Primary") 
+      local restZoneWidget = CreateFrame("Frame",nil) 
       restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate")
       restZoneWidget.checkBox:SetChecked(trackedActionsHideInRestZone)
       restZoneWidget.checkBox:SetSize(35,35)
@@ -224,7 +223,7 @@ function UI:CreateFrames()
       local optionsWidgets = {ResetButton(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),BarsWidget(),RestZoneWidget()}   
       local xOfs =50
       for k in pairs(optionsWidgets) do
-        optionsWidgets[k]:SetPoint("CENTER", primaryFrame.TitleBg, "CENTER", 150, (xOfs)*-1)
+        optionsWidgets[k]:SetPoint("CENTER", primaryFrame.TitleBg, "CENTER", 165, (xOfs)*-1)
         optionsWidgets[k]:SetParent(primaryFrame)
         optionsWidgets[k]:SetSize(100,100)
         xOfs = xOfs+60   
@@ -520,9 +519,11 @@ end
 function UI:RefreshTrackedIcons()
   local tA = Actions:GetTracked()
   for actionID in pairs(tA) do
-    if tA[actionID][3]~=nill then
-      local newTexture= API:GetActionTexture(tA[actionID][1])
-      tA[actionID][3]:SetNormalTexture(newTexture)   
+    local widget =tA[actionID][3]
+    local slotID = tA[actionID][1]
+    if widget~=nill then
+      local newTexture= API:GetActionTexture(slotID)
+      widget:SetNormalTexture(newTexture)   
     end
   end
 end
@@ -532,7 +533,7 @@ function UI:UpdateBars(barsToupdate) --parameter list of table of tracked action
   local userSpec = Config:GetSpec()
   local isResting = Config:GetResting()
   
-if barsToupdate ~=nill then
+if actions ~=nill then
   for actionID in pairs(actions) do  ---Handle tracked actions visibility
     local slotID = actions[actionID][1]
     local spellID = actions[actionID][2]
@@ -552,7 +553,7 @@ if barsToupdate ~=nill then
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
         else                 
-          local inRange = IsActionInRange(slotID)
+          local inRange = API:IsActionInRange(slotID)
           if notEnoughMana or onCooldown>0 and duration>1.5 or inRange==false or not isUsable then
             widget:Hide()                                           
           else           
@@ -577,18 +578,16 @@ end
 function UI:SortTrackedActions(trackedActions,sortNumber)
   local startxOffset = 0
   local startyOffset =-37
-  local count = 0
- 
-  for k,v in pairs(trackedActions) do
+  
+  for k in pairs(trackedActions) do
     local actionID = k 
     local frameNumber = trackedActions[actionID][6]
     local widget = trackedActions[actionID][3]
     if frameNumber == sortNumber then
-      if widget:IsVisible() == true then    ----Sort tracked actions
+      if widget:IsVisible() then
         widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
         startxOffset = startxOffset +50
-        count = count + 1
-          if(startxOffset== trackedActionsColumnCount*50) then
+      if(startxOffset== trackedActionsColumnCount*50) then
       startxOffset =0
       startyOffset  = startyOffset-50
           end
@@ -635,6 +634,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.6 ---
+-- Revision version v0.8.7 ---
 
 
