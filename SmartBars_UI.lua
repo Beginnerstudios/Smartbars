@@ -44,7 +44,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("SmartBars v - 0.8.6");
+       titles.frame:SetText("SmartBars v - 0.8.7");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
