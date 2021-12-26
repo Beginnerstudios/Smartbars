@@ -84,5 +84,5 @@ end
 function API:IsActionInRange(slotID)
     return IsActionInRange(slotID)
 end
--- Revision version v0.8.7 ---
+-- Revision version v0.8.8 ---
 

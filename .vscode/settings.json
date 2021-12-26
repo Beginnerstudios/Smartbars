@@ -23,7 +23,8 @@
         "GetBuildInfo",
         "GetPrimaryTalentTree",
         "CreateFontString",
-        "WorldFrame"
+        "WorldFrame",
+        "v - 0.8.8"
     ]
 }
 

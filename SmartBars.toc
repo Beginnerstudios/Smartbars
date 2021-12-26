@@ -2,7 +2,7 @@
 ## Title: SmartBars
 ## Notes: Tracking your actions.
 ## Author: BStudios
-## Version:0.8.6
+## Version:0.8.8
 ## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha
 
 SmartBars_Global.lua

@@ -35,11 +35,9 @@ function Events:RegisterEvents()
       TrackedSpellsCharacter=nill
       TrackedActionsFrameCount=nill
       TrackedActionsDisplayedInRestZone =nill
-      print("SmartBars -reseted-")
+      print("SmartBars - reseted")
       IsCleared = true
-  end
-   
-
+  end 
   Config:SetDefaults()
   end
   function MyAddon:PLAYER_LOGOUT()   
@@ -71,5 +69,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8.7 ----
+-- Revision version v0.8.8 ----
 

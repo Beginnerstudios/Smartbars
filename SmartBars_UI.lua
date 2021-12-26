@@ -44,7 +44,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("SmartBars v - 0.8.7");
+       titles.frame:SetText("SmartBars " ..SmartBarsVersion);
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -634,6 +634,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.7 ---
+-- Revision version v0.8.8 ---
 
 

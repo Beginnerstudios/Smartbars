@@ -17,6 +17,7 @@ Config:Init()
 Events:Init()
 API:Init()
 --Program run-----------------------------
+Config:DisableOldAddon()
 Events:RegisterEvents()
 C_Timer.After(5, function()   
     Config:LoadConfig()
