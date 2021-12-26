@@ -24,7 +24,7 @@ function Actions:Add(action)
         end         
     UI:UpdateUI() 
 end  
-function Actions:Display(actions,frame) --Create widgets for selected actions under selected frame parent
+function Actions:Display(actions,frame)
     local xOffstet = 0;
     local yOffset = -10;
     local count = 0
@@ -116,4 +116,4 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
--- Revision version v0.8.8 ---
+-- Revision version v0.8.9 ---

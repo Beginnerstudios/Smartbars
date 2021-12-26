@@ -82,7 +82,7 @@ function Config:SetDefaults()
     end   
 end
 function Config:IsCurrentPatch()
-if API:GetBuildInfo() == "9.1.5" or API:GetBuildInfo() == "9.2.0" then
+if API:GetBuildInfo()>90000 then
     return true
 else
     return false
@@ -136,4 +136,4 @@ function Config:DisableOldAddon()
         print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.Delete BS_ActionsTracker folder from --/interface/addons. if you dont want get this notification again.")      
     end 
 end  
--- Revision version v0.8.7 -----
+-- Revision version v0.8.9 -----

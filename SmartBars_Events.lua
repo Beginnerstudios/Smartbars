@@ -11,7 +11,7 @@ UI = SmartBars.UI
 end
 --Events:Functions------------------------
 function Events:RegisterEvents()
-  MyAddon = { }
+  Event = { }
   local frame = CreateFrame("Frame")
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
@@ -24,10 +24,10 @@ function Events:RegisterEvents()
   end
   
   frame:SetScript("OnEvent", function(this, event, ...)
-      MyAddon[event](MyAddon, ...)
+    Event[event](MyAddon, ...)
   end)
 
-  function MyAddon:PLAYER_LOGIN() 
+  function Event:PLAYER_LOGIN() 
     if IsCleared==false or IsCleared == nill then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
@@ -40,9 +40,9 @@ function Events:RegisterEvents()
   end 
   Config:SetDefaults()
   end
-  function MyAddon:PLAYER_LOGOUT()   
+  function Event:PLAYER_LOGOUT()   
   end
-  function MyAddon:PLAYER_SPECIALIZATION_CHANGED()
+  function Event:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
   local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
   if primaryIsVisible then
@@ -50,7 +50,7 @@ function Events:RegisterEvents()
   end
   UI:UpdateUI()       
   end
-  function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
+  function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
         local trackedActions = Actions:GetTracked()         
       for actionID,v in pairs(trackedActions) do                     
@@ -59,7 +59,7 @@ function Events:RegisterEvents()
       end 
     end
   end
-  function MyAddon:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
+  function Event:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
     local trackedActions = Actions:GetTracked()               
     for actionID,v in pairs(trackedActions) do                     
@@ -69,5 +69,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8.8 ----
+-- Revision version v0.8.9 ----
 

@@ -8,8 +8,7 @@ function API:Init()
 end
 --API:Functions-----------------------
 function API:GetSpecialization()
-    local version,build,date = GetBuildInfo()
-    if version == "9.1.5" or version == "9.2.0" then
+    if Config:IsCurrentPatch() then
      GetSpecialization()    
     return  GetSpecialization()  
     else   
@@ -26,8 +25,8 @@ function API:GetActionCooldown(spellID)
     return GetActionCooldown(spellID)
 end
 function API:GetBuildInfo()
-    local version,build,date = GetBuildInfo()
-    return version  
+    local version,build,date,iterface = GetBuildInfo()
+    return iterface  
 end
 function API:IsUsableAction(action)
     local isUsable, notEnoughMana = IsUsableAction(action) 
@@ -84,5 +83,5 @@ end
 function API:IsActionInRange(slotID)
     return IsActionInRange(slotID)
 end
--- Revision version v0.8.8 ---
+-- Revision version v0.8.9 ---
 

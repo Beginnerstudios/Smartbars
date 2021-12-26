@@ -28,15 +28,15 @@ function UI:CreateFrames()
     local defaultLayer = "OVERLAY"
    
       function Frame()
-    local primaryFrame = CreateFrame("Frame",nill,UIParent,"BasicFrameTemplateWithInset");
-    UI:SetFrameMoveable(primaryFrame)  
-    primaryFrame:Hide()
-    primaryFrame:SetSize(450,0);
-    primaryFrame:SetPoint("CENTER",UIParent,"CENTER",-400,100);
-    primaryFrame.CloseButton:SetScript("OnClick", function ()
+    local frame = CreateFrame("Frame",nill,UIParent,"BasicFrameTemplateWithInset");
+    UI:SetFrameMoveable(frame)  
+    frame:Hide()
+    frame:SetSize(450,0);
+    frame:SetPoint("CENTER",UIParent,"CENTER",-400,100);
+    frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
-    return primaryFrame
+    return frame
       end     
       function StaticTitles(parentFrame)
        UIConfig = parentFrame
@@ -218,7 +218,7 @@ function UI:CreateFrames()
       restZoneWidget.title:SetText("Hide in rest zone:")   
       return restZoneWidget
       end
-      local primaryFrame = Frame()
+      primaryFrame = Frame()
       primaryFrame.titles = StaticTitles(primaryFrame)
       local optionsWidgets = {ResetButton(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),BarsWidget(),RestZoneWidget()}   
       local xOfs =50
@@ -236,14 +236,14 @@ function UI:CreateFrames()
     frameholder:SetPoint("LEFT",UIParent,"LEFT",0,0);
     frameholder:SetSize(100,100)
     frameholder:SetScript("OnUpdate", function ()
-      local tA = Actions:GetTracked()
-       UI:UpdateBars(tA)
+    local tA = Actions:GetTracked()
+    UI:UpdateBars(tA)
   
-     local frameIndex = 1
+    local frameIndex = 1
     while frames[frameIndex] do
-      UI:SortTrackedActions(tA,frameIndex)
-      frameIndex = frameIndex +1 
-     end
+    UI:SortBars(tA,frameIndex)
+    frameIndex = frameIndex +1 
+    end
   
     end)
   return frameholder
@@ -360,7 +360,7 @@ function UI:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
-function UI:CalculateFramePosition(frameIndex)  --return frame from table "frames" [1]primary [2]secondary
+function UI:CalculateFramePosition(frameIndex)
   local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
   local function round2(num, numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
@@ -404,7 +404,7 @@ function UI:CreateFontString(parentWidget,valueToSave,isEnabled)
 local fontString =parentWidget:CreateFontString(nil,"ARTWORK");
 fontString:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
 fontString:SetFont("Fonts\\FRIZQT__.TTF", 15,nil)
-fontString:SetText("Test");
+fontString:SetText("");
 return fontString
 end
 function UI:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)
@@ -534,7 +534,7 @@ function UI:UpdateBars(barsToupdate) --parameter list of table of tracked action
   local isResting = Config:GetResting()
   
 if actions ~=nill then
-  for actionID in pairs(actions) do  ---Handle tracked actions visibility
+  for actionID in pairs(actions) do  
     local slotID = actions[actionID][1]
     local spellID = actions[actionID][2]
     local widget = actions[actionID][3]
@@ -542,7 +542,7 @@ if actions ~=nill then
     local isBoosted = actions[actionID][7]   
     local displayOnlyWhenBoosted =actions[actionID][8]
      
-    if Config:IsValueSame(actionSpec,userSpec)  then       
+    if Config:IsValueSame(actionSpec,userSpec)then       
       local chargesText = API:GetActionCharges(slotID) 
       local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
       local start, duration, onCooldown = API:GetActionCooldown(slotID)        
@@ -564,23 +564,19 @@ if actions ~=nill then
               widget:Show() 
             end                                                            
           end         
-       end 
-     
-      end
-
-  
+       end   
+      end 
     else
       widget:Hide()
     end
   end
   end   
 end
-function UI:SortTrackedActions(trackedActions,sortNumber)
+function UI:SortBars(trackedActions,sortNumber)
   local startxOffset = 0
   local startyOffset =-37
   
-  for k in pairs(trackedActions) do
-    local actionID = k 
+  for actionID in pairs(trackedActions) do
     local frameNumber = trackedActions[actionID][6]
     local widget = trackedActions[actionID][3]
     if frameNumber == sortNumber then
@@ -634,6 +630,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.8 ---
+-- Revision version v0.8.9 ---
 
 
