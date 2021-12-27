@@ -65,7 +65,7 @@
                         <mxPoint x="620" y="40" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="13" value="&lt;div&gt;v - 0.8.7&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="13" value="&lt;div&gt;v - 0.9.0&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-30" y="340" width="140" height="40" as="geometry"/>
                 </mxCell>
             </root>

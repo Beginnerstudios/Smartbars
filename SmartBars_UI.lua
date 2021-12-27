@@ -59,7 +59,7 @@ function UI:CreateFrames()
        titles.actionsStatic = titles:CreateFontString(nil,defaultLayer);
        titles.actionsStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-70);
        titles.actionsStatic:SetFontObject(defaultFont)
-       titles.actionsStatic:SetText("Used actions in action bars:");
+       titles.actionsStatic:SetText("Used spells and items in action bars:");
        
        titles.trackedValue = titles:CreateFontString(nil,defaultLayer);
        titles.trackedValue:SetPoint("LEFT",titles.trackedStatic,"LEFT",100,0);
@@ -375,7 +375,8 @@ function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return w
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50)
  actionWidget.tooltipText = "test"
- local newTexture= API:GetActionTexture(action[1])
+ local spellID = action[2] 
+ local newTexture= API:GetActionTexture(spellID,action[6],action[1])
  if isTracked then
   actionWidget:SetHighlightTexture(nill)
   actionWidget:SetPushedTexture(nill)  
@@ -402,7 +403,7 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
 end
 function UI:CreateFontString(parentWidget,valueToSave,isEnabled)
 local fontString =parentWidget:CreateFontString(nil,"ARTWORK");
-fontString:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
+fontString:SetPoint("RIGHT",parentWidget,"CENTER",22,-17);
 fontString:SetFont("Fonts\\FRIZQT__.TTF", 15,nil)
 fontString:SetText("");
 return fontString
@@ -520,9 +521,11 @@ function UI:RefreshTrackedIcons()
   local tA = Actions:GetTracked()
   for actionID in pairs(tA) do
     local widget =tA[actionID][3]
+    local spellID = tA[actionID][2]
+    local actionType = tA[actionID][9]
     local slotID = tA[actionID][1]
     if widget~=nill then
-      local newTexture= API:GetActionTexture(slotID)
+      local newTexture= API:GetActionTexture(spellID,actionType,slotID)
       widget:SetNormalTexture(newTexture)   
     end
   end
@@ -541,20 +544,21 @@ if actions ~=nill then
     local actionSpec = actions[actionID][5]
     local isBoosted = actions[actionID][7]   
     local displayOnlyWhenBoosted =actions[actionID][8]
+    local actionType = actions[actionID][9]  
      
     if Config:IsValueSame(actionSpec,userSpec)then       
-      local chargesText = API:GetActionCharges(slotID) 
-      local isUsable,notEnoughMana = API:IsUsableAction(slotID)  
-      local start, duration, onCooldown = API:GetActionCooldown(slotID)        
+      local chargesText = API:GetActionCharges(spellID,actionType) 
+      local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
+      local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
+      local inRange = API:IsActionInRange(spellID,actionType)       
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 then 
-        widget:Show()       
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
+          widget:Show()                         
       else             
         if isResting and trackedActionsHideInRestZone or displayOnlyWhenBoosted  then  
           widget:Hide()  
-        else                 
-          local inRange = API:IsActionInRange(slotID)
-          if notEnoughMana or onCooldown>0 and duration>1.5 or inRange==false or not isUsable then
+        else                                                                   
+          if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
             widget:Hide()                                           
           else           
             local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
@@ -630,6 +634,6 @@ function UI:SetSavedVariables(framePosition,columnCount,frameScale,frameCount,hi
   trackedActionsHideInRestZone = hiddenInRestZone
   trackedActionsFrameAlpha = frameAlpha
 end
--- Revision version v0.8.9 ---
+-- Revision version v0.9.0 ---
 
 

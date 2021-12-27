@@ -18,19 +18,35 @@ end
 function API:GetActionInfo(slotID)   
     return GetActionInfo(slotID)    
 end
-function API:GetActionTexture(slotID)   
-    return GetActionTexture(slotID)    
+function API:GetActionTexture(slotID,actionType,actionID) 
+    if actionType == "spell" then
+    return GetSpellTexture(slotID) 
+    elseif actionType =="item" then
+    return GetItemIcon(slotID) 
+    end  
 end
-function API:GetActionCooldown(spellID)
-    return GetActionCooldown(spellID)
+function API:GetActionCooldown(spellID,actionType,actionID)
+    if  actionType=="spell" then
+    return GetSpellCooldown(spellID)
+    elseif actionType=="item" then
+    return GetItemCooldown(spellID) 
+    end
+
+    
+   
 end
 function API:GetBuildInfo()
     local version,build,date,iterface = GetBuildInfo()
     return iterface  
 end
-function API:IsUsableAction(action)
-    local isUsable, notEnoughMana = IsUsableAction(action) 
+function API:IsUsableAction(action,actionType)
+if actionType =="spell" then
+    local isUsable, notEnoughMana = IsUsableSpell(action)    
     return isUsable,notEnoughMana
+    elseif actionType =="item" then
+    local  isUsable, notEnoughMana = IsUsableItem(action)   
+    return isUsable,notEnoughMana   
+    end   
 end
 function API:GetPlayerAuraBySpellID(spellID)   
     if Config:IsCurrentPatch() then
@@ -54,25 +70,37 @@ end
    
       
 end
-function API:GetActionCharges(slotID)
- if Config:IsCurrentPatch() then
-  local currentCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetActionCharges(slotID)
-  if currentCharges == 0 then
-      return ""
-  else
-    return currentCharges
-  end
- else
-    return ""
+function API:GetActionCharges(slotID,actionType)  
+ 
+ if actionType=="item" then
+    local currentItemCharges = GetItemCount(slotID)
+  
+    if currentItemCharges == 0 or currentItemCharges==nill  then 
+        return ""
+    else 
+      return currentItemCharges
+    end
+ elseif actionType =="spell" then
+    local currentSpellCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetSpellCharges(slotID)
+  
+    if currentSpellCharges == 0 or currentSpellCharges==nill  then 
+        return ""
+    else 
+      return currentSpellCharges
  end
+
+  
+    
+ end
+ 
 end
 function API:GetUserActions()                                                           
     local slotCount = 120
     local allSlotTable = {}
         for i=1,slotCount do
             local actionType,actionID,subType = API:GetActionInfo(i)
-                 if actionID ~=nil and strmatch(actionID,"%d")  then
-                    allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization}           --- [1]slot id [2]spellID
+                 if actionID ~=nil and strmatch(actionID,"%d") and actionType=="spell" or actionType =="item" then
+                    allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization,actionType}           --- [1]slot id [2]spellID
                 end
         end     
     return allSlotTable
@@ -80,8 +108,16 @@ end
 function API:IsResting()
     return IsResting()
 end
-function API:IsActionInRange(slotID)
-    return IsActionInRange(slotID)
+function API:IsActionInRange(slotID,actionType)
+  
+    if actionType =="spell" then
+        local spellName= GetSpellInfo(slotID)      
+        if IsSpellInRange(spellName,"target") == 1 or IsSpellInRange(spellName,"target") ==nil then
+            return true
+        else
+            return false
+        end                
+    end   
 end
--- Revision version v0.8.9 ---
+-- Revision version v0.9.0 ---
 

@@ -84,19 +84,22 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
     local trackedFrame = nill
     local isBoosted = false
     local showOnlyWhenBoosted = nill
+    local actionType = nill
     if isExisting==true then
         curretSpec = action[5]
         trackedFrame = action[6]
         showOnlyWhenBoosted = action[8]
-        actionID = key       
+        actionID = key  
+        actionType = action[9]     
     else  
         actionID= Config:JoinNumber(action[2],Config:GetSpec())
         curretSpec= API:GetSpecialization()
         trackedFrame = 1   
         showOnlyWhenBoosted = false
+        actionType = action[6]
     end  
  
-        trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted} 
+        trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
         trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
         trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled) 
         trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],trackedActions[actionID],isDisplayed)  
@@ -116,4 +119,4 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
--- Revision version v0.8.9 ---
+-- Revision version v0.9.0 ---

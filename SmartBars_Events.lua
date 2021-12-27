@@ -28,7 +28,7 @@ function Events:RegisterEvents()
   end)
 
   function Event:PLAYER_LOGIN() 
-    if IsCleared==false or IsCleared == nill then
+    if IsCleared==true or IsCleared == nill then
       TrackedSpellsFramePosition = nill
       TrackedActionsColumnCount=nill
       TrackedActionsFrameScale=nill
@@ -36,7 +36,7 @@ function Events:RegisterEvents()
       TrackedActionsFrameCount=nill
       TrackedActionsDisplayedInRestZone =nill
       print("SmartBars - reseted")
-      IsCleared = true
+      IsCleared = false
   end 
   Config:SetDefaults()
   end
@@ -69,5 +69,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.8.9 ----
+-- Revision version v0.9.0 ----
 
