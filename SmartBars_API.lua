@@ -2,6 +2,7 @@
 local _,SmartBars = ...;
 SmartBars.API ={};
 local API = SmartBars.API;
+local Config;
 --Init------------------------------------
 function API:Init()
    Config = SmartBars.Config

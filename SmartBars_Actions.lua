@@ -2,10 +2,14 @@
 local _,SmartBars = ...;
 SmartBars.Actions ={};
 local Actions = SmartBars.Actions;
+local UI;
+local API;
+local Config;
 --Init------------------------------------
 function Actions:Init()
     UI = SmartBars.UI
     API = SmartBars.API
+    Config = SmartBars.Config
 end
 --Variables--------------------------------
 local trackedActions = {}

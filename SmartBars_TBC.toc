@@ -3,7 +3,7 @@
 ## Notes: Tracking your actions.
 ## Author: BStudios
 ## Version:0.9.0
-## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha
+## SavedVariablesPerCharacter:TrackedSpellsCharacter,TrackedSpellsFramePosition,TrackedActionsFrameScale,TrackedActionsColumnCount,TrackedActionsFrameCount,IsCleared,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha,SmartBarsSettings
 
 SmartBars_Global.lua
 SmartBars_UI.lua

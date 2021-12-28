@@ -2,16 +2,22 @@
 local _,SmartBars = ...;
 SmartBars.Config ={};
 local Config = SmartBars.Config;
+local UI
+local Core
+local Actions
+local Global
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
     Core = SmartBars.Core
     Actions = SmartBars.Actions
     Global = SmartBars.Global
+    API = SmartBars.API
 end
 --Config:Functions------------------------
 local isConfigMode = false
 local currentSpecialization
+local isCleared
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -41,45 +47,30 @@ end
 UI:UpdateUI()
 end
 function Config:SaveConfig()
-    TrackedSpellsFramePosition = UI:Get():ActionBarsPositions()
-    TrackedActionsColumnCount = UI:Get():ColumnCount()
-    TrackedActionsFrameScale = UI:Get():ActionBar(1):GetScale()
-    TrackedSpellsCharacter = Actions:GetTracked()
-    TrackedActionsFrameCount = UI:Get():ActionBarCount()
-    TrackedActionsHideInRestZone =UI:Get():HideInSaveZone()
-    TrackedActionsFrameAlpha = UI:Get():ActionBar(1):GetAlpha()
-   
+    TrackedSpellsCharacter = Actions:GetTracked()   
+    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():HideInSaveZone(),isCleared}
 end
-function Config:LoadConfig()
-UI:SetSavedVariables(TrackedSpellsFramePosition,TrackedActionsColumnCount,TrackedActionsFrameScale,TrackedActionsFrameCount,TrackedActionsHideInRestZone,TrackedActionsFrameAlpha)    
+function Config:LoadConfig()  
 Actions:SetSavedVariables(TrackedSpellsCharacter)
-Config:SetSpec(API:GetSpecialization())
+UI:SetSavedVariables(
+    SmartBarsSettings[1], --framesposition
+    SmartBarsSettings[2], --framesscale
+    SmartBarsSettings[3], --framesalpha
+    SmartBarsSettings[4], --framescolumn
+    SmartBarsSettings[5],  --framesrest
+    SmartBarsSettings[6],  --global action bar count
+    SmartBarsSettings[7]  --global hide in restzone    
+)
+isCleared = SmartBarsSettings[8]  --global isCleared value
+currentSpecialization = API:GetSpecialization()
 end
 function Config:SetDefaults()
-    if not IsCleared then
-       IsCleared = false
-    end
     if not TrackedSpellsCharacter then
         TrackedSpellsCharacter = {}      
     end
-    if not TrackedActionsFrameCount then
-        TrackedActionsFrameCount = 1     
-    end
-    if not TrackedSpellsFramePosition then
-      TrackedSpellsFramePosition ={}         
-    end
-    if not TrackedActionsColumnCount then
-      TrackedActionsColumnCount = 5       
-    end   
-    if not TrackedActionsHideInRestZone then
-        TrackedActionsHideInRestZone = false
-    end
-    if not TrackedActionsFrameScale then
-    TrackedActionsFrameScale = 1
-    end
-    if not TrackedActionsFrameAlpha then
-        TrackedActionsFrameAlpha = 1     
-    end   
+    if not SmartBarsSettings then
+        SmartBarsSettings = {{},{},{},{},{},1,false,false}     
+    end  
 end
 function Config:IsCurrentPatch()
 if API:GetBuildInfo()>90000 then
@@ -91,13 +82,12 @@ end
 function Config:IsConfigMode()
  return isConfigMode
 end
-function Config:ResetAll()
-    TrackedSpellsFramePosition = nill
-    TrackedActionsColumnCount=nill
-    TrackedActionsFrameScale=nill
+function Config:ResetActions()  
     TrackedSpellsCharacter=nill
-    TrackedActionsFrameCount=nill
-    TrackedActionsHideInRestZone=nill
+    ReloadUI()
+end
+function Config:ResetSettings()
+    SmartBarsSettings =nill
     ReloadUI()
 end
 --Getter&Setter----------------------------

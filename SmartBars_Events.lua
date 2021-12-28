@@ -2,6 +2,11 @@
 local _,SmartBars = ...;
 SmartBars.Events ={};
 local Events=SmartBars.Events;
+local Actions
+local Core
+local Config
+local Global
+local UI
 --Init------------------------------------
 function Events:Init()
 Actions = SmartBars.Actions
