@@ -33,6 +33,7 @@ local framesHideRest = {}
 local primaryFrameHeight
 local actionBarsCount = 0
 local globalHideRest = false
+local optionWidgets = {}
 
 
 --UI:Frames-------------------------------
@@ -91,11 +92,11 @@ function UI:CreateFrames()
       resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
       resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
       resetWidget.title:SetFontObject("GameFontHighlight")
-      resetWidget.title:SetText("Reset all:")  
+      resetWidget.title:SetText("Reset actions:")  
       resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
       resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
       resetWidget.resetButton:SetSize(50,35)
-      resetWidget.resetButton:SetText("Reset Actions")
+      resetWidget.resetButton:SetText("Reset")
       resetWidget.resetButton:SetNormalFontObject(defaultFont)
       resetWidget.resetButton:SetScript("OnClick", function ()
       Config:ResetActions()
@@ -107,11 +108,11 @@ function UI:CreateFrames()
         resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
         resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
         resetWidget.title:SetFontObject("GameFontHighlight")
-        resetWidget.title:SetText("Reset all:")  
+        resetWidget.title:SetText("Reset settings:")  
         resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
         resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
         resetWidget.resetButton:SetSize(50,35)
-        resetWidget.resetButton:SetText("Reset Settings")
+        resetWidget.resetButton:SetText("Reset")
         resetWidget.resetButton:SetNormalFontObject(defaultFont)
         resetWidget.resetButton:SetScript("OnClick", function ()
         Config:ResetSettings()
@@ -339,11 +340,10 @@ function UI:CreateActionBar(index)
       
     end
     function OptionWidget()
-      actionBar.optionWidget = CreateFrame("Button",nill,actionBar,"BasicFrameTemplateWithInset","ARTWORK");
+      actionBar.optionWidget = CreateFrame("Frame",nill,actionBar,"BasicFrameTemplateWithInset","ARTWORK");
       actionBar.optionWidget:SetPoint("LEFT",primaryFrame,"RIGHT",0,0);   
       actionBar.optionWidget:SetSize(150,primaryFrameMinimuHeight)         
       actionBar.optionWidget:Hide() 
-      actionBar.optionWidget:SetIgnoreParentScale(true) 
       actionBar.optionWidget:SetParent(primaryFrame)
      -- UI:SetFrameMoveable(actionBar.optionWidget)  
     
@@ -362,7 +362,9 @@ function UI:CreateActionBar(index)
          scaleWidget.slider:SetWidth(100)
          scaleWidget.slider:SetHeight(15)
          scaleWidget.slider:SetMinMaxValues(0.5,1.5)
-       --  scaleWidget.slider:SetValue(framesScale[index])
+         if framesScale[index] then          
+          scaleWidget.slider:SetValue(framesScale[index])
+         end
          scaleWidget.slider:SetStepsPerPage(10)      
          scaleWidget.slider:SetScript("OnValueChanged", function (self) 
         
@@ -383,7 +385,9 @@ function UI:CreateActionBar(index)
          alphaWidget.slider:SetWidth(100)
          alphaWidget.slider:SetHeight(15)
          alphaWidget.slider:SetMinMaxValues(0.3,1)
-         --alphaWidget.slider:SetValue(framesAlpha[index])
+         if framesAlpha[index] then
+          alphaWidget.slider:SetValue(framesAlpha[index])           
+         end
          alphaWidget.slider:SetStepsPerPage(10)             
          alphaWidget.slider:SetScript("OnValueChanged", function (self)  
          frames[index]:SetAlpha(self:GetValue()) 
@@ -410,7 +414,7 @@ function UI:CreateActionBar(index)
        columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
        columnsWidget.minusButton:SetScript("OnClick", function ()
        if framesColumn[index]>= 2 then
-        framesColumn[index][1] = framesColumn[index][1] -1
+        framesColumn[index] = framesColumn[index] -1
         columnsWidget.text2:SetText(framesColumn[index])
        end
        end)   
@@ -421,8 +425,8 @@ function UI:CreateActionBar(index)
        columnsWidget.plusButton:SetNormalFontObject(defaultFont)    
        columnsWidget.plusButton:SetScript("OnClick", function ()
        
-         framesColumn[index][1] = framesColumn[index][1] +1
-         columnsWidget.text2:SetText(trackedActionsColumnCount)
+         framesColumn[index] = framesColumn[index] +1
+         columnsWidget.text2:SetText(framesColumn[index])
        
        end)
        return columnsWidget
@@ -430,11 +434,11 @@ function UI:CreateActionBar(index)
        function RestZoneWidget()
        local restZoneWidget = CreateFrame("Frame",nil) 
        restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate")
-       restZoneWidget.checkBox:SetChecked(globalHideRest)
+       restZoneWidget.checkBox:SetChecked(framesHideRest[index])
        restZoneWidget.checkBox:SetSize(35,35)
        restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
        restZoneWidget.checkBox:SetScript("OnClick",function (self)
-        globalHideRest = self:GetChecked()
+        framesHideRest[index] = self:GetChecked()
        end)  
        restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
        restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
@@ -449,20 +453,14 @@ function UI:CreateActionBar(index)
         title:SetText(" BAR: "..index)       
       return title   
       end
-       local optionWidgets = {ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
+      optionWidgets[index] = {ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
        local yOfs =60
-       for k in pairs(optionWidgets) do
-        optionWidgets[k]:SetPoint("CENTER", actionBar.optionWidget, "BOTTOM", 0, yOfs)
-        optionWidgets[k]:SetParent(actionBar.optionWidget)
-        optionWidgets[k]:SetSize(50,50)
+       for k in pairs(optionWidgets[index]) do
+        optionWidgets[index][k]:SetPoint("CENTER", actionBar.optionWidget, "TOP", 0, (yOfs)*-1)
+        optionWidgets[index][k]:SetParent(actionBar.optionWidget)
+        optionWidgets[index][k]:SetSize(50,50)
         yOfs = yOfs+60    
       end
-   
-
-
-
-
-
     end
     Frame()
     Title()
@@ -499,33 +497,36 @@ function UI:SetupSettings(i)
  if not framesScale[i]  then
   framesScale[i]=1
   frames[i]:SetScale(framesScale[i])
- -- frames[i].optionWidget.scaleWidget.slider:SetValue(framesScale[i])
+  optionWidgets[i][1].slider:SetValue(framesScale[i])
 else
   local scale = framesScale[i] 
   frames[i]:SetScale(scale)
+  optionWidgets[i][1].slider:SetValue(scale)
 end 
 --Alpha
 if not framesAlpha[i]  then
   framesAlpha[i]=1
   frames[i]:SetAlpha(framesAlpha[i])
- -- frames[i].optionWidget.alphaWidget.slider:SetValue(framesAlpha[i])
+  optionWidgets[i][2].slider:SetValue(framesAlpha[i])
 else
   local alpha = framesAlpha[i]
   frames[i]:SetAlpha(alpha)
+  optionWidgets[i][2].slider:SetValue(alpha)
 end 
 --Columns
 if not framesColumn[i]  then
   framesColumn[i] = 5
- else
-  framesColumn[i] = 5
- end
+  optionWidgets[i][3].text2:SetText(framesColumn[i])
+else
+  optionWidgets[i][3].text2:SetText(framesColumn[i])
+end
 --Hide
 if not framesHideRest[i]  then
- --frames[frameIndex].optionWidget.restZoneWidget.checkBox:SetChecked(false)
  framesHideRest[i] = false
+ optionWidgets[i][4].checkBox:SetChecked(framesHideRest[i])
 else
   local value = framesHideRest[i]
-  framesHideRest[i] = value
+  optionWidgets[i][4].checkBox:SetChecked(value)
 end
 end
 function UI:RemoveLastActionBar()
@@ -533,6 +534,7 @@ function UI:RemoveLastActionBar()
     if #frames >1 then
       local lastIndex = #frames
       frames[#frames]:Hide()  
+      UI:HideOptionPanels()
       framesScale[#frames] = nill 
       framesPosition[#frames] = nill 
       framesAlpha[#frames] = nill 
@@ -767,6 +769,7 @@ if actions ~=nill then
     local spellID = actions[actionID][2]
     local widget = actions[actionID][3]
     local actionSpec = actions[actionID][5]
+    local frameIndex = actions[actionID][6] 
     local isBoosted = actions[actionID][7]   
     local displayOnlyWhenBoosted =actions[actionID][8]
     local actionType = actions[actionID][9]  
@@ -780,7 +783,7 @@ if actions ~=nill then
       if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
           widget:Show()                         
       else             
-        if isResting and globalHideRest or displayOnlyWhenBoosted  then  
+        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest  then  
           widget:Hide()  
         else                                                                   
           if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then

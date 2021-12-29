@@ -88,6 +88,10 @@ function Config:ResetActions()
 end
 function Config:ResetSettings()
     SmartBarsSettings =nill
+    local trackedActions = Actions:GetTracked()
+    for actionID in pairs(trackedActions) do
+        trackedActions[actionID][6] = 1
+    end
     ReloadUI()
 end
 --Getter&Setter----------------------------
