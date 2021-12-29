@@ -47,11 +47,11 @@ end
 UI:UpdateUI()
 end
 function Config:SaveConfig()
-    TrackedSpellsCharacter = Actions:GetTracked()   
+    SmartBarsCharacterActions = Actions:GetTracked()   
     SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():HideInSaveZone(),isCleared}
 end
 function Config:LoadConfig()  
-Actions:SetSavedVariables(TrackedSpellsCharacter)
+Actions:SetSavedVariables(SmartBarsCharacterActions)
 UI:SetSavedVariables(
     SmartBarsSettings[1], --framesposition
     SmartBarsSettings[2], --framesscale
@@ -65,12 +65,17 @@ isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
 end
 function Config:SetDefaults()
-    if not TrackedSpellsCharacter then
-        TrackedSpellsCharacter = {}      
+    if not SmartBarsCharacterActions then
+        SmartBarsCharacterActions = {}      
     end
     if not SmartBarsSettings then
         SmartBarsSettings = {{},{},{},{},{},1,false,false}     
-    end  
+    end 
+end
+function Config:SetDefaultBuild()
+    if not SmartBarsSavedBuild then
+        SmartBarsSavedBuild = 0   
+    end 
 end
 function Config:IsCurrentPatch()
 if API:GetBuildInfo()>90000 then
@@ -82,16 +87,8 @@ end
 function Config:IsConfigMode()
  return isConfigMode
 end
-function Config:ResetActions()  
-    TrackedSpellsCharacter=nill
-    ReloadUI()
-end
-function Config:ResetSettings()
-    SmartBarsSettings =nill
-    local trackedActions = Actions:GetTracked()
-    for actionID in pairs(trackedActions) do
-        trackedActions[actionID][6] = 1
-    end
+function Config:ResetAll()  
+    SmartBarsSavedBuild=nill
     ReloadUI()
 end
 --Getter&Setter----------------------------

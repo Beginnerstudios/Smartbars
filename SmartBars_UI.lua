@@ -87,38 +87,22 @@ function UI:CreateFrames()
        titles.usedValue:SetText("0");
        return titles
       end
-      function ResetActions()
+      function ResetAll()
       local resetWidget = CreateFrame("Frame",nil)
       resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
       resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
       resetWidget.title:SetFontObject("GameFontHighlight")
-      resetWidget.title:SetText("Reset actions:")  
+      resetWidget.title:SetText("Reset all:")  
       resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
       resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
       resetWidget.resetButton:SetSize(50,35)
       resetWidget.resetButton:SetText("Reset")
       resetWidget.resetButton:SetNormalFontObject(defaultFont)
       resetWidget.resetButton:SetScript("OnClick", function ()
-      Config:ResetActions()
+      Config:ResetAll()
       end)
       return resetWidget
       end
-      function ResetSettings()
-        local resetWidget = CreateFrame("Frame",nil)
-        resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
-        resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
-        resetWidget.title:SetFontObject("GameFontHighlight")
-        resetWidget.title:SetText("Reset settings:")  
-        resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
-        resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
-        resetWidget.resetButton:SetSize(50,35)
-        resetWidget.resetButton:SetText("Reset")
-        resetWidget.resetButton:SetNormalFontObject(defaultFont)
-        resetWidget.resetButton:SetScript("OnClick", function ()
-        Config:ResetSettings()
-        end)
-        return resetWidget
-        end
       function ScaleSlider()           
         local scaleWidget = CreateFrame("Frame",nil)
         scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
@@ -214,6 +198,7 @@ function UI:CreateFrames()
         barsWidget.minusButton :SetNormalFontObject(defaultFont)    
         barsWidget.minusButton :SetScript("OnClick", function ()
         UI:RemoveLastActionBar()
+        UI:UpdateUI()
         barsWidget.textValue:SetText(actionBarsCount);
         end) 
 
@@ -227,7 +212,7 @@ function UI:CreateFrames()
           UI:AddActionBar()                                     
           barsWidget.textValue:SetText(actionBarsCount)
           UI:ToggleWidgets(true)           
-           
+          UI:UpdateUI()
         end)
         return barsWidget
   
@@ -241,7 +226,7 @@ function UI:CreateFrames()
       restZoneWidget.checkBox:SetSize(35,35)
       restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
       restZoneWidget.checkBox:SetScript("OnClick",function (self)
-        globalHideRest = self:GetChecked()
+      globalHideRest = self:GetChecked()
       end)  
       restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
       restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
@@ -251,7 +236,7 @@ function UI:CreateFrames()
       end
       primaryFrame = Frame()
       primaryFrame.titles = StaticTitles(primaryFrame)
-      local optionsWidgets = {ResetActions(),ResetSettings(),BarsWidget(),RestZoneWidget()}   
+      local optionsWidgets = {ResetAll(),BarsWidget(),RestZoneWidget()}   
       local xOfs =50
       for k in pairs(optionsWidgets) do
         optionsWidgets[k]:SetPoint("CENTER", primaryFrame.TitleBg, "CENTER", 165, (xOfs)*-1)
@@ -342,7 +327,7 @@ function UI:CreateActionBar(index)
     function OptionWidget()
       actionBar.optionWidget = CreateFrame("Frame",nill,actionBar,"BasicFrameTemplateWithInset","ARTWORK");
       actionBar.optionWidget:SetPoint("LEFT",primaryFrame,"RIGHT",0,0);   
-      actionBar.optionWidget:SetSize(150,primaryFrameMinimuHeight)         
+      actionBar.optionWidget:SetSize(150,primaryFrame:GetHeight())         
       actionBar.optionWidget:Hide() 
       actionBar.optionWidget:SetParent(primaryFrame)
      -- UI:SetFrameMoveable(actionBar.optionWidget)  
@@ -515,7 +500,7 @@ else
 end 
 --Columns
 if not framesColumn[i]  then
-  framesColumn[i] = 5
+  framesColumn[i] = 10
   optionWidgets[i][3].text2:SetText(framesColumn[i])
 else
   optionWidgets[i][3].text2:SetText(framesColumn[i])
@@ -780,10 +765,10 @@ if actions ~=nill then
       local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
       local inRange = API:IsActionInRange(spellID,actionType)       
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true and globalHideRest==false then      
           widget:Show()                         
       else             
-        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest  then  
+        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting then  
           widget:Hide()  
         else                                                                   
           if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
@@ -815,7 +800,7 @@ function UI:SortBars(trackedActions,sortNumber)
       if widget:IsVisible() then
         widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
         startxOffset = startxOffset +50
-      if(startxOffset== trackedActionsColumnCount*50) then
+      if(startxOffset== framesColumn[sortNumber]*50) then
       startxOffset =0
       startyOffset  = startyOffset-50
           end

@@ -33,17 +33,14 @@ function Events:RegisterEvents()
   end)
 
   function Event:PLAYER_LOGIN() 
-    if IsCleared==true or IsCleared == nill then
-      TrackedSpellsFramePosition = nill
-      TrackedActionsColumnCount=nill
-      TrackedActionsFrameScale=nill
-      TrackedSpellsCharacter=nill
-      TrackedActionsFrameCount=nill
-      TrackedActionsDisplayedInRestZone =nill
-      print("SmartBars - reseted")
-      IsCleared = false
-  end 
-  Config:SetDefaults()
+    Config:SetDefaultBuild()
+    if SmartBarsSavedBuild < SmartBarsCurrentBuild then
+      SmartBarsCharacterActions = nill
+      SmartBarsSettings = nill
+      SmartBarsSavedBuild = SmartBarsCurrentBuild
+      Config:SetDefaults()
+      print("SmartBars - settings reseted.")      
+    end 
   end
   function Event:PLAYER_LOGOUT()   
   end
