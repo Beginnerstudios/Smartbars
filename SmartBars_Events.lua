@@ -34,10 +34,11 @@ function Events:RegisterEvents()
 
   function Event:PLAYER_LOGIN() 
     Config:SetDefaultBuild()
-    if SmartBarsSavedBuild < SmartBarsCurrentBuild then
+    local version,build,savedBuild = Config:GetSmartBarsInfo()
+    if savedBuild < build then
       SmartBarsCharacterActions = nill
       SmartBarsSettings = nill
-      SmartBarsSavedBuild = SmartBarsCurrentBuild
+      Config:SetSavedBuild(build) 
       Config:SetDefaults()
       print("SmartBars - settings reseted.")      
     end 

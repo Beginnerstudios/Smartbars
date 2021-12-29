@@ -18,6 +18,12 @@ end
 local isConfigMode = false
 local currentSpecialization
 local isCleared
+--Save data---
+local currentSaveVersion =93
+local savedSaveVersion
+---Public version----------
+local currentVersion = "v - 0.9.3"
+local publicBuild = 93
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -63,6 +69,7 @@ UI:SetSavedVariables(
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
+currentSavedBuild = SmartBarsSavedBuild
 end
 function Config:SetDefaults()
     if not SmartBarsCharacterActions then
@@ -75,7 +82,14 @@ end
 function Config:SetDefaultBuild()
     if not SmartBarsSavedBuild then
         SmartBarsSavedBuild = 0   
+        savedSaveVersion = SmartBarsSavedBuild
+    else
+        savedSaveVersion = SmartBarsSavedBuild
     end 
+end
+function Config:SetSavedBuild(value)
+    savedSaveVersion = value
+    SmartBarsSavedBuild = value
 end
 function Config:IsCurrentPatch()
 if API:GetBuildInfo()>90000 then
@@ -97,6 +111,17 @@ function Config:GetSpec()
 end
 function Config:GetResting()
     return API:IsResting()
+end
+function Config:GetSmartBarsPublicInfo()
+    local smartBarsVersion = currentVersion
+    local smartBarsCurrentBuild = publicBuild 
+    return smartBarsVersion,smartBarsCurrentBuild
+end
+function Config:GetSmartBarsInfo()
+    local smartBarsVersion = currentVersion
+    local smartBarsCurrentSaveVersion = currentSaveVersion 
+    local smartBarsSavedSaveVersion = savedSaveVersion 
+    return smartBarsVersion,smartBarsCurrentSaveVersion,smartBarsSavedSaveVersion
 end
 function Config:SetSpec(currentSpec)
     currentSpecialization = currentSpec    
@@ -127,4 +152,4 @@ function Config:DisableOldAddon()
         print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.Delete BS_ActionsTracker folder from --/interface/addons. if you dont want get this notification again.")      
     end 
 end  
--- Revision version v0.9.0 -----
+-- Revision version v0.9.3 -----

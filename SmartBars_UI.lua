@@ -47,7 +47,7 @@ function UI:CreateFrames()
     UI:SetFrameMoveable(frame)  
     frame:Hide()
     frame:SetSize(450,0);
-    frame:SetPoint("CENTER",UIParent,"CENTER",-500,100);
+    frame:SetPoint("CENTER",UIParent,"CENTER",-450,100);
     frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
@@ -59,7 +59,7 @@ function UI:CreateFrames()
        titles.frame = titles:CreateFontString(nil,defaultLayer);
        titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
-       titles.frame:SetText("SmartBars " ..SmartBarsVersion);
+       titles.frame:SetText("SmartBars");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
        titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
@@ -706,6 +706,9 @@ for actionID in pairs(trackedActions) do
   end
 end
 primaryFrame.titles.trackedValue:SetText(trackedActionForSpecCount)
+--update primary frame Title
+local version,build,savedBuild = Config:GetSmartBarsInfo()
+primaryFrame.titles.frame:SetText("SmartBars "..version.." |"..build.."|"..savedBuild.."|")
 --Get count of user actions in action bars
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
 primaryFrame.titles.usedValue:SetText(usedSpellsCount) 
