@@ -768,10 +768,10 @@ if actions ~=nill then
       local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
       local inRange = API:IsActionInRange(spellID,actionType)       
       widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true and globalHideRest==false then      
+      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
           widget:Show()                         
       else             
-        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting then  
+        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
           widget:Hide()  
         else                                                                   
           if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
