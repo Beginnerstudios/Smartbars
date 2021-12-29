@@ -762,32 +762,36 @@ if actions ~=nill then
     local displayOnlyWhenBoosted =actions[actionID][8]
     local actionType = actions[actionID][9]  
      
-    if Config:IsValueSame(actionSpec,userSpec)then       
-      local chargesText = API:GetActionCharges(spellID,actionType) 
-      local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
-      local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
-      local inRange = API:IsActionInRange(spellID,actionType)       
-      widget.charges:SetText(chargesText)          
-      if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
+    if Config:IsValueSame(actionSpec,userSpec) then   
+      if globalHideRest == true and isResting ==true and configMode == false then
+       widget:Hide()
+      else
+        local chargesText = API:GetActionCharges(spellID,actionType) 
+        local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
+        local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
+        local inRange = API:IsActionInRange(spellID,actionType)       
+        widget.charges:SetText(chargesText)          
+        if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
           widget:Show()                         
-      else             
-        if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
-          widget:Hide()  
-        else                                                                   
-          if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
-            widget:Hide()                                           
-          else           
-            local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
-            if isUserBuffedBy then
-              widget:Hide()                     
-            else
-              widget:Show() 
-            end                                                            
-          end         
-       end   
-      end 
-    else
-      widget:Hide()
+        else             
+          if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
+            widget:Hide()  
+          else                                                                   
+            if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
+              widget:Hide()                                           
+            else           
+              local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
+              if isUserBuffedBy then
+                widget:Hide()                     
+              else
+                widget:Show() 
+              end                                                            
+            end         
+          end   
+        end 
+      end    
+      else
+        widget:Hide()
     end
   end
   end   
