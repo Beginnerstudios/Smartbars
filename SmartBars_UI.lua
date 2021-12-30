@@ -542,6 +542,7 @@ end
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, defaultCheckButton,defaultLayer)
  actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
+ actionWidget:SetHitRectInsets(0,0,0,0) 
  actionWidget:SetWidth(50)
  actionWidget:SetHeight(50) 
  local spellID = action[2] 
@@ -593,6 +594,7 @@ newWidget.barNumberText:SetFont("Fonts\\FRIZQT__.TTF", 15,"OUTLINE")
 newWidget.barNumberText:SetText(valueToSave[6]);
 if Config:IsCurrentPatch() then
 newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,defaultCheckButton,defaultLayer)
+newWidget.showWhenBoosted:SetHitRectInsets(0,0,0,0) 
 newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
 newWidget.showWhenBoosted:SetSize(20,20)
 newWidget.showWhenBoosted:SetChecked(valueToSave[8])

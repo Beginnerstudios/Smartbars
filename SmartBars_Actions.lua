@@ -109,7 +109,7 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
     else  
         actionID= Config:JoinNumber(action[2],Config:GetSpec())
         curretSpec= API:GetSpecialization()
-        trackedFrame = 1   
+        trackedFrame = UI:Get():ActionBarCount()   
         showOnlyWhenBoosted = false
         actionType = action[6]
     end  
