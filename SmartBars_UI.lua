@@ -201,9 +201,9 @@ function UI:CreateActionBar(index)
       actionBar.title = actionBar:CreateFontString(nil,"ARTWORK");
       actionBar.title:SetPoint("LEFT",actionBar,"LEFT",0,-1);
       actionBar.title:SetFontObject("GameFontHighlight")
-    if Config:IsCurrentPatch() then
+    
       actionBar.title:SetText("BAR: "..index)
-    end   
+   
     actionBar.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
     end
@@ -677,7 +677,7 @@ end
 primaryOptionsWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
 --update primary frame Title
 local version,build,savedBuild = Config:GetSmartBarsInfo()
-primaryOptionsWidgets[1].frame:SetText("SmartBars "..version.." |"..build.."|"..savedBuild.."|")
+primaryOptionsWidgets[1].frame:SetText("SmartBars "..version)
 --Get count of user actions in action bars
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
 primaryOptionsWidgets[1].usedValue:SetText(usedSpellsCount) 

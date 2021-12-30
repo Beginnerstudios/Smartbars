@@ -22,8 +22,8 @@ local isCleared
 local currentSaveVersion =93
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.3"
-local publicBuild = 93
+local currentVersion = "v - 0.9.4"
+local publicBuild = 94
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
