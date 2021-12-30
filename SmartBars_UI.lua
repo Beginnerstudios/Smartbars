@@ -542,36 +542,16 @@ end
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, defaultCheckButton,defaultLayer)
  actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
- actionWidget:SetHitRectInsets(0,0,0,0) 
- actionWidget:SetSize(50,50)
-
+ actionWidget:SetWidth(50)
+ actionWidget:SetHeight(50) 
  local spellID = action[2] 
  local newTexture= API:GetActionTexture(spellID,action[6],action[1])
  if isTracked then
   actionWidget:SetHighlightTexture(nill)
   actionWidget:SetPushedTexture(nill) 
-  actionWidget:SetWidth(50)
-  actionWidget:SetHeight(50) 
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
-
-  actionWidget.tooltipHolder = CreateFrame("CheckButton",nil, actionWidget, defaultCheckButton,defaultLayer)
-  actionWidget.tooltipHolder:SetPoint("LEFT",actionWidget,"LEFT",0,0)
-  actionWidget.tooltipHolder:SetHitRectInsets(0,0,0,0) 
-  actionWidget.tooltipHolder:SetSize(50,50)
-  actionWidget.tooltipHolder:SetHighlightTexture(nill)
-  actionWidget.tooltipHolder:SetPushedTexture(nill)
-  actionWidget.tooltipHolder:SetNormalTexture(nill)
-  local actionType =action[6]
-  local actionID = action[2]
-  local actionName = API:GetDisplayedActionInfo(actionID,actionType)
-  if actionType =="item" then
-    actionWidget.tooltipHolder.tooltipText = actionType.." - "..actionName
-  else
-    actionWidget.tooltipHolder.tooltipText = actionName
-  end
- 
  end
  actionWidget:SetNormalTexture(newTexture)
 

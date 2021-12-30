@@ -45,6 +45,22 @@ function Actions:Display(actions,frame)
     for k,v in pairs(actions) do 
       actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
       actions[k][3]:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
+      actions[k][3]:SetHitRectInsets(0,0,0,0) 
+      
+   
+
+  local actionType =actions[k][6]
+  local actionID = actions[k][2]
+  local actionName = API:GetDisplayedActionInfo(actionID,actionType)
+  if actionType =="item" then
+    actions[k][3].tooltipText = actionType.." - "..actionName
+  else
+    actions[k][3].tooltipText = actionName
+  end
+
+
+
+
       xOffstet = xOffstet+50;
        count = count +1
      --Next line after 12 spells
@@ -63,12 +79,7 @@ function Actions:Display(actions,frame)
      
       actions[k][3]:SetScript("OnClick",function (self) 
       Actions:Add(actions[k]) end)
-      actions[k][3]:SetScript("OnEnter",function ()
-    --    actions[k][3].tooltip:Show()
-      end)
-      actions[k][3]:SetScript("OnEnter",function ()
-     --   actions[k][3].tooltip:Hide()
-       end)
+   
     end  
   displayedActions = actions
   UI:UpdateUI()
