@@ -120,5 +120,15 @@ function API:IsActionInRange(slotID,actionType)
         end                
     end   
 end
--- Revision version v0.9.3 ---
+function API:GetDisplayedActionInfo(id,actionType)
+    if actionType =="spell" then
+        local name = GetSpellInfo(id)
+        return name
+    end
+    if actionType == "item" then
+        local name = GetItemInfo(id)
+        return name
+    end
+end
+-- Revision version v0.9.5 ---
 

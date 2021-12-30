@@ -33,7 +33,7 @@ local defaultFont = "GameFontHighLight"
 local defaultLayer = "OVERLAY"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
 local defaultButton = "UIPanelButtonTemplate"
-local defaultCheckButton = "UICheckButtonTemplate"
+local defaultCheckButton = "OptionsCheckButtonTemplate"
 --UI:Frames-------------------------------
 function UI:CreateFrames()  
   local function PrimaryFrame() 
@@ -138,6 +138,7 @@ function UI:CreateFrames()
       restZoneWidget.checkBox:SetChecked(globalHideRest)
       restZoneWidget.checkBox:SetSize(35,35)
       restZoneWidget.checkBox:SetPoint("CENTER",restZoneWidget,"CENTER",50,-30);
+      restZoneWidget.checkBox:SetHitRectInsets(0,0,0,0) 
       restZoneWidget.checkBox.tooltipText = "Hide all tracked actions in rest zone." 
       restZoneWidget.checkBox:SetScript("OnClick",function (self)
       globalHideRest = self:GetChecked()
@@ -262,7 +263,6 @@ function UI:CreateActionBar(index)
        barNavigator.minusButton:SetPoint("CENTER", barNavigator, "LEFT", -25, 0)
        barNavigator.minusButton:SetSize(35,35)
        barNavigator.minusButton:SetText("-")
-       barNavigator.minusButton.tooltipText = "Change bar for edit."
        barNavigator.minusButton:SetNormalFontObject(defaultFont)    
        barNavigator.minusButton:SetScript("OnClick", function ()
        if index>=2 then
@@ -275,8 +275,7 @@ function UI:CreateActionBar(index)
         barNavigator.plusButton:SetPoint("CENTER", barNavigator, "RIGHT", 25, 0)
         barNavigator.plusButton:SetSize(35,35)
         barNavigator.plusButton:SetText("+")
-        barNavigator.plusButton:SetNormalFontObject(defaultFont) 
-        barNavigator.plusButton.tooltipText = "Change bar for edit."   
+        barNavigator.plusButton:SetNormalFontObject(defaultFont)   
         barNavigator.plusButton:SetScript("OnClick", function ()
           if index<#frames then
             UI:HideOptionPanels()
@@ -298,7 +297,7 @@ function UI:CreateActionBar(index)
          scaleWidget.slider:SetWidth(100)
          scaleWidget.slider:SetHeight(15)
          scaleWidget.slider:SetMinMaxValues(0.5,1.5)
-         scaleWidget.slider.tooltipText = "Change scale of tracked bar."
+        
     
          scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer);
          scaleWidget.text:SetPoint("CENTER",scaleWidget.title,"CENTER",75,0);
@@ -321,7 +320,7 @@ function UI:CreateActionBar(index)
          alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer);
          alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
          alphaWidget.title:SetFontObject(defaultFont)
-         alphaWidget.title:SetText("Transparency:")  
+         alphaWidget.title:SetText("Alpha:")  
          alphaWidget.slider = CreateFrame("Slider", "myslider", alphaWidget,"OptionsSliderTemplate")
          alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-30);
          alphaWidget.slider:SetWidth(100)
@@ -333,7 +332,7 @@ function UI:CreateActionBar(index)
          
          
          alphaWidget.slider:SetStepsPerPage(10)             
-         alphaWidget.slider.tooltipText = "Change transparency of tracked bar."
+         
          alphaWidget.slider:SetScript("OnValueChanged", function (self)  
          frames[index]:SetAlpha(self:GetValue()) 
          framesAlpha[index] = self:GetValue() 
@@ -382,10 +381,12 @@ function UI:CreateActionBar(index)
        function RestZoneWidget()
        local restZoneWidget = CreateFrame("Frame",nil) 
        restZoneWidget.checkBox = CreateFrame("CheckButton",nil,restZoneWidget,defaultCheckButton,defaultLayer)
+       restZoneWidget.checkBox.tooltipText = "Hide actions in bar in rest zone."
+       restZoneWidget.checkBox:SetHitRectInsets(0,0,0,0) 
        restZoneWidget.checkBox:SetChecked(framesHideRest[index])
        restZoneWidget.checkBox:SetSize(35,35)
        restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
-       restZoneWidget.checkBox.tooltipText = "Check to hide actions in rest zone."  
+      
        restZoneWidget.checkBox:SetScript("OnClick",function (self)
         framesHideRest[index] = self:GetChecked()
        end)  
@@ -541,8 +542,9 @@ end
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, defaultCheckButton,defaultLayer)
  actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
+ actionWidget:SetHitRectInsets(0,0,0,0) 
  actionWidget:SetSize(50,50)
- actionWidget.tooltipText = "Create new action bar."
+
  local spellID = action[2] 
  local newTexture= API:GetActionTexture(spellID,action[6],action[1])
  if isTracked then
@@ -553,8 +555,26 @@ function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return w
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
+
+  actionWidget.tooltipHolder = CreateFrame("CheckButton",nil, actionWidget, defaultCheckButton,defaultLayer)
+  actionWidget.tooltipHolder:SetPoint("LEFT",actionWidget,"LEFT",0,0)
+  actionWidget.tooltipHolder:SetHitRectInsets(0,0,0,0) 
+  actionWidget.tooltipHolder:SetSize(50,50)
+  actionWidget.tooltipHolder:SetHighlightTexture(nill)
+  actionWidget.tooltipHolder:SetPushedTexture(nill)
+  actionWidget.tooltipHolder:SetNormalTexture(nill)
+  local actionType =action[6]
+  local actionID = action[2]
+  local actionName = API:GetDisplayedActionInfo(actionID,actionType)
+  if actionType =="item" then
+    actionWidget.tooltipHolder.tooltipText = actionType.." - "..actionName
+  else
+    actionWidget.tooltipHolder.tooltipText = actionName
+  end
+ 
  end
  actionWidget:SetNormalTexture(newTexture)
+
  return actionWidget
 end
 function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
@@ -841,6 +861,6 @@ function UI:SetSavedVariables(loadedFramesPosition,loadedFramesScale,loadedFrame
  actionBarsCount = loadedActionBarsCount
  globalHideRest = loadedGlobalHideRest
 end
--- Revision version v0.9.0 ---
+-- Revision version v0.9.5 ---
 
 

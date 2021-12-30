@@ -12,4 +12,4 @@ function Global:GetSmartBarsPublicInfo()
     local smartBarsPublicVersion,smartBarsPublicBuild = Config:GetSmartBarsInfo() 
     return smartBarsPublicVersion,smartBarsPublicBuild 
 end
--- Revision version v0.9.3 ---------------
+-- Revision version v0.9.5 ---------------
