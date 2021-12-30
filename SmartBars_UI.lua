@@ -15,11 +15,6 @@ end
 local primaryFrame   
 local frames = {};  
 local trackedActionsColumnCount=0 --SV
-local trackedSpellsFramePosition ={};--SV
-local trackedActionsFrameScale =0--SV
-local trackedActionsFrameCount = 1--SV
-local trackedActionsFrameAlpha =0--SV
-local trackedActionsHideInRestZone --SV
 local primaryFrameMinimuHeight
 local trackedBarsMaximum = 10
 
@@ -44,21 +39,19 @@ function UI:CreateFrames()
     local defaultLayer = "OVERLAY"
    
       function Frame()
-    local frame = CreateFrame("Frame",nill,UIParent,"BasicFrameTemplateWithInset");
+    local frame = CreateFrame("Frame",nill,nill,"BasicFrameTemplateWithInset","ARTWORK");
     UI:SetFrameMoveable(frame)  
     frame:Hide()
     frame:SetSize(320,0);
-    frame:SetPoint("CENTER",UIParent,"CENTER",-450,100);
+    frame:SetPoint("CENTER",nill,"CENTER",-450,100);
     frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
-    end)
-
-      
+    end)    
       frame.resetButton = CreateFrame("Button", nill, frame,"UIPanelButtonTemplate")
       frame.resetButton:SetPoint("RIGHT",frame.TitleBg,"RIGHT",-50,0);
       frame.resetButton:SetSize(50,15)
       frame.resetButton:SetText("Reset All")
-      frame.resetButton:SetNormalFontObject("GameFontHighlight")
+      frame.resetButton:SetNormalFontObject(defaultFont)
       frame.resetButton:SetScript("OnClick", function ()
       Config:ResetAll()
       end)
@@ -111,22 +104,24 @@ function UI:CreateFrames()
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(actionBarsCount);
 
-        barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate")
+        barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate","ARTWORK")
         barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 0, -30)
         barsWidget.minusButton :SetSize(35,35)
         barsWidget.minusButton :SetText("-")
-        barsWidget.minusButton :SetNormalFontObject(defaultFont)    
+        barsWidget.minusButton :SetNormalFontObject(defaultFont)  
+        barsWidget.minusButton.tooltipText = "Remove last action bar."   
         barsWidget.minusButton :SetScript("OnClick", function ()
         UI:RemoveLastActionBar()
         UI:UpdateUI()
         barsWidget.textValue:SetText(actionBarsCount);
         end) 
 
-        barsWidget.plusButton  = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate")
+        barsWidget.plusButton  = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate","ARTWORK")
         barsWidget.plusButton:SetPoint("CENTER", barsWidget, "CENTER", 35, -30)
-       barsWidget.plusButton:SetSize(35,35)
+        barsWidget.plusButton:SetSize(35,35)
         barsWidget.plusButton:SetText("+")
         barsWidget.plusButton:SetNormalFontObject(defaultFont)    
+        barsWidget.plusButton.tooltipText = "Create new action bar."   
         barsWidget.plusButton:SetScript("OnClick", function ()        
   
           UI:AddActionBar()                                     
@@ -141,10 +136,12 @@ function UI:CreateFrames()
       end
       function RestZoneWidget()
       local restZoneWidget = CreateFrame("Frame",nil) 
-      restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate")
+      restZoneWidget:SetSize(35,35)
+      restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate","ARTWORK")
       restZoneWidget.checkBox:SetChecked(globalHideRest)
       restZoneWidget.checkBox:SetSize(35,35)
-      restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
+      restZoneWidget.checkBox:SetPoint("CENTER",restZoneWidget,"CENTER",50,-30);
+      restZoneWidget.checkBox.tooltipText = "Hide all tracked actions in rest zone." 
       restZoneWidget.checkBox:SetScript("OnClick",function (self)
       globalHideRest = self:GetChecked()
       end)  
@@ -167,8 +164,8 @@ function UI:CreateFrames()
       return primaryFrame
   end
   function SecondaryFrame()
-    local frameholder = CreateFrame("Frame",nil,UIParent);
-    frameholder:SetPoint("LEFT",UIParent,"LEFT",0,0);
+    local frameholder = CreateFrame("Frame",nil,nil);
+    frameholder:SetPoint("LEFT",nil,"LEFT",0,0);
     frameholder:SetSize(100,100)
     frameholder:SetScript("OnUpdate", function ()
     local tA = Actions:GetTracked()
@@ -189,7 +186,7 @@ function UI:CreateFrames()
 end
 function UI:CreateActionBar(index)
     local function ActionBar()
-    local actionBar = CreateFrame("Frame","BS_ActionsTracker.Secondary",UIParent);
+    local actionBar = CreateFrame("Frame","BS_ActionsTracker.Secondary",nil);
     function Frame()
     actionBar:SetScale(1)
     actionBar:SetAlpha(1)
@@ -247,6 +244,7 @@ function UI:CreateActionBar(index)
       actionBar.optionWidget:SetSize(150,primaryFrame:GetHeight())         
       actionBar.optionWidget:Hide() 
       actionBar.optionWidget:SetParent(primaryFrame)
+      actionBar.optionWidget:EnableMouse(false)
      -- UI:SetFrameMoveable(actionBar.optionWidget)  
     
       local defaultFont = "GameFontHighlight"
@@ -266,6 +264,7 @@ function UI:CreateActionBar(index)
        barNavigator.minusButton:SetPoint("CENTER", barNavigator, "LEFT", -25, 0)
        barNavigator.minusButton:SetSize(35,35)
        barNavigator.minusButton:SetText("-")
+       barNavigator.minusButton.tooltipText = "Change bar for edit."
        barNavigator.minusButton:SetNormalFontObject(defaultFont)    
        barNavigator.minusButton:SetScript("OnClick", function ()
        if index>=2 then
@@ -278,7 +277,8 @@ function UI:CreateActionBar(index)
         barNavigator.plusButton:SetPoint("CENTER", barNavigator, "RIGHT", 25, 0)
         barNavigator.plusButton:SetSize(35,35)
         barNavigator.plusButton:SetText("+")
-        barNavigator.plusButton:SetNormalFontObject(defaultFont)    
+        barNavigator.plusButton:SetNormalFontObject(defaultFont) 
+        barNavigator.plusButton.tooltipText = "Change bar for edit."   
         barNavigator.plusButton:SetScript("OnClick", function ()
           if index<#frames then
             UI:HideOptionPanels()
@@ -300,6 +300,7 @@ function UI:CreateActionBar(index)
          scaleWidget.slider:SetWidth(100)
          scaleWidget.slider:SetHeight(15)
          scaleWidget.slider:SetMinMaxValues(0.5,1.5)
+         scaleWidget.slider.tooltipText = "Change scale of tracked bar."
     
          scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer);
          scaleWidget.text:SetPoint("CENTER",scaleWidget.title,"CENTER",75,0);
@@ -331,10 +332,10 @@ function UI:CreateActionBar(index)
          alphaWidget.text = alphaWidget:CreateFontString(nil,defaultLayer);
          alphaWidget.text:SetPoint("CENTER",alphaWidget.title,"CENTER",50,0);
          alphaWidget.text:SetFontObject(defaultFont)
-      
-
-
+         
+         
          alphaWidget.slider:SetStepsPerPage(10)             
+         alphaWidget.slider.tooltipText = "Change transparency of tracked bar."
          alphaWidget.slider:SetScript("OnValueChanged", function (self)  
          frames[index]:SetAlpha(self:GetValue()) 
          framesAlpha[index] = self:GetValue() 
@@ -353,11 +354,13 @@ function UI:CreateActionBar(index)
        columnsWidget.text2:SetPoint("CENTER",columnsWidget,"CENTER",35,0);
        columnsWidget.text2:SetFontObject(defaultFont)
       -- columnsWidget.text2:SetText(framesColumn[index][1]);    
+
        columnsWidget.minusButton = CreateFrame("Button", "bs_minus", columnsWidget,"UIPanelButtonTemplate")
        columnsWidget.minusButton:SetPoint("CENTER", columnsWidget, "CENTER", 0, -30)
        columnsWidget.minusButton:SetSize(35,35)
        columnsWidget.minusButton:SetText("-")
        columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
+       columnsWidget.minusButton.tooltipText = "Decrease horizontal count of actions in bar."  
        columnsWidget.minusButton:SetScript("OnClick", function ()
        if framesColumn[index]>= 2 then
         framesColumn[index] = framesColumn[index] -1
@@ -368,7 +371,8 @@ function UI:CreateActionBar(index)
        columnsWidget.plusButton:SetPoint("CENTER", columnsWidget, "CENTER", 35, -30)
        columnsWidget.plusButton:SetSize(35,35)
        columnsWidget.plusButton:SetText("+")
-       columnsWidget.plusButton:SetNormalFontObject(defaultFont)    
+       columnsWidget.plusButton:SetNormalFontObject(defaultFont) 
+       columnsWidget.plusButton.tooltipText = "Increase horizontal count of actions in bar."    
        columnsWidget.plusButton:SetScript("OnClick", function ()
        
          framesColumn[index] = framesColumn[index] +1
@@ -383,6 +387,7 @@ function UI:CreateActionBar(index)
        restZoneWidget.checkBox:SetChecked(framesHideRest[index])
        restZoneWidget.checkBox:SetSize(35,35)
        restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
+       restZoneWidget.checkBox.tooltipText = "Check to hide actions in rest zone."  
        restZoneWidget.checkBox:SetScript("OnClick",function (self)
         framesHideRest[index] = self:GetChecked()
        end)  
@@ -430,14 +435,14 @@ function UI:SetupSettings(i)
      xOffset=300
      yOffset=400 - ((#frames-rowCount)*100)    
    end
-   frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+   frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
    framesPosition[i] = {xOffset,yOffset,point,relativePoint}
  else
    local xOffset = framesPosition[i][1] 
    local yOffset = framesPosition[i][2]
    local point = framesPosition[i][3]
    local relativePoint = framesPosition[i][4]
-   frames[i]:SetPoint(point,UIParent,relativePoint,xOffset,yOffset)
+   frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
  end 
  --Scale
  if not framesScale[i]  then
@@ -539,14 +544,16 @@ end
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
  local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate", "ARTWORK")
  actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
- actionWidget:SetWidth(50)
- actionWidget:SetHeight(50)
+ actionWidget:SetWidth(45)
+ actionWidget:SetHeight(45)
  actionWidget.tooltipText = "test"
  local spellID = action[2] 
  local newTexture= API:GetActionTexture(spellID,action[6],action[1])
  if isTracked then
   actionWidget:SetHighlightTexture(nill)
-  actionWidget:SetPushedTexture(nill)  
+  actionWidget:SetPushedTexture(nill) 
+  actionWidget:SetWidth(50)
+  actionWidget:SetHeight(50) 
  else
   actionWidget:SetHighlightTexture(newTexture)
   actionWidget:SetPushedTexture(newTexture)
