@@ -34,6 +34,7 @@ local primaryFrameHeight
 local actionBarsCount = 0
 local globalHideRest = false
 local optionWidgets = {}
+local primaryOptionsWidgets = {}
 
 
 --UI:Frames-------------------------------
@@ -46,33 +47,45 @@ function UI:CreateFrames()
     local frame = CreateFrame("Frame",nill,UIParent,"BasicFrameTemplateWithInset");
     UI:SetFrameMoveable(frame)  
     frame:Hide()
-    frame:SetSize(450,0);
+    frame:SetSize(320,0);
     frame:SetPoint("CENTER",UIParent,"CENTER",-450,100);
     frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)
+
+      
+      frame.resetButton = CreateFrame("Button", nill, frame,"UIPanelButtonTemplate")
+      frame.resetButton:SetPoint("RIGHT",frame.TitleBg,"RIGHT",-50,0);
+      frame.resetButton:SetSize(50,15)
+      frame.resetButton:SetText("Reset All")
+      frame.resetButton:SetNormalFontObject("GameFontHighlight")
+      frame.resetButton:SetScript("OnClick", function ()
+      Config:ResetAll()
+      end)
+    
+    
+  
     return frame
       end     
-      function StaticTitles(parentFrame)
-       UIConfig = parentFrame
+      function StaticTitles()
        local titles = CreateFrame("Frame",nill,UIConfig) 
        titles.frame = titles:CreateFontString(nil,defaultLayer);
-       titles.frame:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",5,-2);
+       titles.frame:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",5,-2);
        titles.frame:SetFontObject(defaultFont)
        titles.frame:SetText("SmartBars");
 
        titles.usedStatic = titles:CreateFontString(nil,defaultLayer);
-       titles.usedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-30);
+       titles.usedStatic:SetPoint("LEFT",titles,"LEFT",10,0);
        titles.usedStatic:SetFontObject(defaultFont)
        titles.usedStatic:SetText("Used actions:");
     
        titles.trackedStatic = titles:CreateFontString(nil,defaultLayer);
-       titles.trackedStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-50);
+      titles.trackedStatic:SetPoint("LEFT",titles,"LEFT",10,-20);
        titles.trackedStatic:SetFontObject(defaultFont)
        titles.trackedStatic:SetText("Tracked actions:");
 
        titles.actionsStatic = titles:CreateFontString(nil,defaultLayer);
-       titles.actionsStatic:SetPoint("LEFT",UIConfig.TitleBg,"LEFT",10,-70);
+       titles.actionsStatic:SetPoint("LEFT",titles,"LEFT",10,-54);
        titles.actionsStatic:SetFontObject(defaultFont)
        titles.actionsStatic:SetText("Used spells and items in action bars:");
        
@@ -87,107 +100,14 @@ function UI:CreateFrames()
        titles.usedValue:SetText("0");
        return titles
       end
-      function ResetAll()
-      local resetWidget = CreateFrame("Frame",nil)
-      resetWidget.title = resetWidget:CreateFontString(nil,defaultLayer);
-      resetWidget.title:SetPoint("LEFT",resetWidget,"CENTER",-50,0);
-      resetWidget.title:SetFontObject("GameFontHighlight")
-      resetWidget.title:SetText("Reset all:")  
-      resetWidget.resetButton = CreateFrame("Button", nill, resetWidget,"UIPanelButtonTemplate")
-      resetWidget.resetButton:SetPoint("RIGHT",resetWidget,"CENTER",50,-30);
-      resetWidget.resetButton:SetSize(50,35)
-      resetWidget.resetButton:SetText("Reset")
-      resetWidget.resetButton:SetNormalFontObject(defaultFont)
-      resetWidget.resetButton:SetScript("OnClick", function ()
-      Config:ResetAll()
-      end)
-      return resetWidget
-      end
-      function ScaleSlider()           
-        local scaleWidget = CreateFrame("Frame",nil)
-        scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
-        scaleWidget.title:SetPoint("LEFT",scaleWidget,"CENTER",-50,0);
-        scaleWidget.title:SetFontObject("GameFontHighlight")
-        scaleWidget.title:SetText("Scale:")  
-        scaleWidget.slider = CreateFrame("Slider",nil, scaleWidget,"OptionsSliderTemplate")
-        scaleWidget.slider:SetPoint("CENTER",scaleWidget,"CENTER",0,-30);
-        scaleWidget.slider:SetWidth(100)
-        scaleWidget.slider:SetHeight(15)
-        scaleWidget.slider:SetMinMaxValues(0.5,1.5)
-        scaleWidget.slider:SetValue(trackedActionsFrameScale)
-        scaleWidget.slider:SetStepsPerPage(10)      
-        scaleWidget.slider:SetScript("OnValueChanged", function (self) 
-        for i=1,#frames do
-        frames[i]:SetScale(self:GetValue())  
-        trackedActionsFrameScale = self:GetValue()
-        end    
-      end)    
-      return scaleWidget
-      end
-      function AlphaSlider()           
-        local alphaWidget = CreateFrame("Frame", "dasd")
-        alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer);
-        alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
-        alphaWidget.title:SetFontObject("GameFontHighlight")
-        alphaWidget.title:SetText("Transparency:")  
-        alphaWidget.slider = CreateFrame("Slider", "myslider", alphaWidget,"OptionsSliderTemplate")
-        alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-30);
-        alphaWidget.slider:SetWidth(100)
-        alphaWidget.slider:SetHeight(15)
-        alphaWidget.slider:SetMinMaxValues(0.3,1)
-        alphaWidget.slider:SetValue(trackedActionsFrameAlpha)
-        alphaWidget.slider:SetStepsPerPage(10)             
-        alphaWidget.slider:SetScript("OnValueChanged", function (self) 
-        for i=1,#frames do   
-        frames[i]:SetAlpha(self:GetValue()) 
-        trackedActionsFrameAlpha = self:GetValue() 
-        end    
-      end)
-    
-      return alphaWidget
-      end
-      function ColumnsWidgets()
-      local columnsWidget = CreateFrame("Frame",nil) 
-      columnsWidget.text = columnsWidget:CreateFontString(nil,defaultLayer);
-      columnsWidget.text:SetPoint("LEFT",columnsWidget,"CENTER",-50,0);
-      columnsWidget.text:SetFontObject(defaultFont)
-      columnsWidget.text:SetText("Columns: ");
-      columnsWidget.text2 = columnsWidget:CreateFontString(nil,defaultLayer);
-      columnsWidget.text2:SetPoint("CENTER",columnsWidget,"CENTER",35,0);
-      columnsWidget.text2:SetFontObject(defaultFont)
-      columnsWidget.text2:SetText(trackedActionsColumnCount);    
-      columnsWidget.minusButton = CreateFrame("Button", "bs_minus", columnsWidget,"UIPanelButtonTemplate")
-      columnsWidget.minusButton:SetPoint("CENTER", columnsWidget, "CENTER", 0, -30)
-      columnsWidget.minusButton:SetSize(35,35)
-      columnsWidget.minusButton:SetText("-")
-      columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
-      columnsWidget.minusButton:SetScript("OnClick", function ()
-      if trackedActionsColumnCount>= 2 then
-        trackedActionsColumnCount = trackedActionsColumnCount -1
-        columnsWidget.text2:SetText(trackedActionsColumnCount)
-      end
-      end)   
-      columnsWidget.plusButton = CreateFrame("Button",nil, columnsWidget,"UIPanelButtonTemplate")
-      columnsWidget.plusButton:SetPoint("CENTER", columnsWidget, "CENTER", 35, -30)
-      columnsWidget.plusButton:SetSize(35,35)
-      columnsWidget.plusButton:SetText("+")
-      columnsWidget.plusButton:SetNormalFontObject(defaultFont)    
-      columnsWidget.plusButton:SetScript("OnClick", function ()
-      if trackedActionsColumnCount<= 12 then
-        trackedActionsColumnCount = trackedActionsColumnCount +1
-        columnsWidget.text2:SetText(trackedActionsColumnCount)
-      end
-      end)
-      return columnsWidget
-      end
       function BarsWidget()
         local barsWidget = CreateFrame("Frame",nil) 
         barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultFont);
-        barsWidget.textStatic:SetPoint("LEFT",barsWidget,"CENTER",-50,0);
+        barsWidget.textStatic:SetPoint("LEFT",barsWidget,"CENTER",-10,0);
         barsWidget.textStatic:SetFontObject(defaultFont)
-        barsWidget.textStatic:SetText("Tracked bars: ");
+        barsWidget.textStatic:SetText("Bars: ");
         barsWidget.textValue = barsWidget:CreateFontString(nil,defaultFont);
-        barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",35,0);
+        barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",25,0);
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(actionBarsCount);
 
@@ -229,22 +149,21 @@ function UI:CreateFrames()
       globalHideRest = self:GetChecked()
       end)  
       restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
-      restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
+      restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",0,0);
       restZoneWidget.title:SetFontObject("GameFontHighlight")
       restZoneWidget.title:SetText("Hide in rest zone:")   
       return restZoneWidget
       end
       primaryFrame = Frame()
-      primaryFrame.titles = StaticTitles(primaryFrame)
-      local optionsWidgets = {ResetAll(),BarsWidget(),RestZoneWidget()}   
-      local xOfs =50
-      for k in pairs(optionsWidgets) do
-        optionsWidgets[k]:SetPoint("CENTER", primaryFrame.TitleBg, "CENTER", 165, (xOfs)*-1)
-        optionsWidgets[k]:SetParent(primaryFrame)
-        optionsWidgets[k]:SetSize(100,100)
-        xOfs = xOfs+60   
-        primaryFrameMinimuHeight = xOfs +50   
+      primaryOptionsWidgets = {StaticTitles(),RestZoneWidget(),BarsWidget()}   
+      local xOfs =0
+      for k in pairs(primaryOptionsWidgets) do
+        primaryOptionsWidgets[k]:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT",(xOfs), -30)
+        primaryOptionsWidgets[k]:SetParent(primaryFrame)
+        primaryOptionsWidgets[k]:SetSize(80,80)
+        xOfs = xOfs+105
       end
+      primaryFrameMinimuHeight = 400  
       return primaryFrame
   end
   function SecondaryFrame()
@@ -284,8 +203,6 @@ function UI:CreateActionBar(index)
       actionBar.title:SetFontObject("GameFontHighlight")
     if Config:IsCurrentPatch() then
       actionBar.title:SetText("BAR: "..index)
-    else
-      actionBar.title:SetText("BAR: "..index) 
     end   
     actionBar.title:SetAlpha(0)
      --SECONDARY FRAME -EVENTS   
@@ -335,7 +252,43 @@ function UI:CreateActionBar(index)
       local defaultFont = "GameFontHighlight"
       local defaultLayer = "OVERLAY"
       
-      
+      function BarNavigator()
+        local barNavigator = CreateFrame("Frame",nil) 
+        barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer);
+        barNavigator.text:SetPoint("CENTER",barNavigator,"CENTER",0,0);
+        barNavigator.text:SetFontObject(defaultFont)
+        barNavigator.text:SetText("Bar: "..index);
+        barNavigator.text2 = barNavigator:CreateFontString(nil,defaultLayer);
+        barNavigator.text2:SetPoint("CENTER",barNavigator,"CENTER",-25,0);
+        barNavigator.text2:SetFontObject(defaultFont)
+       -- columnsWidget.text2:SetText(framesColumn[index][1]);    
+       barNavigator.minusButton = CreateFrame("Button", "bs_minus", barNavigator,"UIPanelButtonTemplate")
+       barNavigator.minusButton:SetPoint("CENTER", barNavigator, "LEFT", -25, 0)
+       barNavigator.minusButton:SetSize(35,35)
+       barNavigator.minusButton:SetText("-")
+       barNavigator.minusButton:SetNormalFontObject(defaultFont)    
+       barNavigator.minusButton:SetScript("OnClick", function ()
+       if index>=2 then
+         UI:HideOptionPanels()
+         frames[index-1].optionWidget:Show()
+         optionWidgets[index-1][1].text:SetText("Bar: "..index-1);
+       end
+        end)   
+        barNavigator.plusButton = CreateFrame("Button",nil, barNavigator,"UIPanelButtonTemplate")
+        barNavigator.plusButton:SetPoint("CENTER", barNavigator, "RIGHT", 25, 0)
+        barNavigator.plusButton:SetSize(35,35)
+        barNavigator.plusButton:SetText("+")
+        barNavigator.plusButton:SetNormalFontObject(defaultFont)    
+        barNavigator.plusButton:SetScript("OnClick", function ()
+          if index<#frames then
+            UI:HideOptionPanels()
+            frames[index+1].optionWidget:Show()
+            optionWidgets[index+1][1].text:SetText("Bar: "..index+1);
+          end
+        
+        end)
+        return barNavigator
+      end
        function ScaleSlider()           
          local scaleWidget = CreateFrame("Frame",nil)
          scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
@@ -347,16 +300,21 @@ function UI:CreateActionBar(index)
          scaleWidget.slider:SetWidth(100)
          scaleWidget.slider:SetHeight(15)
          scaleWidget.slider:SetMinMaxValues(0.5,1.5)
-         if framesScale[index] then          
-          scaleWidget.slider:SetValue(framesScale[index])
-         end
+    
+         scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer);
+         scaleWidget.text:SetPoint("CENTER",scaleWidget.title,"CENTER",75,0);
+         scaleWidget.text:SetFontObject(defaultFont)
+         
+         
+    
          scaleWidget.slider:SetStepsPerPage(10)      
          scaleWidget.slider:SetScript("OnValueChanged", function (self) 
-        
+
          frames[index]:SetScale(self:GetValue())  
-         framesScale[index] = self:GetValue()
-         
-       end)    
+         framesScale[index] = self:GetValue()      
+         scaleWidget.text:SetText(Config:RoundNumber(framesScale[index],2));      
+       end)   
+   
        return scaleWidget
        end
        function AlphaSlider()           
@@ -370,14 +328,17 @@ function UI:CreateActionBar(index)
          alphaWidget.slider:SetWidth(100)
          alphaWidget.slider:SetHeight(15)
          alphaWidget.slider:SetMinMaxValues(0.3,1)
-         if framesAlpha[index] then
-          alphaWidget.slider:SetValue(framesAlpha[index])           
-         end
+         alphaWidget.text = alphaWidget:CreateFontString(nil,defaultLayer);
+         alphaWidget.text:SetPoint("CENTER",alphaWidget.title,"CENTER",50,0);
+         alphaWidget.text:SetFontObject(defaultFont)
+      
+
+
          alphaWidget.slider:SetStepsPerPage(10)             
          alphaWidget.slider:SetScript("OnValueChanged", function (self)  
          frames[index]:SetAlpha(self:GetValue()) 
          framesAlpha[index] = self:GetValue() 
-            
+         alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[index],2));    
        end)
      
        return alphaWidget
@@ -435,10 +396,10 @@ function UI:CreateActionBar(index)
         local title = actionBar.optionWidget:CreateFontString(nil,"ARTWORK");
         title:SetPoint("LEFT",actionBar.optionWidget.TitleBg,"LEFT",0,-2);
         title:SetFontObject("GameFontHighlight")
-        title:SetText(" BAR: "..index)       
+        title:SetText("Settings")       
       return title   
       end
-      optionWidgets[index] = {ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
+      optionWidgets[index] = {BarNavigator(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
        local yOfs =60
        for k in pairs(optionWidgets[index]) do
         optionWidgets[index][k]:SetPoint("CENTER", actionBar.optionWidget, "TOP", 0, (yOfs)*-1)
@@ -482,36 +443,40 @@ function UI:SetupSettings(i)
  if not framesScale[i]  then
   framesScale[i]=1
   frames[i]:SetScale(framesScale[i])
-  optionWidgets[i][1].slider:SetValue(framesScale[i])
+  optionWidgets[i][2].slider:SetValue(framesScale[i])
+  optionWidgets[i][2].text:SetText(Config:RoundNumber(framesScale[i],2))
 else
   local scale = framesScale[i] 
   frames[i]:SetScale(scale)
-  optionWidgets[i][1].slider:SetValue(scale)
+  optionWidgets[i][2].slider:SetValue(scale)
+  optionWidgets[i][2].text:SetText(Config:RoundNumber(scale,2))
 end 
 --Alpha
 if not framesAlpha[i]  then
   framesAlpha[i]=1
   frames[i]:SetAlpha(framesAlpha[i])
-  optionWidgets[i][2].slider:SetValue(framesAlpha[i])
+  optionWidgets[i][3].slider:SetValue(framesAlpha[i])
+  optionWidgets[i][3].text:SetText(Config:RoundNumber(framesAlpha[i],2))
 else
   local alpha = framesAlpha[i]
   frames[i]:SetAlpha(alpha)
-  optionWidgets[i][2].slider:SetValue(alpha)
+  optionWidgets[i][3].slider:SetValue(alpha)
+  optionWidgets[i][3].text:SetText(Config:RoundNumber(alpha,2))
 end 
 --Columns
 if not framesColumn[i]  then
   framesColumn[i] = 10
-  optionWidgets[i][3].text2:SetText(framesColumn[i])
+  optionWidgets[i][4].text2:SetText(framesColumn[i])
 else
-  optionWidgets[i][3].text2:SetText(framesColumn[i])
+  optionWidgets[i][4].text2:SetText(framesColumn[i])
 end
 --Hide
 if not framesHideRest[i]  then
  framesHideRest[i] = false
- optionWidgets[i][4].checkBox:SetChecked(framesHideRest[i])
+ optionWidgets[i][5].checkBox:SetChecked(framesHideRest[i])
 else
   local value = framesHideRest[i]
-  optionWidgets[i][4].checkBox:SetChecked(value)
+  optionWidgets[i][5].checkBox:SetChecked(value)
 end
 end
 function UI:RemoveLastActionBar()
@@ -520,6 +485,7 @@ function UI:RemoveLastActionBar()
       local lastIndex = #frames
       frames[#frames]:Hide()  
       UI:HideOptionPanels()
+      frames[#frames-1].optionWidget:Show()
       framesScale[#frames] = nill 
       framesPosition[#frames] = nill 
       framesAlpha[#frames] = nill 
@@ -665,9 +631,12 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
    if value == true then
     v[3].group:Show()
     v[3].charges:Hide()
+    UI:HideOptionPanels()
+    frames[#frames].optionWidget:Show()
    else
     v[3].group:Hide()
     v[3].charges:Show()
+    UI:HideOptionPanels()
    end
   end
   
@@ -679,7 +648,7 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
       if value == true then
         frames[i].title:SetAlpha(1) 
         frames[i].info:SetAlpha(1) 
-        frames[i].edit:SetAlpha(1) 
+        frames[i].edit:SetAlpha(1)         
       else
         frames[i].title:SetAlpha(0) 
         frames[i].info:SetAlpha(0) 
@@ -705,13 +674,13 @@ for actionID in pairs(trackedActions) do
     trackedActionForSpecCount = trackedActionForSpecCount +1
   end
 end
-primaryFrame.titles.trackedValue:SetText(trackedActionForSpecCount)
+primaryOptionsWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
 --update primary frame Title
 local version,build,savedBuild = Config:GetSmartBarsInfo()
-primaryFrame.titles.frame:SetText("SmartBars "..version.." |"..build.."|"..savedBuild.."|")
+primaryOptionsWidgets[1].frame:SetText("SmartBars "..version.." |"..build.."|"..savedBuild.."|")
 --Get count of user actions in action bars
 local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
-primaryFrame.titles.usedValue:SetText(usedSpellsCount) 
+primaryOptionsWidgets[1].usedValue:SetText(usedSpellsCount) 
 --Count Primary frame height
 local minimumHeight = primaryFrameMinimuHeight
 if usedSpellsCount<12 then

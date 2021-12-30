@@ -30,7 +30,7 @@ function Actions:Add(action)
 end  
 function Actions:Display(actions,frame)
     local xOffstet = 0;
-    local yOffset = -10;
+    local yOffset = -20;
     local count = 0
   
     if displayedActions~=nill then

@@ -152,4 +152,9 @@ function Config:DisableOldAddon()
         print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.Delete BS_ActionsTracker folder from --/interface/addons. if you dont want get this notification again.")      
     end 
 end  
+function Config:RoundNumber(num,numDecimalPlaces)
+   
+    return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
+     
+end
 -- Revision version v0.9.3 -----
