@@ -8,30 +8,32 @@ local Config
 --Init------------------------------------
 function UI:Init()
 Actions = SmartBars.Actions
-Core = SmartBars.Core
 Config = SmartBars.Config
 end
 --Variables-------------------------------
 local primaryFrame   
 local frames = {};  
-local trackedActionsColumnCount=0 --SV
 local primaryFrameMinimuHeight
-local trackedBarsMaximum = 10
-
 --new
-local framesPosition = {}
-local framesScale = {}
-local framesAlpha = {}
-local framesColumn ={}
+local framesPosition = {}--sv
+local framesScale = {}--sv
+local framesAlpha = {}--sv
+local framesColumn ={}--sv
+local actionBarsMaximum = 10
 local framesHideRest = {}
 
 local primaryFrameHeight
+local primaryOptionsWidgets = {}
 local actionBarsCount = 0
 local globalHideRest = false
 local optionWidgets = {}
-local primaryOptionsWidgets = {}
 
-
+-----XML Templates Variables--------------
+local defaultFont = "GameFontHighlight"
+local defaultLayer = "OVERLAY"
+local basicFrameWithInset = "BasicFrameTemplateWithInset"
+local defaultButton = "UIPanelButtonTemplate"
+local defaultCheckButton = "UICheckButtonTemplate"
 --UI:Frames-------------------------------
 function UI:CreateFrames()  
   local function PrimaryFrame()
@@ -39,7 +41,7 @@ function UI:CreateFrames()
     local defaultLayer = "OVERLAY"
    
       function Frame()
-    local frame = CreateFrame("Frame",nill,nill,"BasicFrameTemplateWithInset","ARTWORK");
+    local frame = CreateFrame("Frame",nill,nill,basicFrameWithInset,defaultLayer);
     UI:SetFrameMoveable(frame)  
     frame:Hide()
     frame:SetSize(320,0);
@@ -47,17 +49,14 @@ function UI:CreateFrames()
     frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
     end)    
-      frame.resetButton = CreateFrame("Button", nill, frame,"UIPanelButtonTemplate")
+      frame.resetButton = CreateFrame("Button", nill, frame,defaultButton)
       frame.resetButton:SetPoint("RIGHT",frame.TitleBg,"RIGHT",-50,0);
       frame.resetButton:SetSize(50,15)
-      frame.resetButton:SetText("Reset All")
-      frame.resetButton:SetNormalFontObject(defaultFont)
+      frame.resetButton:SetNormalFontObject(defaultFont)       
+      frame.resetButton:SetText("ResetAll");
       frame.resetButton:SetScript("OnClick", function ()
       Config:ResetAll()
       end)
-    
-    
-  
     return frame
       end     
       function StaticTitles()
@@ -104,7 +103,7 @@ function UI:CreateFrames()
         barsWidget.textValue:SetFontObject(defaultFont)
         barsWidget.textValue:SetText(actionBarsCount);
 
-        barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate","ARTWORK")
+        barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,defaultButton,defaultLayer)
         barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 0, -30)
         barsWidget.minusButton :SetSize(35,35)
         barsWidget.minusButton :SetText("-")
@@ -116,7 +115,7 @@ function UI:CreateFrames()
         barsWidget.textValue:SetText(actionBarsCount);
         end) 
 
-        barsWidget.plusButton  = CreateFrame("Button",nil, barsWidget,"UIPanelButtonTemplate","ARTWORK")
+        barsWidget.plusButton  = CreateFrame("Button",nil, barsWidget,defaultButton,defaultLayer)
         barsWidget.plusButton:SetPoint("CENTER", barsWidget, "CENTER", 35, -30)
         barsWidget.plusButton:SetSize(35,35)
         barsWidget.plusButton:SetText("+")
@@ -137,7 +136,7 @@ function UI:CreateFrames()
       function RestZoneWidget()
       local restZoneWidget = CreateFrame("Frame",nil) 
       restZoneWidget:SetSize(35,35)
-      restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate","ARTWORK")
+      restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget,defaultCheckButton,defaultLayer)
       restZoneWidget.checkBox:SetChecked(globalHideRest)
       restZoneWidget.checkBox:SetSize(35,35)
       restZoneWidget.checkBox:SetPoint("CENTER",restZoneWidget,"CENTER",50,-30);
@@ -205,7 +204,7 @@ function UI:CreateActionBar(index)
      --SECONDARY FRAME -EVENTS   
     end
     function Info()
-      actionBar.info = CreateFrame("Button",nill,actionBar,"UIPanelButtonTemplate","ARTWORK");
+      actionBar.info = CreateFrame("Button",nill,actionBar,defaultButton,defaultLayer);
       actionBar.info:SetPoint("LEFT",actionBar,"Center",0,-1);   
       actionBar.info:SetSize(20,20)    
       if Config:IsCurrentPatch() then
@@ -220,7 +219,7 @@ function UI:CreateActionBar(index)
       actionBar.info.text:SetText("i")
     end
     function Edit()
-      actionBar.edit = CreateFrame("Button",nill,actionBar,"UIPanelButtonTemplate","ARTWORK");
+      actionBar.edit = CreateFrame("Button",nill,actionBar,defaultButton,defaultLayer);
       actionBar.edit:SetPoint("LEFT",actionBar,"Center",-35,-1);   
       actionBar.edit:SetSize(40,20)         
       actionBar.edit:SetAlpha(0)
@@ -247,11 +246,11 @@ function UI:CreateActionBar(index)
       actionBar.optionWidget:EnableMouse(false)
      -- UI:SetFrameMoveable(actionBar.optionWidget)  
     
-      local defaultFont = "GameFontHighlight"
-      local defaultLayer = "OVERLAY"
+  
       
       function BarNavigator()
-        local barNavigator = CreateFrame("Frame",nil) 
+        local barNavigator = CreateFrame("Frame",nil,nil,nil,defaultLayer) 
+      
         barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer);
         barNavigator.text:SetPoint("CENTER",barNavigator,"CENTER",0,0);
         barNavigator.text:SetFontObject(defaultFont)
@@ -260,7 +259,7 @@ function UI:CreateActionBar(index)
         barNavigator.text2:SetPoint("CENTER",barNavigator,"CENTER",-25,0);
         barNavigator.text2:SetFontObject(defaultFont)
        -- columnsWidget.text2:SetText(framesColumn[index][1]);    
-       barNavigator.minusButton = CreateFrame("Button", "bs_minus", barNavigator,"UIPanelButtonTemplate")
+       barNavigator.minusButton = CreateFrame("Button", "bs_minus", barNavigator,defaultButton,defaultLayer)
        barNavigator.minusButton:SetPoint("CENTER", barNavigator, "LEFT", -25, 0)
        barNavigator.minusButton:SetSize(35,35)
        barNavigator.minusButton:SetText("-")
@@ -273,7 +272,7 @@ function UI:CreateActionBar(index)
          optionWidgets[index-1][1].text:SetText("Bar: "..index-1);
        end
         end)   
-        barNavigator.plusButton = CreateFrame("Button",nil, barNavigator,"UIPanelButtonTemplate")
+        barNavigator.plusButton = CreateFrame("Button",nil, barNavigator,defaultButton,defaultLayer)
         barNavigator.plusButton:SetPoint("CENTER", barNavigator, "RIGHT", 25, 0)
         barNavigator.plusButton:SetSize(35,35)
         barNavigator.plusButton:SetText("+")
@@ -355,7 +354,7 @@ function UI:CreateActionBar(index)
        columnsWidget.text2:SetFontObject(defaultFont)
       -- columnsWidget.text2:SetText(framesColumn[index][1]);    
 
-       columnsWidget.minusButton = CreateFrame("Button", "bs_minus", columnsWidget,"UIPanelButtonTemplate")
+       columnsWidget.minusButton = CreateFrame("Button", "bs_minus", columnsWidget,defaultButton,defaultLayer)
        columnsWidget.minusButton:SetPoint("CENTER", columnsWidget, "CENTER", 0, -30)
        columnsWidget.minusButton:SetSize(35,35)
        columnsWidget.minusButton:SetText("-")
@@ -367,7 +366,7 @@ function UI:CreateActionBar(index)
         columnsWidget.text2:SetText(framesColumn[index])
        end
        end)   
-       columnsWidget.plusButton = CreateFrame("Button",nil, columnsWidget,"UIPanelButtonTemplate")
+       columnsWidget.plusButton = CreateFrame("Button",nil, columnsWidget,defaultButton,defaultLayer)
        columnsWidget.plusButton:SetPoint("CENTER", columnsWidget, "CENTER", 35, -30)
        columnsWidget.plusButton:SetSize(35,35)
        columnsWidget.plusButton:SetText("+")
@@ -383,7 +382,7 @@ function UI:CreateActionBar(index)
        end      
        function RestZoneWidget()
        local restZoneWidget = CreateFrame("Frame",nil) 
-       restZoneWidget.checkBox = CreateFrame("CheckButton",nil, restZoneWidget, "UICheckButtonTemplate")
+       restZoneWidget.checkBox = CreateFrame("CheckButton",nil,restZoneWidget,defaultCheckButton,defaultLayer)
        restZoneWidget.checkBox:SetChecked(framesHideRest[index])
        restZoneWidget.checkBox:SetSize(35,35)
        restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
@@ -423,7 +422,6 @@ function UI:CreateActionBar(index)
     frames[index] = ActionBar()   
 end
 function UI:SetupSettings(i)
-
   local rowCount =5
  ---Position
  if not framesPosition[i]  then
@@ -508,7 +506,7 @@ function UI:RemoveLastActionBar()
   end  
 end
 function UI:AddActionBar()
-  if #frames < trackedBarsMaximum then
+  if #frames < actionBarsMaximum then
   UI:CreateActionBar(#frames+1)
   UI:SetupSettings(#frames)
   UI:ToggleWidgets(true)
@@ -542,11 +540,10 @@ function UI:CalculateFramePosition(frameIndex)
 end
 --UI:Widgets-------------------------------
 function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return widget with correct size and textures
- local actionWidget = CreateFrame("CheckButton",nil, parentFrame, "UICheckButtonTemplate", "ARTWORK")
+ local actionWidget = CreateFrame("CheckButton",nil, parentFrame, defaultCheckButton,defaultLayer)
  actionWidget:SetPoint("LEFT",parentFrame,"LEFT",0,0)
- actionWidget:SetWidth(45)
- actionWidget:SetHeight(45)
- actionWidget.tooltipText = "test"
+ actionWidget:SetSize(50,50)
+ actionWidget.tooltipText = "Create new action bar."
  local spellID = action[2] 
  local newTexture= API:GetActionTexture(spellID,action[6],action[1])
  if isTracked then
@@ -562,7 +559,7 @@ function UI:CreateActionWidget(action,parentFrame,isTracked,isEnabled)--Return w
  return actionWidget
 end
 function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
-  local edit = CreateFrame("EditBox",nil, parentWidget, "UICheckButtonTemplate","ARTWORK")
+  local edit = CreateFrame("EditBox",nil, parentWidget,nill,defaultLayer)
   edit:SetPoint("CENTER",parentWidget,"CENTER",2,0)
   edit:SetSize(50,50)
   edit:SetText(valueToSave[4])
@@ -575,26 +572,28 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
   end)
   return edit
 end
-function UI:CreateFontString(parentWidget,valueToSave,isEnabled)
-local fontString =parentWidget:CreateFontString(nil,"ARTWORK");
+function UI:CreateFontString(parentWidget,fontSize,someText)
+local fontString =parentWidget:CreateFontString(nil,defaultLayer);
 fontString:SetPoint("RIGHT",parentWidget,"CENTER",22,-17);
-fontString:SetFont("Fonts\\FRIZQT__.TTF", 15,nil)
-fontString:SetText("");
+fontString:SetFont("Fonts\\FRIZQT__.TTF",fontSize,nil)
+if not someText then
+  fontString:SetText("");
+else
+  fontString:SetText(someText) 
+end
 return fontString
 end
 function UI:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)
-local xOfs = 0
 local yOfs = -15
-local defaultFont = "GameFontHighlight"
-local newWidget = CreateFrame("Frame", "bs_newpg", parentWidget)
+local newWidget = CreateFrame("Frame",nill, parentWidget)
 newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
 
-newWidget.barNumberText =newWidget:CreateFontString(nil,"ARTWORK");
+newWidget.barNumberText =newWidget:CreateFontString(nil,defaultLayer);
 newWidget.barNumberText:SetPoint("CENTER",parentWidget,"CENTER",17,-17);
 newWidget.barNumberText:SetFont("Fonts\\FRIZQT__.TTF", 15,"OUTLINE")
 newWidget.barNumberText:SetText(valueToSave[6]);
 if Config:IsCurrentPatch() then
-newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,"UICheckButtonTemplate")
+newWidget.showWhenBoosted = CreateFrame("CheckButton", nil, newWidget,defaultCheckButton,defaultLayer)
 newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
 newWidget.showWhenBoosted:SetSize(20,20)
 newWidget.showWhenBoosted:SetChecked(valueToSave[8])
@@ -606,7 +605,7 @@ end
 
 
 
-newWidget.minusButton = CreateFrame("Button", "bs_minus2", newWidget,"UIPanelButtonTemplate")
+newWidget.minusButton = CreateFrame("Button",nill, newWidget,defaultButton,defaultLayer)
 newWidget.minusButton:SetPoint("CENTER", parentWidget, "CENTER", -15,yOfs)
 newWidget.minusButton:SetSize(20,20)
 newWidget.minusButton:SetText("-")
@@ -616,7 +615,7 @@ newWidget.minusButton:SetScript("OnClick", function ()
   UI:MoveActionWidgets(valueToSave,-1)
   end
 end)
-newWidget.plusButton = CreateFrame("Button", "bs_plus2", newWidget,"UIPanelButtonTemplate")
+newWidget.plusButton = CreateFrame("Button",nill, newWidget,defaultButton,defaultLayer)
 newWidget.plusButton:SetPoint("CENTER", parentWidget, "CENTER", 0, yOfs)
 newWidget.plusButton:SetSize(20,20)
 newWidget.plusButton:SetText("+")
@@ -798,16 +797,13 @@ function UI:Get()
              ActionBar = function(self,barIndex)             
                 return frames[barIndex]                             
              end,        
-             ColumnCount = function(self)                                                             
-                return trackedActionsColumnCount
-             end,
              CurrentSpec = function(self)                                                                                    
                 return  currentSpecialization
              end,
              ActionBarCount = function(self)                                                                                    
               return actionBarsCount
              end,           
-             HideInSaveZone = function(self)                                                                                    
+             GlobalHideRest = function(self)                                                                                    
               return  globalHideRest
              end,
              FramesScale = function(self)                                                                                                  
@@ -834,7 +830,6 @@ function UI:Get()
          }
  return returnTable
 end
-
 function UI:SetSavedVariables(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedGlobalHideRest)
  framesPosition = loadedFramesPosition
  framesScale =loadedFramesScale

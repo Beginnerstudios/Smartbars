@@ -54,7 +54,7 @@ UI:UpdateUI()
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():HideInSaveZone(),isCleared}
+    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared}
 end
 function Config:LoadConfig()  
 Actions:SetSavedVariables(SmartBarsCharacterActions)
