@@ -24,27 +24,25 @@ local framesHideRest = {}
 
 local primaryFrameHeight
 local primaryOptionsWidgets = {}
-local actionBarsCount = 0
+local actionBarsCount = 1
 local globalHideRest = false
 local optionWidgets = {}
 
 -----XML Templates Variables--------------
-local defaultFont = "GameFontHighlight"
+local defaultFont = "GameFontHighLight"
 local defaultLayer = "OVERLAY"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
 local defaultButton = "UIPanelButtonTemplate"
 local defaultCheckButton = "UICheckButtonTemplate"
 --UI:Frames-------------------------------
 function UI:CreateFrames()  
-  local function PrimaryFrame()
-    local defaultFont = "GameFontHighlight"
-    local defaultLayer = "OVERLAY"
-   
+  local function PrimaryFrame() 
       function Frame()
     local frame = CreateFrame("Frame",nill,nill,basicFrameWithInset,defaultLayer);
     UI:SetFrameMoveable(frame)  
     frame:Hide()
     frame:SetSize(320,0);
+    frame:SetScale(0.75)
     frame:SetPoint("CENTER",nill,"CENTER",-450,100);
     frame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
@@ -146,8 +144,8 @@ function UI:CreateFrames()
       end)  
       restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
       restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",0,0);
-      restZoneWidget.title:SetFontObject("GameFontHighlight")
-      restZoneWidget.title:SetText("Hide in rest zone:")   
+      restZoneWidget.title:SetFontObject(defaultFont)
+      restZoneWidget.title:SetText("Hide in rest:")   
       return restZoneWidget
       end
       primaryFrame = Frame()
@@ -186,6 +184,7 @@ end
 function UI:CreateActionBar(index)
     local function ActionBar()
     local actionBar = CreateFrame("Frame","BS_ActionsTracker.Secondary",nil);
+    actionBar:SetScale(0.75)
     function Frame()
     actionBar:SetScale(1)
     actionBar:SetAlpha(1)
@@ -196,7 +195,7 @@ function UI:CreateActionBar(index)
     function Title()
       actionBar.title = actionBar:CreateFontString(nil,"ARTWORK");
       actionBar.title:SetPoint("LEFT",actionBar,"LEFT",0,-1);
-      actionBar.title:SetFontObject("GameFontHighlight")
+      actionBar.title:SetFontObject(defaultFont)
     
       actionBar.title:SetText("BAR: "..index)
    
@@ -215,7 +214,7 @@ function UI:CreateActionBar(index)
       actionBar.info:SetAlpha(0)
       actionBar.info.text = actionBar.info:CreateFontString(nil,"BORDER");
       actionBar.info.text:SetPoint("CENTER",actionBar.info,"CENTER",0,0);
-      actionBar.info.text:SetFontObject("GameFontHighlight")
+      actionBar.info.text:SetFontObject(defaultFont)
       actionBar.info.text:SetText("i")
     end
     function Edit()
@@ -225,7 +224,7 @@ function UI:CreateActionBar(index)
       actionBar.edit:SetAlpha(0)
       actionBar.edit.text = actionBar.edit:CreateFontString(nil,"BORDER");
       actionBar.edit.text:SetPoint("CENTER",actionBar.edit,"CENTER",0,0);
-      actionBar.edit.text:SetFontObject("GameFontHighlight")
+      actionBar.edit.text:SetFontObject(defaultFont)
       actionBar.edit.text:SetText("Edit")
       actionBar.edit:SetScript("OnClick",function ()
       UI:HideOptionPanels()
@@ -292,7 +291,7 @@ function UI:CreateActionBar(index)
          local scaleWidget = CreateFrame("Frame",nil)
          scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer);
          scaleWidget.title:SetPoint("LEFT",scaleWidget,"CENTER",-50,0);
-         scaleWidget.title:SetFontObject("GameFontHighlight")
+         scaleWidget.title:SetFontObject(defaultFont)
          scaleWidget.title:SetText("Scale:")  
          scaleWidget.slider = CreateFrame("Slider",nil, scaleWidget,"OptionsSliderTemplate")
          scaleWidget.slider:SetPoint("CENTER",scaleWidget,"CENTER",0,-30);
@@ -321,7 +320,7 @@ function UI:CreateActionBar(index)
          local alphaWidget = CreateFrame("Frame", "dasd")
          alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer);
          alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
-         alphaWidget.title:SetFontObject("GameFontHighlight")
+         alphaWidget.title:SetFontObject(defaultFont)
          alphaWidget.title:SetText("Transparency:")  
          alphaWidget.slider = CreateFrame("Slider", "myslider", alphaWidget,"OptionsSliderTemplate")
          alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-30);
@@ -392,14 +391,14 @@ function UI:CreateActionBar(index)
        end)  
        restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
        restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
-       restZoneWidget.title:SetFontObject("GameFontHighlight")
+       restZoneWidget.title:SetFontObject(defaultFont)
        restZoneWidget.title:SetText("Hide in rest zone:")   
        return restZoneWidget
        end
        function Title()
         local title = actionBar.optionWidget:CreateFontString(nil,"ARTWORK");
         title:SetPoint("LEFT",actionBar.optionWidget.TitleBg,"LEFT",0,-2);
-        title:SetFontObject("GameFontHighlight")
+        title:SetFontObject(defaultFont)
         title:SetText("Settings")       
       return title   
       end
@@ -637,8 +636,8 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
    if value == true then
     v[3].group:Show()
     v[3].charges:Hide()
-    UI:HideOptionPanels()
-    frames[#frames].optionWidget:Show()
+   
+
    else
     v[3].group:Hide()
     v[3].charges:Show()
@@ -653,15 +652,18 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     
       if value == true then
         frames[i].title:SetAlpha(1) 
+        frames[i].info:Show() 
         frames[i].info:SetAlpha(1) 
         frames[i].edit:SetAlpha(1)         
       else
         frames[i].title:SetAlpha(0) 
+        frames[i].info:Hide() 
         frames[i].info:SetAlpha(0) 
         frames[i].edit:SetAlpha(0) 
       end
   end
-
+  UI:HideOptionPanels()
+  frames[#frames].optionWidget:Show()
 end
 function UI:HideOptionPanels()
   for index in pairs(frames) do
