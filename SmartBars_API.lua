@@ -130,5 +130,5 @@ function API:GetDisplayedActionInfo(id,actionType)
         return name
     end
 end
--- Revision version v0.9.5 ---
+-- Revision version v0.9.6 ---
 

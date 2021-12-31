@@ -3,9 +3,7 @@ local _,SmartBars = ...;
 SmartBars.Config ={};
 local Config = SmartBars.Config;
 local UI
-local Core
 local Actions
-local Global
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
@@ -22,8 +20,8 @@ local isCleared
 local currentSaveVersion =93
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.5"
-local publicBuild = 95
+local currentVersion = "v - 0.9.6 ALPHA"
+local publicBuild = 96
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -102,7 +100,7 @@ function Config:IsConfigMode()
  return isConfigMode
 end
 function Config:ResetAll()  
-    SmartBarsSavedBuild=nill
+    SmartBarsSavedBuild=nill   
     ReloadUI()
 end
 --Getter&Setter----------------------------
@@ -157,4 +155,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v0.9.5 -----
+-- Revision version v0.9.6 -----

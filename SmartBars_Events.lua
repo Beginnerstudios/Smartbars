@@ -3,9 +3,7 @@ local _,SmartBars = ...;
 SmartBars.Events ={};
 local Events=SmartBars.Events;
 local Actions
-local Core
 local Config
-local Global
 local UI
 --Init------------------------------------
 function Events:Init()
@@ -27,7 +25,7 @@ function Events:RegisterEvents()
   frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
   frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
   end
-  
+ 
   frame:SetScript("OnEvent", function(this, event, ...)
     Event[event](MyAddon, ...)
   end)
@@ -72,5 +70,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.9.5 ----
+-- Revision version v0.9.6 ----
 

@@ -2,7 +2,6 @@
 --NameSpaces------------------------------
 local _,SmartBars = ...;
 SmartBars.Core ={};
-local Core = SmartBars.Core
 UI = SmartBars.UI
 local Actions = SmartBars.Actions
 local Config = SmartBars.Config
