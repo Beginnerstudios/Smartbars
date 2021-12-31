@@ -20,8 +20,8 @@ local isCleared
 local currentSaveVersion =93
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.6"
-local publicBuild = 96
+local currentVersion = "v - 0.9.7 ALPHA"
+local publicBuild = 97
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -67,7 +67,7 @@ UI:SetSavedVariables(
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
-currentSavedBuild = SmartBarsSavedBuild
+currentSaveVersion = SmartBarsSavedBuild
 end
 function Config:SetDefaults()
     if not SmartBarsCharacterActions then
@@ -105,7 +105,7 @@ function Config:ResetAll()
 end
 function Config:CreatePopup()
     StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
-      text = "Do you want to reset all settings?",
+      text = "Do you want to reset SmartBars to default state?",
       button1 = "Yes",
       button2 = "No",
       OnAccept = function()

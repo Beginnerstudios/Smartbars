@@ -14,6 +14,7 @@ end
 local primaryFrame   
 local primaryOptionsWidgets = {}
 local globalHideRest = false
+local minimumHeight = 350
 --ActionBars
 local actionBarsCount = 1
 local optionWidgets = {}
@@ -137,6 +138,7 @@ function UI:CreateFrames()--Create primary frame + ActionUpdater frame
       widget.checkBox.tooltipText = "Hide all tracked actions in rest zone." 
       widget.checkBox:SetScript("OnClick",function (self)
       globalHideRest = self:GetChecked()
+      UI:UpdateUI()
       end)  
       widget.title = widget:CreateFontString(nil,defaultLayer);
       widget.title:SetPoint("LEFT",widget,"CENTER",0,0);
@@ -190,11 +192,9 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
       actionBar.info = CreateFrame("Button",nill,actionBar,defaultButton,defaultLayer);
       actionBar.info:SetPoint("LEFT",actionBar,"Center",10,-1);   
       actionBar.info:SetSize(20,20)    
-      if Config:IsCurrentPatch() then
-        actionBar.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-.\nDisplay only when boosted: Check checkbox."
-      else
-        actionBar.info.tooltipText ="Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-"
-      end   
+    
+        actionBar.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\n"
+      
       actionBar.info:SetAlpha(0)
       actionBar.info.text = actionBar.info:CreateFontString(nil,"BORDER");
       actionBar.info.text:SetPoint("CENTER",actionBar.info,"CENTER",0,0);
@@ -221,9 +221,9 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
       
     end
     function OptionWidget()
-      actionBar.optionWidget = CreateFrame("Frame",nill,actionBar,"BasicFrameTemplateWithInset","ARTWORK");
-      actionBar.optionWidget:SetPoint("LEFT",primaryFrame,"RIGHT",0,0);   
-      actionBar.optionWidget:SetSize(150,primaryFrame:GetHeight())         
+      actionBar.optionWidget = CreateFrame("Frame",nill,actionBar,basicFrameWithInset,defaultLayer);
+      actionBar.optionWidget:SetPoint("LEFT",primaryFrame,"RIGHT",0,107);   
+      actionBar.optionWidget:SetSize(150,minimumHeight)         
       actionBar.optionWidget:Hide() 
       actionBar.optionWidget:SetParent(primaryFrame)
       actionBar.optionWidget:EnableMouse(false)
@@ -235,8 +235,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
   
       
       function BarNavigator()
-        local barNavigator = CreateFrame("Frame",nil,nil,nil,defaultLayer) 
-      
+        local barNavigator = CreateFrame("Frame",nil,nil,nil,defaultLayer)       
         barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer);
         barNavigator.text:SetPoint("CENTER",barNavigator,"CENTER",0,0);
         barNavigator.text:SetFontObject(defaultFont)
@@ -255,6 +254,11 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
          UI:HideOptionPanels()
          frames[index-1].optionWidget:Show()
          optionWidgets[index-1][1].text:SetText("Bar: "..index-1);
+       elseif index ==1 then
+        UI:HideOptionPanels()
+         frames[#frames].optionWidget:Show()
+         optionWidgets[#frames][1].text:SetText("Bar: "..#frames);
+
        end
         end)   
         barNavigator.plusButton = CreateFrame("Button",nil, barNavigator,defaultButton,defaultLayer)
@@ -267,8 +271,11 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
             UI:HideOptionPanels()
             frames[index+1].optionWidget:Show()
             optionWidgets[index+1][1].text:SetText("Bar: "..index+1);
+          elseif index==#frames then
+            UI:HideOptionPanels()
+            frames[1].optionWidget:Show()
+            optionWidgets[1][1].text:SetText("Bar: 1");
           end
-        
         end)
         return barNavigator
       end
@@ -369,6 +376,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
       
        restZoneWidget.checkBox:SetScript("OnClick",function (self)
         framesHideRest[index] = self:GetChecked()
+        UI:UpdateUI()
        end)  
        restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
        restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
@@ -555,6 +563,7 @@ function UI:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with 
   edit:SetText(valueToSave[4])
   edit:SetAutoFocus(false)
   edit:SetMaxLetters(3)
+  edit.tooltipText ="Change bar."  
   edit:SetEnabled(isEnabled)
   edit:SetFont("Fonts\\FRIZQT__.TTF", 25, "OUTLINE")
   edit:SetScript("OnEditFocusLost", function (self)             
@@ -588,7 +597,8 @@ newWidget.showWhenBoosted:SetHitRectInsets(0,0,0,0)
 newWidget.showWhenBoosted:SetPoint("CENTER", parentWidget, "CENTER", 18,18)
 newWidget.showWhenBoosted:SetSize(20,20)
 newWidget.showWhenBoosted:SetChecked(valueToSave[8])
-newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)   
+newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)
+newWidget.showWhenBoosted.tooltipText = "Check if you want display this spell only when BOOSTED."   
 newWidget.showWhenBoosted:SetScript("OnClick", function (self) 
 valueToSave[8]=self:GetChecked()
 end)
@@ -600,21 +610,25 @@ newWidget.minusButton = CreateFrame("Button",nill, newWidget,defaultButton,defau
 newWidget.minusButton:SetPoint("CENTER", parentWidget, "CENTER", -15,yOfs)
 newWidget.minusButton:SetSize(20,20)
 newWidget.minusButton:SetText("-")
+newWidget.minusButton.tooltipText ="Change bar."
 newWidget.minusButton:SetNormalFontObject(defaultFont)    
 newWidget.minusButton:SetScript("OnClick", function () 
   if  valueToSave[6]>1 then
   UI:MoveActionWidgets(valueToSave,-1)
   end
+  UI:UpdateUI()
 end)
 newWidget.plusButton = CreateFrame("Button",nill, newWidget,defaultButton,defaultLayer)
 newWidget.plusButton:SetPoint("CENTER", parentWidget, "CENTER", 0, yOfs)
 newWidget.plusButton:SetSize(20,20)
 newWidget.plusButton:SetText("+")
-newWidget.plusButton:SetNormalFontObject(defaultFont)    
+newWidget.plusButton:SetNormalFontObject(defaultFont)  
+newWidget.plusButton.tooltipText ="Change bar."  
 newWidget.plusButton:SetScript("OnClick", function ()
   if valueToSave[6]< actionBarsCount then
     UI:MoveActionWidgets(valueToSave,1)
   end  
+  UI:UpdateUI()
 end)
 if not isDisplayed then
   newWidget:Hide()
@@ -668,6 +682,7 @@ end
 function UI:UpdateUI() ---update all dynamic variables in UI 
 UI:SetupPrimaryFrame()
 UI:RefreshTrackedIcons()
+Config:SaveConfig()
 end
 function UI:SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
   --Count of tracked actions for specific spec
@@ -684,7 +699,6 @@ function UI:SetupPrimaryFrame() --handle height of primary frame and primary opt
   --Determinate height of primary frame
   local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
   primaryOptionsWidgets[1].usedValue:SetText(usedSpellsCount)
-  local minimumHeight = 350
   local actionsHeight = usedSpellsCount/6*60+165
   local primaryFrameHeight
   if usedSpellsCount<=18 then 
@@ -693,9 +707,7 @@ function UI:SetupPrimaryFrame() --handle height of primary frame and primary opt
     primaryFrameHeight = actionsHeight  
   end
   primaryFrame:SetHeight(primaryFrameHeight)
-  for i in pairs(frames) do
-    frames[i].optionWidget:SetHeight(400)
-  end
+
 end
 function UI:RefreshTrackedIcons()--update icons on tracked actions
   local tA = Actions:GetTracked()
