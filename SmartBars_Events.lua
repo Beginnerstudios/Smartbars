@@ -18,14 +18,14 @@ function Events:RegisterEvents()
   local frame = CreateFrame("Frame")
   frame:RegisterEvent("PLAYER_LOGIN")
   frame:RegisterEvent("PLAYER_LOGOUT")
-
-
+  Config:CreatePopup()
   if Config:IsCurrentPatch() then
   frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
   frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
   frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
   end
  
+
   frame:SetScript("OnEvent", function(this, event, ...)
     Event[event](MyAddon, ...)
   end)

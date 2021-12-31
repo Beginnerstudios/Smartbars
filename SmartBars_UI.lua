@@ -50,8 +50,10 @@ function UI:CreateFrames()--Create primary frame + ActionUpdater frame
       frame.resetButton:SetNormalFontObject(defaultFont)       
       frame.resetButton:SetText("ResetAll");
       frame.resetButton:SetScript("OnClick", function ()
-      Config:ResetAll()
+        StaticPopup_Show ("SMARTBARS_RESETCONFIRM")  
       end)
+   
+
     return frame
     end     
     function StaticTitles()
@@ -93,7 +95,7 @@ function UI:CreateFrames()--Create primary frame + ActionUpdater frame
       barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultFont);
       barsWidget.textStatic:SetPoint("LEFT",barsWidget,"CENTER",-10,0);
       barsWidget.textStatic:SetFontObject(defaultFont)
-      barsWidget.textStatic:SetText("Bars: ");
+      barsWidget.textStatic:SetText("Bars:  ");
       barsWidget.textValue = barsWidget:CreateFontString(nil,defaultFont);
       barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",25,0);
       barsWidget.textValue:SetFontObject(defaultFont)
@@ -139,7 +141,7 @@ function UI:CreateFrames()--Create primary frame + ActionUpdater frame
       widget.title = widget:CreateFontString(nil,defaultLayer);
       widget.title:SetPoint("LEFT",widget,"CENTER",0,0);
       widget.title:SetFontObject(defaultFont)
-      widget.title:SetText("Hide in rest zone: ")   
+      widget.title:SetText("Rest zone:")   
       return widget
     end
     primaryFrame = Frame()
@@ -186,7 +188,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
     end
     function Info()
       actionBar.info = CreateFrame("Button",nill,actionBar,defaultButton,defaultLayer);
-      actionBar.info:SetPoint("LEFT",actionBar,"Center",0,-1);   
+      actionBar.info:SetPoint("LEFT",actionBar,"Center",10,-1);   
       actionBar.info:SetSize(20,20)    
       if Config:IsCurrentPatch() then
         actionBar.info.tooltipText = "Move - Drag BAR.\nEdit - Set text inside icon.\nChange bar: Use buttons +-.\nDisplay only when boosted: Check checkbox."
@@ -201,7 +203,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
     end
     function Edit()
       actionBar.edit = CreateFrame("Button",nill,actionBar,defaultButton,defaultLayer);
-      actionBar.edit:SetPoint("LEFT",actionBar,"Center",-35,-1);   
+      actionBar.edit:SetPoint("LEFT",actionBar,"Center",-25,-1);   
       actionBar.edit:SetSize(40,20)         
       actionBar.edit:SetAlpha(0)
       actionBar.edit.text = actionBar.edit:CreateFontString(nil,"BORDER");
@@ -240,13 +242,13 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
         barNavigator.text:SetFontObject(defaultFont)
         barNavigator.text:SetText("Bar: "..index);
         barNavigator.text2 = barNavigator:CreateFontString(nil,defaultLayer);
-        barNavigator.text2:SetPoint("CENTER",barNavigator,"CENTER",-25,0);
+        barNavigator.text2:SetPoint("CENTER",barNavigator,"CENTER",-15,0);
         barNavigator.text2:SetFontObject(defaultFont)
        -- columnsWidget.text2:SetText(framesColumn[index][1]);    
        barNavigator.minusButton = CreateFrame("Button", "bs_minus", barNavigator,defaultButton,defaultLayer)
-       barNavigator.minusButton:SetPoint("CENTER", barNavigator, "LEFT", -25, 0)
-       barNavigator.minusButton:SetSize(35,35)
-       barNavigator.minusButton:SetText("-")
+       barNavigator.minusButton:SetPoint("CENTER", barNavigator, "CENTER", -35, 0)
+       barNavigator.minusButton:SetSize(25,25)
+       barNavigator.minusButton:SetText("<")
        barNavigator.minusButton:SetNormalFontObject(defaultFont)    
        barNavigator.minusButton:SetScript("OnClick", function ()
        if index>=2 then
@@ -256,9 +258,9 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
        end
         end)   
         barNavigator.plusButton = CreateFrame("Button",nil, barNavigator,defaultButton,defaultLayer)
-        barNavigator.plusButton:SetPoint("CENTER", barNavigator, "RIGHT", 25, 0)
-        barNavigator.plusButton:SetSize(35,35)
-        barNavigator.plusButton:SetText("+")
+        barNavigator.plusButton:SetPoint("CENTER", barNavigator, "CENTER", 35, 0)
+        barNavigator.plusButton:SetSize(25,25)
+        barNavigator.plusButton:SetText(">")
         barNavigator.plusButton:SetNormalFontObject(defaultFont)   
         barNavigator.plusButton:SetScript("OnClick", function ()
           if index<#frames then
@@ -277,21 +279,15 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
          scaleWidget.title:SetFontObject(defaultFont)
          scaleWidget.title:SetText("Scale:")  
          scaleWidget.slider = CreateFrame("Slider",nil, scaleWidget,"OptionsSliderTemplate")
-         scaleWidget.slider:SetPoint("CENTER",scaleWidget,"CENTER",0,-30);
+         scaleWidget.slider:SetPoint("CENTER",scaleWidget,"CENTER",0,-20);
          scaleWidget.slider:SetWidth(100)
          scaleWidget.slider:SetHeight(15)
          scaleWidget.slider:SetMinMaxValues(0.5,1.5)
-        
-    
          scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer);
          scaleWidget.text:SetPoint("CENTER",scaleWidget.title,"CENTER",75,0);
          scaleWidget.text:SetFontObject(defaultFont)
-         
-         
-    
          scaleWidget.slider:SetStepsPerPage(10)      
          scaleWidget.slider:SetScript("OnValueChanged", function (self) 
-
          frames[index]:SetScale(self:GetValue())  
          framesScale[index] = self:GetValue()      
          scaleWidget.text:SetText(Config:RoundNumber(framesScale[index],2));      
@@ -304,9 +300,9 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
          alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer);
          alphaWidget.title:SetPoint("LEFT",alphaWidget,"CENTER",-50,0);
          alphaWidget.title:SetFontObject(defaultFont)
-         alphaWidget.title:SetText("Alpha:")  
+         alphaWidget.title:SetText("Alpha:  ")  
          alphaWidget.slider = CreateFrame("Slider", "myslider", alphaWidget,"OptionsSliderTemplate")
-         alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-30);
+         alphaWidget.slider:SetPoint("CENTER",alphaWidget,"CENTER",0,-20);
          alphaWidget.slider:SetWidth(100)
          alphaWidget.slider:SetHeight(15)
          alphaWidget.slider:SetMinMaxValues(0.3,1)
@@ -337,8 +333,8 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
       -- columnsWidget.text2:SetText(framesColumn[index][1]);    
 
        columnsWidget.minusButton = CreateFrame("Button", "bs_minus", columnsWidget,defaultButton,defaultLayer)
-       columnsWidget.minusButton:SetPoint("CENTER", columnsWidget, "CENTER", 0, -30)
-       columnsWidget.minusButton:SetSize(35,35)
+       columnsWidget.minusButton:SetPoint("LEFT", columnsWidget, "CENTER", 0, -20)
+       columnsWidget.minusButton:SetSize(25,25)
        columnsWidget.minusButton:SetText("-")
        columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
        columnsWidget.minusButton.tooltipText = "Decrease horizontal count of actions in bar."  
@@ -349,8 +345,8 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
        end
        end)   
        columnsWidget.plusButton = CreateFrame("Button",nil, columnsWidget,defaultButton,defaultLayer)
-       columnsWidget.plusButton:SetPoint("CENTER", columnsWidget, "CENTER", 35, -30)
-       columnsWidget.plusButton:SetSize(35,35)
+       columnsWidget.plusButton:SetPoint("LEFT", columnsWidget, "CENTER", 22, -20)
+       columnsWidget.plusButton:SetSize(25,25)
        columnsWidget.plusButton:SetText("+")
        columnsWidget.plusButton:SetNormalFontObject(defaultFont) 
        columnsWidget.plusButton.tooltipText = "Increase horizontal count of actions in bar."    
@@ -369,7 +365,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
        restZoneWidget.checkBox:SetHitRectInsets(0,0,0,0) 
        restZoneWidget.checkBox:SetChecked(framesHideRest[index])
        restZoneWidget.checkBox:SetSize(35,35)
-       restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,-30);
+       restZoneWidget.checkBox:SetPoint("RIGHT",restZoneWidget,"CENTER",50,00);
       
        restZoneWidget.checkBox:SetScript("OnClick",function (self)
         framesHideRest[index] = self:GetChecked()
@@ -377,7 +373,7 @@ function UI:CreateActionBar(index)--Create action bar + option widgets
        restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
        restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
        restZoneWidget.title:SetFontObject(defaultFont)
-       restZoneWidget.title:SetText("Rest zone - Hide: ")   
+       restZoneWidget.title:SetText("Rest zone: ")   
        return restZoneWidget
        end
        function Title()
@@ -666,6 +662,8 @@ function UI:HideOptionPanels()
     frames[index].optionWidget:Hide()
   end
 end
+function UI:CreatePopUp()
+end
 --UI:Update-------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI 
 UI:SetupPrimaryFrame()
@@ -696,7 +694,7 @@ function UI:SetupPrimaryFrame() --handle height of primary frame and primary opt
   end
   primaryFrame:SetHeight(primaryFrameHeight)
   for i in pairs(frames) do
-    frames[i].optionWidget:SetHeight(primaryFrameHeight)
+    frames[i].optionWidget:SetHeight(400)
   end
 end
 function UI:RefreshTrackedIcons()--update icons on tracked actions

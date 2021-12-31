@@ -20,7 +20,7 @@ local isCleared
 local currentSaveVersion =93
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.6 ALPHA"
+local currentVersion = "v - 0.9.6"
 local publicBuild = 96
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -103,6 +103,20 @@ function Config:ResetAll()
     SmartBarsSavedBuild=nill   
     ReloadUI()
 end
+function Config:CreatePopup()
+    StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
+      text = "Do you want to reset all settings?",
+      button1 = "Yes",
+      button2 = "No",
+      OnAccept = function()
+          Config:ResetAll()
+      end,
+      timeout = 0,
+      whileDead = true,
+      hideOnEscape = true,
+      preferredIndex = 3,
+    }
+  end
 --Getter&Setter----------------------------
 function Config:GetSpec()
     return currentSpecialization   
@@ -155,4 +169,5 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
+
 -- Revision version v0.9.6 -----
