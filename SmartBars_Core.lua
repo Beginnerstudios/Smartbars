@@ -22,15 +22,15 @@ Config:DisableOldAddon()
 Events:RegisterEvents()
 C_Timer.After(5, function()   
     Config:LoadConfig()
-    print("SmartBars - /bs or /sb for settings.\n")   
     Config:CreateCommands();
     UI:CreatePrimaryFrames();
     for i=1,UI:Get():ActionBarCount(),1 do
-    UI:CreateActionBar(i)
+        UI:CreateActionBar(i)
     end
     Actions:Load();
+    print("SmartBars - /bs or /sb for settings.\n")   
 end)
--- Revision version v0.9.5 ----
+-- Revision version v0.9.8 ----
 
 
 
