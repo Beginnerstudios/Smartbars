@@ -3,7 +3,9 @@
         "undefined-field",
         "redundant-parameter",
         "empty-block",
-        "undefined-global"
+        "undefined-global",
+        "redefined-local",
+        "unused-local"
     ],
     "Lua.diagnostics.globals": [
         "SlashCmdList",

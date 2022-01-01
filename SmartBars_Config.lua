@@ -20,7 +20,7 @@ local isCleared
 local currentSaveVersion =93
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.7 ALPHA"
+local currentVersion = "v - 0.9.8 ALPHA"
 local publicBuild = 97
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -161,7 +161,7 @@ function Config:DisableOldAddon()
     local name, title, notes, enabled, loadable, reason, security =GetAddOnInfo("BS_ActionsTracker")
     if enabled then
         DisableAddOn("BS_ActionsTracker")
-        print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.Delete BS_ActionsTracker folder from --/interface/addons. if you dont want get this notification again.")      
+        print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.If you dont want get this notification again delete BS_ActionsTracker folder from --/interface/addons")      
     end 
 end  
 function Config:RoundNumber(num,numDecimalPlaces)

@@ -5,11 +5,13 @@ local Actions = SmartBars.Actions;
 local UI;
 local API;
 local Config;
+local Templates;
 --Init------------------------------------
 function Actions:Init()
     UI = SmartBars.UI
     API = SmartBars.API
     Config = SmartBars.Config
+    Templates = SmartBars.Templates
 end
 --Variables--------------------------------
 local trackedActions = {}
@@ -43,7 +45,7 @@ function Actions:Display(actions,frame)
       displayedActions = nill
     end
     for k,v in pairs(actions) do 
-      actions[k][3]=UI:CreateActionWidget(actions[k],frame,false)
+      actions[k][3]=Templates:CreateActionWidget(actions[k],frame,false)
       actions[k][3]:SetPoint("LEFT",frame.TitleBg,"LEFT",xOffstet+10,yOffset-100);
       actions[k][3]:SetHitRectInsets(0,0,0,0) 
       
@@ -114,10 +116,10 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
         actionType = action[6]
     end  
  
-        trackedActions[actionID]= {action[1],action[2],UI:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
-        trackedActions[actionID][3].edit = UI:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-        trackedActions[actionID][3].group = UI:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled) 
-        trackedActions[actionID][3].charges = UI:CreateFontString(trackedActions[actionID][3],15)  
+        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
+        trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
+        trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled) 
+        trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  
   
     
 
@@ -127,6 +129,10 @@ function Actions:Delete(actionID)
     trackedActions[actionID]=nill
    
 end  
+function Actions:Move(trackedAction,value)
+    trackedAction[6] = trackedAction[6] +(value)
+    trackedAction[3]:SetParent(UI:Get():ActionBar(trackedAction[6]))
+  end
 --Getters & Setters,Reset-----------------------------
 function Actions:SetSavedVariables(tActions)
     trackedActions = tActions
