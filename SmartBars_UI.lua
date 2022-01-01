@@ -274,7 +274,7 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
    else
     widget.group:Hide()
     widget.charges:Show()
-
+    widget.edit:SetEnabled(value) 
    end
   end
   
