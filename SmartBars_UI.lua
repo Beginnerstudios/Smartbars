@@ -86,6 +86,12 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
     function SetupSettings(i)--Setup variables for action bar position,scale etc..
       local defaultFrameScale = 0.75
       local defaultFrameAlpha = 1
+      local scaleWidget = optionWidgets[i].settings[2]
+      local alphaWidget = optionWidgets[i].settings[3]
+      local columnsWidget = optionWidgets[i].settings[4]
+      local hideWidget = optionWidgets[i].settings[5]
+
+
       function Position()
       if not framesPosition[i]  then
         local rowCount =10
@@ -113,41 +119,41 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
       function Scale()
         if not framesScale[i]  then      
           frames[i]:SetScale(defaultFrameScale)
-          optionWidgets[i].settings[2].slider:SetValue(defaultFrameScale)
-          optionWidgets[i].settings[2].text:SetText(Config:RoundNumber(defaultFrameScale,2))
+          scaleWidget.slider:SetValue(defaultFrameScale)
+          scaleWidget.text:SetText(Config:RoundNumber(defaultFrameScale,2))
         else
           local scale = framesScale[i] 
           frames[i]:SetScale(scale)
-          optionWidgets[i].settings[2].slider:SetValue(scale)
-          optionWidgets[i].settings[2].text:SetText(Config:RoundNumber(scale,2))
+          scaleWidget.slider:SetValue(scale)
+          scaleWidget.text:SetText(Config:RoundNumber(scale,2))
         end 
       end
       function Alpha()
         if not framesAlpha[i]  then
           frames[i]:SetAlpha(defaultFrameAlpha)
-          optionWidgets[i].settings[3].slider:SetValue(defaultFrameAlpha)
-          optionWidgets[i].settings[3].text:SetText(Config:RoundNumber(defaultFrameAlpha,2))
+          alphaWidget.slider:SetValue(defaultFrameAlpha)
+          alphaWidget.text:SetText(Config:RoundNumber(defaultFrameAlpha,2))
         else
           local alpha = framesAlpha[i]
           frames[i]:SetAlpha(alpha)
-          optionWidgets[i].settings[3].slider:SetValue(alpha)
-          optionWidgets[i].settings[3].text:SetText(Config:RoundNumber(alpha,2))
+          alphaWidget.slider:SetValue(alpha)
+          alphaWidget.text:SetText(Config:RoundNumber(alpha,2))
         end 
       end
       function Columns()
         if not framesColumn[i]  then
           framesColumn[i] = 10
-          optionWidgets[i].settings[4].text2:SetText(framesColumn[i])
+          columnsWidget.text2:SetText(framesColumn[i])
         else
-          optionWidgets[i].settings[4].text2:SetText(framesColumn[i])
+          columnsWidget.text2:SetText(framesColumn[i])
         end
       end
       function Hide()
         if not framesHideRest[i]  then    
-          optionWidgets[i].settings[5].checkBox:SetChecked(false)
+          hideWidget.checkBox:SetChecked(false)
          else
            local value = framesHideRest[i]
-           optionWidgets[i].settings[5].checkBox:SetChecked(value)
+           hideWidget.checkBox:SetChecked(value)
          end
       end
       function Scripts()
@@ -188,37 +194,36 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
           end
         end)
         --Scale
-        local optionWidgetScale = optionWidgets[i].settings[2]
-        optionWidgetScale.slider:SetScript("OnValueChanged", function (self) 
+
+        scaleWidget.slider:SetScript("OnValueChanged", function (self) 
         frames[i]:SetScale(self:GetValue())  
         framesScale[i] = self:GetValue()      
-        optionWidgetScale.text:SetText(Config:RoundNumber(framesScale[i],2));      
+        scaleWidget.text:SetText(Config:RoundNumber(framesScale[i],2));      
         end)   
         --Alpha
-        local optionWidgetAlpha = optionWidgets[i].settings[3]
-        optionWidgetAlpha.slider:SetScript("OnValueChanged", function (self)  
+      
+        alphaWidget.slider:SetScript("OnValueChanged", function (self)  
         frames[i]:SetAlpha(self:GetValue()) 
         framesAlpha[i] = self:GetValue() 
-        optionWidgetAlpha.text:SetText(Config:RoundNumber(framesAlpha[i],2));    
+        alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i],2));    
           end)
         --Rest zone widget
-        local optionWidgetRestZone = optionWidgets[i].settings[5]
-        --optionWidgetRestZone.checkBox:SetChecked(framesHideRest[i])
-        optionWidgetRestZone.checkBox:SetScript("OnClick",function (self)
+     
+        hideWidget.checkBox:SetScript("OnClick",function (self)
         framesHideRest[i] = self:GetChecked()
         UI:UpdateUI()
         end)  
         --Columns widget
-        local optionWidgetColumns = optionWidgets[i].settings[4] 
-        optionWidgetColumns.minusButton:SetScript("OnClick", function ()
+    
+        columnsWidget.minusButton:SetScript("OnClick", function ()
         if framesColumn[i]>= 2 then
         framesColumn[i] = framesColumn[i] -1
-        optionWidgetColumns.text2:SetText(framesColumn[i])
+        columnsWidget.text2:SetText(framesColumn[i])
         end
         end) 
-        optionWidgetColumns.plusButton:SetScript("OnClick", function ()  
+        columnsWidget.plusButton:SetScript("OnClick", function ()  
         framesColumn[i] = framesColumn[i] +1
-        optionWidgetColumns.text2:SetText(framesColumn[i])  
+        columnsWidget.text2:SetText(framesColumn[i])  
         end)
       end
       Position()
@@ -275,6 +280,7 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     widget.group:Hide()
     widget.charges:Show()
     widget.edit:SetEnabled(value) 
+
    end
   end
   
