@@ -132,14 +132,6 @@ function Actions:Delete(actionID)
     trackedActions[actionID][3]:Hide() 
     trackedActions[actionID]=nill   
 end  
-function Actions:Move(key,lastFrameIndex) 
- local newFrameID = ActionBars:FindFrameID(lastFrameIndex)
- print(newFrameID)
-  --trackedActions[key][3]:SetParent(ActionBars:Get():ActionBar(newFrameID))
-  trackedActions[key][6] = lastFrameIndex   
-  
-  
-end
 --Getters & Setters,Reset-----------------------------
 function Actions:Set(tActions)
     trackedActions = tActions

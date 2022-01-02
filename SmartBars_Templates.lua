@@ -81,7 +81,7 @@ function Templates:PrimaryFrame()
       barsWidget.textValue = barsWidget:CreateFontString(nil,defaultFont);
       barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",25,0);
       barsWidget.textValue:SetFontObject(defaultFont)
-      barsWidget.textValue:SetText(ActionBars:Get():ActionBarCount());
+     
 
       barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,defaultButton,defaultLayer)
       barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 5, -25)
@@ -321,10 +321,9 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,key)--
   newWidget.minusButton.tooltipText ="Change bar."
   newWidget.minusButton:SetNormalFontObject(defaultFont)    
   newWidget.minusButton:SetScript("OnClick", function () 
-    if  valueToSave[6]>1 then
-    Actions:Move(key,valueToSave[6]-1)
+    if ActionBars:FindIndex(valueToSave[6])>1 then
+    valueToSave[6] = valueToSave[6]-1
     end
-    UI:UpdateUI()
   end)
   newWidget.plusButton = CreateFrame("Button",nill, newWidget,defaultButton,defaultLayer)
   newWidget.plusButton:SetPoint("CENTER", parentWidget, "CENTER", 0, yOfs)
@@ -333,10 +332,9 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,key)--
   newWidget.plusButton:SetNormalFontObject(defaultFont)  
   newWidget.plusButton.tooltipText ="Change bar."  
   newWidget.plusButton:SetScript("OnClick", function ()
-    if valueToSave[6]< ActionBars:Get():ActionBarCount() then
-      Actions:Move(key,valueToSave[6]+1)
+    if ActionBars:FindIndex(valueToSave[6])< ActionBars:Get():ActionBarCount() then
+      valueToSave[6]=valueToSave[6] +1
     end  
-    UI:UpdateUI()
   end)
   if not isDisplayed then
     newWidget:Hide()

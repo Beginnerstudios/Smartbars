@@ -22,9 +22,10 @@ local globalHideRest = false
 --UI:Frames-------------------------------
 function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame 
 function Scripts()
+
     --Primary Frame
-    primaryFrame.CloseButton:SetScript("OnClick", function ()
-    Config:ToggleConfigMode()
+  primaryFrame.CloseButton:SetScript("OnClick", function ()
+  Config:ToggleConfigMode()
     end) 
     primaryFrame.resetButton:SetScript("OnClick", function ()
       StaticPopup_Show ("SMARTBARS_RESETCONFIRM")  
@@ -39,14 +40,18 @@ function Scripts()
     UI:UpdateUI()
     end)
      
-      barsWidget.minusButton :SetScript("OnClick", function ()
-      ActionBars:Remove()
-      barsWidget.textValue:SetText(actionBarsCount);
+      barsWidget.minusButton:SetScript("OnClick", function ()
+        local barCount = ActionBars:Get():ActionBarCount()  
+        if barCount >1 then
+        ActionBars:Remove()
+        barsWidget.textValue:SetText(barCount-1);
+        end
       end) 
   
-      barsWidget.plusButton:SetScript("OnClick", function ()         
+      barsWidget.plusButton:SetScript("OnClick", function ()   
         ActionBars:Add()                                     
-        barsWidget.textValue:SetText(actionBarsCount)
+        local barCount = ActionBars:Get():ActionBarCount()        
+        barsWidget.textValue:SetText(barCount)
         end)
   --Option widgets
   
@@ -81,6 +86,8 @@ function UI:UpdateUI() ---update all dynamic variables in UI
       primaryFrameHeight = actionsHeight  
     end
     primaryFrame:SetHeight(primaryFrameHeight)
+    local barCount = ActionBars:Get():ActionBarCount()                                           
+    primaryOptionsWidgets[3].textValue:SetText(barCount);
   
   end
   function RefreshTrackedIcons()--update icons on tracked actions

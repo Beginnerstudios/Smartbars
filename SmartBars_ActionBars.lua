@@ -204,10 +204,7 @@ function ActionBars:Load()
   local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
   frameIDs[frameID] = {frameID,actionBarsCount}
   ActionBars:Create(frameID)
-  print(frameID)
   end
- -- ActionBars:ToggleWidgets(false)
- -- UI:UpdateUI()
 end 
 function ActionBars:Remove()
 actionBarsCount = actionBarsCount -1
@@ -225,8 +222,8 @@ framesColumn[lastFrameID] = nill
 local tA = Actions:GetTracked()
       for k,v in pairs(tA) do
         local barNumber = tA[k][6]        
-        if barNumber==lastFrameIndex then    
-        Actions:Move(k,lastFrameIndex-1)
+        if barNumber==lastFrameID then    
+          tA[k][6] = tA[k][6]-1
         end  
      end
 ActionBars:ShowLastOptionWidget()
