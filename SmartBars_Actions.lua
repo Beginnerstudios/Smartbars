@@ -111,7 +111,7 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
     else  
         actionID= Config:JoinNumber(action[2],Config:GetSpec())
         curretSpec= API:GetSpecialization()
-        trackedFrame = UI:Get():ActionBarCount()   
+        trackedFrame = UI:Get():HighestFrameID()   
         showOnlyWhenBoosted = false
         actionType = action[6]
     end  
@@ -128,10 +128,20 @@ function Actions:Delete(actionID)
     trackedActions[actionID][3]:Hide() 
     trackedActions[actionID]=nill   
 end  
-function Actions:Move(trackedAction,value)
-    trackedAction[6] = trackedAction[6] +(value)
-    trackedAction[3]:SetParent(UI:Get():ActionBar(trackedAction[6]))
+function Actions:Move(key,lastFrameIndex)
+ local tA=trackedActions[key]
+ print(tA[6])
+
+  for k,v in pairs(UI:Get():FrameIDs()) do   
+  
+    if v[2] == lastFrameIndex then
+    
+      tA[6] = v[2]
+      tA[3]:SetParent(UI:Get():ActionBar(v[2]))
+      print(tA[6])
+    end
   end
+end
 --Getters & Setters,Reset-----------------------------
 function Actions:Set(tActions)
     trackedActions = tActions

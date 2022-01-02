@@ -49,17 +49,13 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
     end)
      
       barsWidget.minusButton :SetScript("OnClick", function ()
-      UI:RemoveActionBar()
-      UI:UpdateUI()
+      UI:Remove()
       barsWidget.textValue:SetText(actionBarsCount);
       end) 
   
       barsWidget.plusButton:SetScript("OnClick", function ()         
-        UI:AddActionBar()                                     
+        UI:Add()                                     
         barsWidget.textValue:SetText(actionBarsCount)
-        UI:ToggleWidgets(true)           
-        UI:UpdateUI()
-        UI:Add()
         end)
   --Option widgets
   
@@ -69,17 +65,14 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
    updater:SetScript("OnUpdate", function ()
     local tA = Actions:GetTracked()
     UI:UpdateBars(tA)  
-    local frameIndex = 1
-    while frames[frameIndex] do
-    UI:SortBars(tA,frameIndex)
-    frameIndex = frameIndex +1 
-    end
+ 
 
- --   for frameID,v in pairs(frameIDs) do 
- --     if frameIDs[frameID]~=nill then                    
-  --   UI:SortBars(tA,frameID)    
- --     end  
- --   end
+
+    for frameID,v in pairs(frameIDs) do    
+     if frames[frameID]~=nill then                 
+     UI:SortBars(tA,v[2],frameID)    
+    end  
+    end
 
     
     end) 
@@ -88,7 +81,6 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
  Scripts()
 end
 function UI:CreateActionBar(i)--Create action bar + option widgets 
-
     frames[i] = Templates:ActionBar(i)
     frames[i]:SetParent(primaryFrame) 
     frames[i].optionWidgets = Templates:OptionWidget(i)  
@@ -132,13 +124,13 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
         if not framesScale[i]  then      
           frames[i]:SetScale(defaultFrameScale)
           scaleWidget.slider:SetValue(defaultFrameScale)
-          scaleWidget.text:SetText(Config:RoundNumber(defaultFrameScale,2))
+          scaleWidget.text:SetText(Config:RoundNumber(defaultFrameScale,2))       
         else
           local scale = framesScale[i] 
           frames[i]:SetScale(scale)
           scaleWidget.slider:SetValue(scale)
           scaleWidget.text:SetText(Config:RoundNumber(scale,2))
-        end 
+        end       
       end
       function Alpha()
         if not framesAlpha[i]  then
@@ -269,28 +261,46 @@ function UI:RemoveActionBar()
     end
   end  
 end
-function UI:AddActionBar()
-  if #frames < 30 then  
-  UI:CreateActionBar(#frames+1)
-  UI:ToggleWidgets(true)
-  actionBarsCount = actionBarsCount +1
-  end
-end
 function UI:Load()
   if Config:GetTableCount(frameIDs) >0 then  
       for frameID,v in pairs(frameIDs) do                     
-        UI:CreateActionBar(frameID)
-        UI:ToggleWidgets(true)       
+        UI:CreateActionBar(frameID)      
       end
     else
-  local frameID = Config:JoinNumber(API:GetSpecialization(),1)
-  print(frameID)
-  frameIDs[frameID] = frameID
+  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
+  frameIDs[frameID] = {frameID,actionBarsCount}
   UI:CreateActionBar(frameID)
-  UI:ToggleWidgets(true)
   end
+  UI:ToggleWidgets(false)
   UI:UpdateUI()
 end 
+function UI:Add() 
+  actionBarsCount = actionBarsCount +1
+  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
+  frameIDs[frameID] = {frameID,actionBarsCount}
+  UI:CreateActionBar(frameID) 
+  UI:ToggleWidgets(true)        
+  UI:UpdateUI() 
+end 
+function UI:Remove()
+actionBarsCount = actionBarsCount -1
+local lastFrameIndex,lastFrameID = UI:Get():HighestFrameID()  
+frames[lastFrameID]:Hide()
+framesScale[lastFrameID] = nill 
+framesPosition[lastFrameID] = nill 
+framesAlpha[lastFrameID] = nill 
+frames[lastFrameID] = nill
+
+local tA = Actions:GetTracked()
+      for k,v in pairs(tA) do
+        local barNumber = tA[k][6]        
+        if barNumber==lastFrameIndex then    
+        Actions:Move(k,lastFrameIndex-1)
+        end  
+      end
+
+UI:UpdateUI()
+end
 --UI:Widgets-------------------------------
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
    --ActionWidgets
@@ -298,7 +308,7 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
     local widget = v[3]
    if widget~=nill then
     if value == true then
-    widget.edit:SetEnabled(value) 
+    widget.edit:SetEnabled(true) 
     widget.group:Show()
     widget.charges:Hide()  
    else
@@ -311,44 +321,24 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
   
   end
   --Actionbars
-  for i=1,#frames do
-    frames[i]:SetMovable(value) 
-    frames[i]:EnableMouse(value)  
-
-    local configWidgets = frames[i].configWidgets
-    if value == true then
-      for widget in pairs(configWidgets) do
-        configWidgets[widget]:Show()
-      end          
-    else
-      for widget in pairs(frames[k].configWidgets) do
-        configWidgets[widget]:Hide()
-      end 
-    end
-  end
-
-  UI:HideOptionPanels()
- 
 for k,v in pairs(frames) do
   frames[k]:SetMovable(value) 
   frames[k]:EnableMouse(value)  
-
   local configWidgets = frames[k].configWidgets
   if value == true then
     for widget in pairs(configWidgets) do
       configWidgets[widget]:Show()
     end          
   else
-    for widget in pairs(frames[i].configWidgets) do
+    for widget in pairs(frames[k].configWidgets) do
       configWidgets[widget]:Hide()
     end 
   end
-
-
-  frames[k].optionWidgets:Show()
-  frames[k]:Show()
+ 
 end
-
+local frameID,frameIndex =UI:Get():HighestFrameID()
+frames[frameIndex].optionWidgets:Show()
+frames[frameIndex]:Show()
 
 
 end
@@ -452,19 +442,25 @@ if actions ~=nill then
   end
   end   
 end
-function UI:SortBars(trackedActions,sortNumber)--handle displayed widget position
+function UI:SortBars(trackedActions,sortNumber,frameID)--handle displayed widget position
   local startxOffset = 0
   local startyOffset =-37
-  print(sortNumber)
-  
+
   for actionID in pairs(trackedActions) do
     local frameNumber = trackedActions[actionID][6]
     local widget = trackedActions[actionID][3]
+
     if frameNumber == sortNumber then
-      if widget:IsVisible() then
-        widget:SetPoint("LEFT",frames[frameNumber],"LEFT",startxOffset,startyOffset)
-        startxOffset = startxOffset +50
-      if(startxOffset== framesColumn[sortNumber]*50) then
+      if widget:IsVisible() then     
+       widget:SetPoint("LEFT",frames[frameID],"LEFT",startxOffset,startyOffset)
+       if framesScale[frameID] then
+        widget:SetScale(framesScale[frameID]) 
+       end
+      if framesAlpha[frameID] then
+       widget:SetAlpha(framesAlpha[frameID])
+      end
+      startxOffset = startxOffset +50
+      if(startxOffset== framesColumn[frameID]*50) then
       startxOffset =0
       startyOffset  = startyOffset-50
           end
@@ -478,7 +474,10 @@ function UI:Get()   --get values from SmartBars_UI
          {                         
              ActionBar = function(self,barIndex)             
                 return frames[barIndex]                             
-             end,        
+             end,  
+             ActionBars = function(self,barIndex)             
+              return frames                             
+             end,      
              CurrentSpec = function(self)                                                                                    
                 return  currentSpecialization
              end,
@@ -491,20 +490,35 @@ function UI:Get()   --get values from SmartBars_UI
              FramesScale = function(self)                                                                                                  
              return framesScale
              end,
-             FrameIDs = function(self)                                                                                                  
+            FrameIDs = function(self)                                                                                                  
             return frameIDs
             end,
+            HighestFrameID = function(self)  
+              local highestID=0 
+              local frameID
+              for k,v in pairs(frameIDs) do
+              if v[2]>highestID then
+                  highestID = v[2]
+                  frameID = v[1]
+              end  
+            end                                                                                            
+              return highestID,frameID
+              end,
              FramesPosition = function(self) 
-              for i=1,#frames do
-                function CalculateFramePosition(frameIndex)
-                  local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
-                  local function round2(num, numDecimalPlaces)
-                    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-                  end
-                  return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-                  
+              for k,v in pairs(frames) do
+                local frameIndex = k
+                if k then
+                  function CalculateFramePosition(frameIndex)
+                    local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+                    local function round2(num, numDecimalPlaces)
+                      return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+                    end
+                    return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
+                    
+                  end 
                 end
-                framesPosition[i]=CalculateFramePosition(i)              
+                
+                framesPosition[k]=CalculateFramePosition(k)              
               end
                 return framesPosition         
              end,
