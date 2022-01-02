@@ -32,23 +32,13 @@ function ActionBars:Add()
   actionBarsCount = actionBarsCount +1
   local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
   frameIDs[frameID] = {frameID,actionBarsCount}
-  ActionBars:CreateActionBar(frameID) 
+  ActionBars:Create(frameID) 
   ActionBars:ToggleWidgets(true)   
   ActionBars:HideOptionPanels()     
   ActionBars:ShowLastOptionWidget()
   UI:UpdateUI() 
 end 
---Getter & Setter -- 
-function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedFrameIDs)--set saved variables
-  framesPosition = loadedFramesPosition
-  framesScale =loadedFramesScale
-  framesAlpha = loadedFramesAlpha
-  framesColumn = loadedFramesColumn
-  framesHideRest = loadedFramesHideRest
-  actionBarsCount = loadedActionBarsCount
-  frameIDs = loadedFrameIDs
-end
-function ActionBars:CreateActionBar(i)--Create action bar + option widgets 
+function ActionBars:Create(i)--Create action bar + option widgets 
 local primaryFrame = UI:Get():PrimaryFrame()
 
   frames[i] = Templates:ActionBar(i)
@@ -208,33 +198,17 @@ end
 function ActionBars:Load()
   if Config:GetTableCount(frameIDs) >0 then  
       for frameID,v in pairs(frameIDs) do                     
-        ActionBars:CreateActionBar(frameID)      
+        ActionBars:Create(frameID)      
       end   
   else
   local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
   frameIDs[frameID] = {frameID,actionBarsCount}
-  ActionBars:CreateActionBar(frameID)
+  ActionBars:Create(frameID)
   print(frameID)
   end
  -- ActionBars:ToggleWidgets(false)
  -- UI:UpdateUI()
 end 
-function ActionBars:FindIndex(frameID) --return frame index based on frameID
-  local frameIndex
-  for k,v in pairs(frameIDs) do
-    if k==frameID then
-      return v[2]      
-    end
-  end
-end
-function ActionBars:FindFrameID(frameIndex) --return frame index based on frameID
-  for k,v in pairs(frameIDs) do
-    if v[2]==frameIndex then
-      return k      
-    end
-  end
-end
-
 function ActionBars:Remove()
 actionBarsCount = actionBarsCount -1
 local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
@@ -257,68 +231,6 @@ local tA = Actions:GetTracked()
      end
 ActionBars:ShowLastOptionWidget()
 UI:UpdateUI()
-end
-function ActionBars:Get()   --get values from SmartBars_UI                      
-  local returnTable =
-         {                         
-             ActionBar = function(self,barIndex)             
-                return frames[barIndex]                             
-             end,  
-             ActionBars = function(self,barIndex)             
-              return frames                             
-             end,              
-             ActionBarCount = function(self)                                                                                    
-              return actionBarsCount
-             end,
-             FramesScale = function(self)                                                                                                  
-             return framesScale
-             end,
-            FrameIDs = function(self)                                                                                                  
-            return frameIDs
-            end,
-            HighestFrameID = function(self)  
-              local highestID=0 
-              local frameID
-              for k,v in pairs(frameIDs) do
-                if k~=nil then
-                  if v[2]>highestID then
-                    highestID = v[2]
-                    frameID = v[1]
-                end   
-                end  
-            end 
-            --(highestID.."|"..frameID)                                                                                           
-              return highestID,frameID
-            end,
-            FramesPosition = function(self) 
-              for k,v in pairs(frames) do
-                local frameIndex = k
-                if k then
-                  function CalculateFramePosition(frameIndex)
-                    local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
-                    local function round2(num, numDecimalPlaces)
-                      return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-                    end
-                    return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-                    
-                  end 
-                end
-                
-                framesPosition[k]=CalculateFramePosition(k)              
-              end
-                return framesPosition         
-            end,
-             FramesAlpha = function(self)                                                                                    
-             return framesAlpha
-              end,
-              FramesColumn = function(self)                                                                                    
-              return  framesColumn
-              end,
-              FramesHideRest = function(self)                                                                                    
-              return  framesHideRest
-              end,        
-         }
- return returnTable
 end
 function ActionBars:HideOptionPanels()
   for i in pairs(frames) do
@@ -368,9 +280,24 @@ end
   end
 ActionBars:ShowLastOptionWidget()
 
-
 end
---Update
+--Find-------------------------
+function ActionBars:FindIndex(frameID) --return frame index based on frameID
+  local frameIndex
+  for k,v in pairs(frameIDs) do
+    if k==frameID then
+      return v[2]      
+    end
+  end
+end
+function ActionBars:FindFrameID(frameIndex) --return frame index based on frameID
+  for k,v in pairs(frameIDs) do
+    if v[2]==frameIndex then
+      return k      
+    end
+  end
+end
+--Update-----------------
 function ActionBars:StartUpdate()
   updater = CreateFrame("Frame",nil,nil);
   updater:SetScale(0.75)
@@ -452,5 +379,77 @@ function ActionBars:SortBars(frameID)--handle displayed widget position
         end                
       end   
   end
+end
+--Getter & Setter -- 
+function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedFrameIDs)--set saved variables
+  framesPosition = loadedFramesPosition
+  framesScale =loadedFramesScale
+  framesAlpha = loadedFramesAlpha
+  framesColumn = loadedFramesColumn
+  framesHideRest = loadedFramesHideRest
+  actionBarsCount = loadedActionBarsCount
+  frameIDs = loadedFrameIDs
+end
+function ActionBars:Get()   --get values from SmartBars_UI                      
+  local returnTable =
+         {                         
+             ActionBar = function(self,barIndex)             
+                return frames[barIndex]                             
+             end,  
+             ActionBars = function(self,barIndex)             
+              return frames                             
+             end,              
+             ActionBarCount = function(self)                                                                                    
+              return actionBarsCount
+             end,
+             FramesScale = function(self)                                                                                                  
+             return framesScale
+             end,
+            FrameIDs = function(self)                                                                                                  
+            return frameIDs
+            end,
+            HighestFrameID = function(self)  
+              local highestID=0 
+              local frameID
+              for k,v in pairs(frameIDs) do
+                if k~=nil then
+                  if v[2]>highestID then
+                    highestID = v[2]
+                    frameID = v[1]
+                end   
+                end  
+            end 
+            --(highestID.."|"..frameID)                                                                                           
+              return highestID,frameID
+            end,
+            FramesPosition = function(self) 
+              for k,v in pairs(frames) do
+                local frameIndex = k
+                if k then
+                  function CalculateFramePosition(frameIndex)
+                    local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+                    local function round2(num, numDecimalPlaces)
+                      return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+                    end
+                    return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
+                    
+                  end 
+                end
+                
+                framesPosition[k]=CalculateFramePosition(k)              
+              end
+                return framesPosition         
+            end,
+             FramesAlpha = function(self)                                                                                    
+             return framesAlpha
+              end,
+              FramesColumn = function(self)                                                                                    
+              return  framesColumn
+              end,
+              FramesHideRest = function(self)                                                                                    
+              return  framesHideRest
+              end,        
+         }
+ return returnTable
 end
 --Revision v 0.9.8 --
