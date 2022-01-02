@@ -2,12 +2,13 @@
 --NameSpaces------------------------------
 local _,SmartBars = ...;
 SmartBars.Core ={};
-UI = SmartBars.UI
+local UI = SmartBars.UI
 local Actions = SmartBars.Actions
 local Config = SmartBars.Config
 local Events = SmartBars.Events
 local API = SmartBars.API
 local Templates = SmartBars.Templates
+local ActionBars = SmartBars.ActionBars
 --LoadingMessage--------------------------
 --Core:Functions--------------------------
 --Init------------------------------------
@@ -17,6 +18,7 @@ Config:Init()
 Events:Init()
 API:Init()
 Templates:Init()
+ActionBars:Init()
 --Program run-----------------------------
 Config:DisableOldAddon()
 Events:RegisterEvents()
@@ -26,8 +28,8 @@ C_Timer.After(5, function()
     UI:CreatePrimaryFrames();
 
     Actions:Load();
-    UI:Load()
- 
+    ActionBars:Load()
+    ActionBars:StartUpdate()
     print("SmartBars - /bs or /sb for settings.\n")   
 end)
 -- Revision version v0.9.8 ----

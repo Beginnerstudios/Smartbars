@@ -5,11 +5,13 @@ local Templates=SmartBars.Templates;
 local Config
 local UI
 local Actions
+local ActionBars
 --Init------------------------------------
 function Templates:Init()
 Config = SmartBars.Config
 UI = SmartBars.UI
 Actions = SmartBars.Actions
+ActionBars = SmartBars.ActionBars
 end
 --XML Variables
 -----XML Templates Variables--------------
@@ -79,7 +81,7 @@ function Templates:PrimaryFrame()
       barsWidget.textValue = barsWidget:CreateFontString(nil,defaultFont);
       barsWidget.textValue:SetPoint("CENTER",barsWidget,"CENTER",25,0);
       barsWidget.textValue:SetFontObject(defaultFont)
-      barsWidget.textValue:SetText(UI:Get():ActionBarCount());
+      barsWidget.textValue:SetText(ActionBars:Get():ActionBarCount());
 
       barsWidget.minusButton = CreateFrame("Button",nil, barsWidget,defaultButton,defaultLayer)
       barsWidget.minusButton :SetPoint("CENTER", barsWidget, "CENTER", 5, -25)
@@ -111,12 +113,7 @@ function Templates:PrimaryFrame()
       widget.title:SetText("Rest zone:")   
       return widget
     end
-    function Updater()
-    local frameholder = CreateFrame("Frame",nil,nil);
-    return frameholder
-    end
     local primaryFrame = Frame()
-    local updater = Updater()
     local primaryOptionsWidgets = {StaticTitles(),RestZoneWidget(),BarsWidget()}   
     local xOfs =0
     for k in pairs(primaryOptionsWidgets) do
@@ -125,7 +122,7 @@ function Templates:PrimaryFrame()
       primaryOptionsWidgets[k]:SetSize(80,80)
         xOfs = xOfs+105
     end   
-    return primaryFrame,primaryOptionsWidgets,updater
+    return primaryFrame,primaryOptionsWidgets
 end
 function Templates:ActionBar(index)     
         local actionBar = CreateFrame("Frame",nill,nil);
@@ -293,7 +290,7 @@ function Templates:OptionWidget(index)
   end
   return optionWidget
 end
-function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
+function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,key)--Add group layout to desired widget
   local yOfs = -15
   local newWidget = CreateFrame("Frame",nill, parentWidget)
   newWidget:SetPoint("CENTER",parentWidget,"CENTER",0,0);
@@ -325,7 +322,7 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add 
   newWidget.minusButton:SetNormalFontObject(defaultFont)    
   newWidget.minusButton:SetScript("OnClick", function () 
     if  valueToSave[6]>1 then
-    Actions:Move(valueToSave,-1)
+    Actions:Move(key,valueToSave[6]-1)
     end
     UI:UpdateUI()
   end)
@@ -336,8 +333,8 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add 
   newWidget.plusButton:SetNormalFontObject(defaultFont)  
   newWidget.plusButton.tooltipText ="Change bar."  
   newWidget.plusButton:SetScript("OnClick", function ()
-    if valueToSave[6]< UI:Get():ActionBarCount() then
-      Actions:Move(valueToSave,1)
+    if valueToSave[6]< ActionBars:Get():ActionBarCount() then
+      Actions:Move(key,valueToSave[6]+1)
     end  
     UI:UpdateUI()
   end)

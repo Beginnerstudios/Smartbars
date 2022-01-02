@@ -4,6 +4,7 @@ SmartBars.Config ={};
 local Config = SmartBars.Config;
 local UI
 local Actions
+local ActionBars
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
@@ -11,6 +12,7 @@ function Config:Init()
     Actions = SmartBars.Actions
     Global = SmartBars.Global
     API = SmartBars.API
+    ActionBars = SmartBars.ActionBars
 end
 --Config:Functions------------------------
 local isConfigMode = false
@@ -41,10 +43,10 @@ function Config:ToggleConfigMode()
         Actions:Display(usedActions,primaryFrame,true);  
         primaryFrame:Show()                
         isConfigMode =true           
-        UI:ToggleWidgets(true)            
+        ActionBars:ToggleWidgets(true)            
     else
         primaryFrame:Hide()                                               
-        UI:ToggleWidgets(false)
+        ActionBars:ToggleWidgets(false)
         Config:SaveConfig()
         isConfigMode =false 
 end
@@ -52,18 +54,21 @@ UI:UpdateUI()
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared,UI:Get():FrameIDs()}
+    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs()}
+    
 end
 function Config:LoadConfig()  
 Actions:Set(SmartBarsCharacterActions)
-UI:Set(
+UI:Set(    
+    SmartBarsSettings[7]  --global hide in restzone    
+)
+ActionBars:Set(
     SmartBarsSettings[1], --framesposition
     SmartBarsSettings[2], --framesscale
     SmartBarsSettings[3], --framesalpha
     SmartBarsSettings[4], --framescolumn
     SmartBarsSettings[5],  --framesrest
     SmartBarsSettings[6],  --global action bar count
-    SmartBarsSettings[7],  --global hide in restzone    
     SmartBarsSettings[9]   --frameIdNumbers
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value

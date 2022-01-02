@@ -12,5 +12,6 @@ SmartBars_Config.lua
 SmartBars_Events.lua
 SmartBars_API.lua
 SmartBars_Templates.lua
+SmartBars_ActionBars.lua
 SmartBars_Core.lua
 

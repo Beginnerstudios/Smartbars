@@ -6,12 +6,14 @@ local UI;
 local API;
 local Config;
 local Templates;
+local ActionBars;
 --Init------------------------------------
 function Actions:Init()
     UI = SmartBars.UI
     API = SmartBars.API
     Config = SmartBars.Config
     Templates = SmartBars.Templates
+    ActionBars = SmartBars.ActionBars
 end
 --Variables--------------------------------
 local trackedActions = {}
@@ -111,14 +113,14 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
     else  
         actionID= Config:JoinNumber(action[2],Config:GetSpec())
         curretSpec= API:GetSpecialization()
-        trackedFrame = UI:Get():HighestFrameID()   
+        trackedFrame = ActionBars:Get():HighestFrameID()   
         showOnlyWhenBoosted = false
         actionType = action[6]
     end  
  
-        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,UI:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
+        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame),true,isEnabled),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
         trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-        trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled) 
+        trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled,actionID) 
         trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  
   
     
@@ -130,15 +132,12 @@ function Actions:Delete(actionID)
 end  
 function Actions:Move(key,lastFrameIndex)
  local tA=trackedActions[key]
- print(tA[6])
-
-  for k,v in pairs(UI:Get():FrameIDs()) do   
+  for k,v in pairs(ActionBars:Get():FrameIDs()) do   
   
-    if v[2] == lastFrameIndex then
-    
+    if v[2] == lastFrameIndex then   
       tA[6] = v[2]
-      tA[3]:SetParent(UI:Get():ActionBar(v[2]))
-      print(tA[6])
+      tA[3]:SetParent(ActionBars:Get():ActionBar(v[2]))
+     
     end
   end
 end

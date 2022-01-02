@@ -5,32 +5,23 @@ local UI=SmartBars.UI;
 local Actions
 local Config
 local Templates
+local ActionBars
 --Init------------------------------------
 function UI:Init()
 Actions = SmartBars.Actions
 Config = SmartBars.Config
 Templates = SmartBars.Templates
+ActionBars = SmartBars.ActionBars
 end
 --Variables-------------------------------
 --Primaryframe
 local primaryFrame   
 local primaryOptionsWidgets = {}
-local updater
---ActionBars
-local frames = {};
-local frameIDs
-local optionWidgets = {}
 --Saved variables
 local globalHideRest = false
-local actionBarsCount = 1
-local framesPosition = {}
-local framesScale = {}
-local framesAlpha = {}
-local framesColumn ={}
-local framesHideRest = {}
 --UI:Frames-------------------------------
 function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame 
-  function Scripts()
+function Scripts()
     --Primary Frame
     primaryFrame.CloseButton:SetScript("OnClick", function ()
     Config:ToggleConfigMode()
@@ -49,303 +40,21 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
     end)
      
       barsWidget.minusButton :SetScript("OnClick", function ()
-      UI:Remove()
+      ActionBars:Remove()
       barsWidget.textValue:SetText(actionBarsCount);
       end) 
   
       barsWidget.plusButton:SetScript("OnClick", function ()         
-        UI:Add()                                     
+        ActionBars:Add()                                     
         barsWidget.textValue:SetText(actionBarsCount)
         end)
   --Option widgets
   
   
-  
-   --Updater
-   updater:SetScript("OnUpdate", function ()
-    local tA = Actions:GetTracked()
-    UI:UpdateBars(tA)  
- 
 
-
-    for frameID,v in pairs(frameIDs) do    
-     if frames[frameID]~=nill then                 
-     UI:SortBars(tA,v[2],frameID)    
-    end  
-    end
-
-    
-    end) 
-  end
- primaryFrame,primaryOptionsWidgets,updater = Templates:PrimaryFrame()
+end
+ primaryFrame,primaryOptionsWidgets = Templates:PrimaryFrame()
  Scripts()
-end
-function UI:CreateActionBar(i)--Create action bar + option widgets 
-    frames[i] = Templates:ActionBar(i)
-    frames[i]:SetParent(primaryFrame) 
-    frames[i].optionWidgets = Templates:OptionWidget(i)  
-    frames[i].optionWidgets:SetParent(primaryFrame) 
-    function SetupSettings(i)--Setup variables for action bar position,scale etc..
-      local defaultFrameScale = 0.75
-      local defaultFrameAlpha = 1
-      local scaleWidget = frames[i].optionWidgets.settings[2]
-      local alphaWidget = frames[i].optionWidgets.settings[3]
-      local columnsWidget = frames[i].optionWidgets.settings[4]
-      local hideWidget = frames[i].optionWidgets.settings[5]
-      local optionWidget = frames[i].optionWidgets
-      local barWidget = frames[i].optionWidgets.settings[1]
-    
-
-      function Position()
-      if not framesPosition[i]  then
-        local rowCount =10
-        local xOffset = 0   
-        local yOffset = 300 - (i*40)
-        local point = "CENTER"
-        local relativePoint = "CENTER"
-          if i>rowCount and i<=2*rowCount then
-            xOffset=150
-            yOffset=300 - ((i-rowCount)*40)  
-          elseif i>2*rowCount then
-          xOffset=300
-          yOffset=300 - ((i-2*(rowCount))*40)  
-          end
-      frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
-      framesPosition[i] = {xOffset,yOffset,point,relativePoint}  
-      else
-       local xOffset = framesPosition[i][1] 
-       local yOffset = framesPosition[i][2]
-       local point = framesPosition[i][3]
-       local relativePoint = framesPosition[i][4]
-       frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
-      end
-      end
-      function Scale()
-        if not framesScale[i]  then      
-          frames[i]:SetScale(defaultFrameScale)
-          scaleWidget.slider:SetValue(defaultFrameScale)
-          scaleWidget.text:SetText(Config:RoundNumber(defaultFrameScale,2))       
-        else
-          local scale = framesScale[i] 
-          frames[i]:SetScale(scale)
-          scaleWidget.slider:SetValue(scale)
-          scaleWidget.text:SetText(Config:RoundNumber(scale,2))
-        end       
-      end
-      function Alpha()
-        if not framesAlpha[i]  then
-          frames[i]:SetAlpha(defaultFrameAlpha)
-          alphaWidget.slider:SetValue(defaultFrameAlpha)
-          alphaWidget.text:SetText(Config:RoundNumber(defaultFrameAlpha,2))
-        else
-          local alpha = framesAlpha[i]
-          frames[i]:SetAlpha(alpha)
-          alphaWidget.slider:SetValue(alpha)
-          alphaWidget.text:SetText(Config:RoundNumber(alpha,2))
-        end 
-      end
-      function Columns()
-        if not framesColumn[i]  then
-          framesColumn[i] = 10
-          columnsWidget.text2:SetText(framesColumn[i])
-        else
-          columnsWidget.text2:SetText(framesColumn[i])
-        end
-      end
-      function Hide()
-        if not framesHideRest[i]  then    
-          hideWidget.checkBox:SetChecked(false)
-         else
-           local value = framesHideRest[i]
-           hideWidget.checkBox:SetChecked(value)
-         end
-      end
-      function Scripts()
-        optionWidget.CloseButton:SetScript("OnClick", function ()
-        Config:ToggleConfigMode()
-        end) 
-       --Edit button
-        frames[i].configWidgets[2]:SetScript("OnClick",function ()
-          UI:HideOptionPanels()
-           if optionWidget:IsVisible() then
-            optionWidget:Hide()
-        else
-          optionWidget:Show()
-          end
-       end)
-       --Bar navigator
-        
-       barWidget.minusButton:SetScript("OnClick", function ()
-        UI:HideOptionPanels() 
-        if i>=2 then
-            frames[i-1].optionWidgets:Show()
-            frames[i-1].optionWidgets.settings[1].text:SetText("Bar: "..i-1);
-        elseif i ==1 then                  
-           frames[#frames].optionWidgets:Show()
-           frames[#frames].optionWidgets.settings[1].text:SetText("Bar: 1");
-          end
-        end) 
-        barWidget.plusButton:SetScript("OnClick", function ()
-          UI:HideOptionPanels()
-          if i<#frames then
-          frames[i+1].optionWidgets:Show()
-          frames[i+1].optionWidgets.settings[1].text:SetText("Bar: "..i+1);
-          elseif i==#frames then
-        
-          frames[1].optionWidgets:Show()
-          frames[1].optionWidgets.settings[1].text:SetText("Bar: 1");
-          end
-        end)
-        --Scale
-
-        scaleWidget.slider:SetScript("OnValueChanged", function (self) 
-        frames[i]:SetScale(self:GetValue())  
-        framesScale[i] = self:GetValue()      
-        scaleWidget.text:SetText(Config:RoundNumber(framesScale[i],2));      
-        end)   
-        --Alpha
-      
-        alphaWidget.slider:SetScript("OnValueChanged", function (self)  
-        frames[i]:SetAlpha(self:GetValue()) 
-        framesAlpha[i] = self:GetValue() 
-        alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i],2));    
-          end)
-        --Rest zone widget
-     
-        hideWidget.checkBox:SetScript("OnClick",function (self)
-        framesHideRest[i] = self:GetChecked()
-        UI:UpdateUI()
-        end)  
-        --Columns widget
-    
-        columnsWidget.minusButton:SetScript("OnClick", function ()
-        if framesColumn[i]>= 2 then
-        framesColumn[i] = framesColumn[i] -1
-        columnsWidget.text2:SetText(framesColumn[i])
-        end
-        end) 
-        columnsWidget.plusButton:SetScript("OnClick", function ()  
-        framesColumn[i] = framesColumn[i] +1
-        columnsWidget.text2:SetText(framesColumn[i])  
-        end)
-      end
-      Position()
-      Scale()
-      Alpha()
-      Columns()
-      Hide()
-      Scripts()
-    end
-    SetupSettings(i) 
-end
-function UI:RemoveActionBar()
-  if frames then 
-    if #frames >1 then
-      local lastIndex = #frames
-      frames[#frames]:Hide()  
-      UI:HideOptionPanels()
-      frames[#frames-1].optionWidgets:Show()
-      framesScale[#frames] = nill 
-      framesPosition[#frames] = nill 
-      framesAlpha[#frames] = nill 
-      frames[#frames] = nill
-     
-      local tA = Actions:GetTracked()
-      for k,v in pairs(tA) do
-        local barNumber = tA[k][6]
-        if barNumber>1 and barNumber==lastIndex then         
-        Actions:Move(tA[k],-1)
-        end  
-      end
-      actionBarsCount = actionBarsCount-1
-    end
-  end  
-end
-function UI:Load()
-  if Config:GetTableCount(frameIDs) >0 then  
-      for frameID,v in pairs(frameIDs) do                     
-        UI:CreateActionBar(frameID)      
-      end
-    else
-  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
-  frameIDs[frameID] = {frameID,actionBarsCount}
-  UI:CreateActionBar(frameID)
-  end
-  UI:ToggleWidgets(false)
-  UI:UpdateUI()
-end 
-function UI:Add() 
-  actionBarsCount = actionBarsCount +1
-  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
-  frameIDs[frameID] = {frameID,actionBarsCount}
-  UI:CreateActionBar(frameID) 
-  UI:ToggleWidgets(true)        
-  UI:UpdateUI() 
-end 
-function UI:Remove()
-actionBarsCount = actionBarsCount -1
-local lastFrameIndex,lastFrameID = UI:Get():HighestFrameID()  
-frames[lastFrameID]:Hide()
-framesScale[lastFrameID] = nill 
-framesPosition[lastFrameID] = nill 
-framesAlpha[lastFrameID] = nill 
-frames[lastFrameID] = nill
-
-local tA = Actions:GetTracked()
-      for k,v in pairs(tA) do
-        local barNumber = tA[k][6]        
-        if barNumber==lastFrameIndex then    
-        Actions:Move(k,lastFrameIndex-1)
-        end  
-      end
-
-UI:UpdateUI()
-end
---UI:Widgets-------------------------------
-function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
-   --ActionWidgets
-  for k,v in pairs(Actions:GetTracked()) do
-    local widget = v[3]
-   if widget~=nill then
-    if value == true then
-    widget.edit:SetEnabled(true) 
-    widget.group:Show()
-    widget.charges:Hide()  
-   else
-    widget.group:Hide()
-    widget.charges:Show()
-    widget.edit:SetEnabled(value) 
-
-   end
-  end
-  
-  end
-  --Actionbars
-for k,v in pairs(frames) do
-  frames[k]:SetMovable(value) 
-  frames[k]:EnableMouse(value)  
-  local configWidgets = frames[k].configWidgets
-  if value == true then
-    for widget in pairs(configWidgets) do
-      configWidgets[widget]:Show()
-    end          
-  else
-    for widget in pairs(frames[k].configWidgets) do
-      configWidgets[widget]:Hide()
-    end 
-  end
- 
-end
-local frameID,frameIndex =UI:Get():HighestFrameID()
-frames[frameIndex].optionWidgets:Show()
-frames[frameIndex]:Show()
-
-
-end
-function UI:HideOptionPanels()
-  for i in pairs(frames) do
-    frames[i].optionWidgets:Hide()
-  end
 end
 --UI:Update-------------------------------
 function UI:UpdateUI() ---update all dynamic variables in UI 
@@ -391,161 +100,24 @@ function UI:UpdateUI() ---update all dynamic variables in UI
     RefreshTrackedIcons()
     Config:SaveConfig()
 end
-function UI:UpdateBars(barsToupdate) --determinate if widget will be wisible or hidden
-  local actions = barsToupdate
-  local configMode = Config:IsConfigMode()
-  local userSpec = Config:GetSpec()
-  local isResting = Config:GetResting()
-  
-if actions ~=nill then
-  for actionID in pairs(actions) do  
-    local slotID = actions[actionID][1]
-    local spellID = actions[actionID][2]
-    local widget = actions[actionID][3]
-    local actionSpec = actions[actionID][5]
-    local frameIndex = actions[actionID][6] 
-    local isBoosted = actions[actionID][7]   
-    local displayOnlyWhenBoosted =actions[actionID][8]
-    local actionType = actions[actionID][9]  
-     
-    if Config:IsValueSame(actionSpec,userSpec) then   
-      if globalHideRest == true and isResting ==true and configMode == false then
-       widget:Hide()
-      else
-        local chargesText = API:GetActionCharges(spellID,actionType) 
-        local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
-        local start, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
-        local inRange = API:IsActionInRange(spellID,actionType)       
-        widget.charges:SetText(chargesText)          
-        if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
-          widget:Show()                         
-        else             
-          if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
-            widget:Hide()  
-          else                                                                   
-            if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then
-              widget:Hide()                                           
-            else           
-              local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
-              if isUserBuffedBy then
-                widget:Hide()                     
-              else
-                widget:Show() 
-              end                                                            
-            end         
-          end   
-        end 
-      end    
-      else
-        widget:Hide()
-    end
-  end
-  end   
-end
-function UI:SortBars(trackedActions,sortNumber,frameID)--handle displayed widget position
-  local startxOffset = 0
-  local startyOffset =-37
-
-  for actionID in pairs(trackedActions) do
-    local frameNumber = trackedActions[actionID][6]
-    local widget = trackedActions[actionID][3]
-
-    if frameNumber == sortNumber then
-      if widget:IsVisible() then     
-       widget:SetPoint("LEFT",frames[frameID],"LEFT",startxOffset,startyOffset)
-       if framesScale[frameID] then
-        widget:SetScale(framesScale[frameID]) 
-       end
-      if framesAlpha[frameID] then
-       widget:SetAlpha(framesAlpha[frameID])
-      end
-      startxOffset = startxOffset +50
-      if(startxOffset== framesColumn[frameID]*50) then
-      startxOffset =0
-      startyOffset  = startyOffset-50
-          end
-      end
-    end
-  end
-end
 --Getters & Setters-----------------------------
 function UI:Get()   --get values from SmartBars_UI                      
   local returnTable =
-         {                         
-             ActionBar = function(self,barIndex)             
-                return frames[barIndex]                             
-             end,  
-             ActionBars = function(self,barIndex)             
-              return frames                             
-             end,      
+         {                                         
              CurrentSpec = function(self)                                                                                    
-                return  currentSpecialization
-             end,
-             ActionBarCount = function(self)                                                                                    
-              return actionBarsCount
+                return  currentSpecialization             
              end,           
              GlobalHideRest = function(self)                                                                                    
               return  globalHideRest
-             end,
-             FramesScale = function(self)                                                                                                  
-             return framesScale
-             end,
-            FrameIDs = function(self)                                                                                                  
-            return frameIDs
-            end,
-            HighestFrameID = function(self)  
-              local highestID=0 
-              local frameID
-              for k,v in pairs(frameIDs) do
-              if v[2]>highestID then
-                  highestID = v[2]
-                  frameID = v[1]
-              end  
-            end                                                                                            
-              return highestID,frameID
-              end,
-             FramesPosition = function(self) 
-              for k,v in pairs(frames) do
-                local frameIndex = k
-                if k then
-                  function CalculateFramePosition(frameIndex)
-                    local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
-                    local function round2(num, numDecimalPlaces)
-                      return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
-                    end
-                    return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
-                    
-                  end 
-                end
-                
-                framesPosition[k]=CalculateFramePosition(k)              
-              end
-                return framesPosition         
-             end,
-             FramesAlpha = function(self)                                                                                    
-             return framesAlpha
-              end,
-              FramesColumn = function(self)                                                                                    
-              return  framesColumn
-              end,
-              FramesHideRest = function(self)                                                                                    
-              return  framesHideRest
-              end,
+             end,          
              PrimaryFrame = function(self)                                                                                    
              return  primaryFrame
              end            
          }
  return returnTable
 end
-function UI:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedGlobalHideRest,loadedFrameIDs)--set saved variables
- framesPosition = loadedFramesPosition
- framesScale =loadedFramesScale
- framesAlpha = loadedFramesAlpha
- framesColumn = loadedFramesColumn
- framesHideRest = loadedFramesHideRest
- actionBarsCount = loadedActionBarsCount
+function UI:Set(loadedGlobalHideRest)--set saved variables
  globalHideRest = loadedGlobalHideRest
- frameIDs = loadedFrameIDs
 end
 -- Revision version v0.9.8 ---
 
