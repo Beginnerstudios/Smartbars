@@ -22,14 +22,13 @@ ActionBars:Init()
 --Program run-----------------------------
 Config:DisableOldAddon()
 Events:RegisterEvents()
-C_Timer.After(5, function()   
-    Config:LoadConfig()
-    Config:CreateCommands();
-    UI:CreatePrimaryFrames();
-
-    Actions:Load();
+Config:CreateCommands();
+C_Timer.After(3, function()   
+    Config:LoadConfig() 
+    UI:CreatePrimaryFrames();    
     ActionBars:Load()
-    ActionBars:StartUpdate()
+    Actions:Load();
+    ActionBars:StartUpdate()    
     print("SmartBars - /bs or /sb for settings.\n")   
 end)
 -- Revision version v0.9.8 ----
