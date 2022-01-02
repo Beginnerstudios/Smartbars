@@ -126,15 +126,14 @@ function Actions:Create(action,isEnabled,isExisting,isDisplayed,key)
 end
 function Actions:Delete(actionID)
     trackedActions[actionID][3]:Hide() 
-    trackedActions[actionID]=nill
-   
+    trackedActions[actionID]=nill   
 end  
 function Actions:Move(trackedAction,value)
     trackedAction[6] = trackedAction[6] +(value)
     trackedAction[3]:SetParent(UI:Get():ActionBar(trackedAction[6]))
   end
 --Getters & Setters,Reset-----------------------------
-function Actions:SetSavedVariables(tActions)
+function Actions:Set(tActions)
     trackedActions = tActions
 end
 function Actions:GetTracked()

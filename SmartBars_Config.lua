@@ -52,18 +52,19 @@ UI:UpdateUI()
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared}
+    SmartBarsSettings = {UI:Get():FramesPosition(),UI:Get():FramesScale(),UI:Get():FramesAlpha(),UI:Get():FramesColumn(),UI:Get():FramesHideRest(),UI:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared,UI:Get():FrameIDs()}
 end
 function Config:LoadConfig()  
-Actions:SetSavedVariables(SmartBarsCharacterActions)
-UI:SetSavedVariables(
+Actions:Set(SmartBarsCharacterActions)
+UI:Set(
     SmartBarsSettings[1], --framesposition
     SmartBarsSettings[2], --framesscale
     SmartBarsSettings[3], --framesalpha
     SmartBarsSettings[4], --framescolumn
     SmartBarsSettings[5],  --framesrest
     SmartBarsSettings[6],  --global action bar count
-    SmartBarsSettings[7]  --global hide in restzone    
+    SmartBarsSettings[7],  --global hide in restzone    
+    SmartBarsSettings[9]   --frameIdNumbers
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
@@ -74,7 +75,7 @@ function Config:SetDefaults()
         SmartBarsCharacterActions = {}      
     end
     if not SmartBarsSettings then
-        SmartBarsSettings = {{},{},{},{},{},1,false,false}     
+        SmartBarsSettings = {{},{},{},{},{},1,false,false,{}}     
     end 
 end
 function Config:SetDefaultBuild()

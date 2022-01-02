@@ -18,6 +18,7 @@ local primaryOptionsWidgets = {}
 local updater
 --ActionBars
 local frames = {};
+local frameIDs
 local optionWidgets = {}
 --Saved variables
 local globalHideRest = false
@@ -58,6 +59,7 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
         barsWidget.textValue:SetText(actionBarsCount)
         UI:ToggleWidgets(true)           
         UI:UpdateUI()
+        UI:Add()
         end)
   --Option widgets
   
@@ -72,25 +74,35 @@ function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame
     UI:SortBars(tA,frameIndex)
     frameIndex = frameIndex +1 
     end
+
+ --   for frameID,v in pairs(frameIDs) do 
+ --     if frameIDs[frameID]~=nill then                    
+  --   UI:SortBars(tA,frameID)    
+ --     end  
+ --   end
+
+    
     end) 
   end
  primaryFrame,primaryOptionsWidgets,updater = Templates:PrimaryFrame()
  Scripts()
 end
-function UI:CreateActionBar(i)--Create action bar + option widgets
-  
-    frames[i] = Templates:ActionBar(i)   
-    optionWidgets[i] = Templates:OptionWidget(i)
-    optionWidgets[i]:SetParent(primaryFrame)     
+function UI:CreateActionBar(i)--Create action bar + option widgets 
 
+    frames[i] = Templates:ActionBar(i)
+    frames[i]:SetParent(primaryFrame) 
+    frames[i].optionWidgets = Templates:OptionWidget(i)  
+    frames[i].optionWidgets:SetParent(primaryFrame) 
     function SetupSettings(i)--Setup variables for action bar position,scale etc..
       local defaultFrameScale = 0.75
       local defaultFrameAlpha = 1
-      local scaleWidget = optionWidgets[i].settings[2]
-      local alphaWidget = optionWidgets[i].settings[3]
-      local columnsWidget = optionWidgets[i].settings[4]
-      local hideWidget = optionWidgets[i].settings[5]
-
+      local scaleWidget = frames[i].optionWidgets.settings[2]
+      local alphaWidget = frames[i].optionWidgets.settings[3]
+      local columnsWidget = frames[i].optionWidgets.settings[4]
+      local hideWidget = frames[i].optionWidgets.settings[5]
+      local optionWidget = frames[i].optionWidgets
+      local barWidget = frames[i].optionWidgets.settings[1]
+    
 
       function Position()
       if not framesPosition[i]  then
@@ -157,40 +169,39 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
          end
       end
       function Scripts()
-        optionWidgets[i].CloseButton:SetScript("OnClick", function ()
+        optionWidget.CloseButton:SetScript("OnClick", function ()
         Config:ToggleConfigMode()
         end) 
        --Edit button
         frames[i].configWidgets[2]:SetScript("OnClick",function ()
           UI:HideOptionPanels()
-           if optionWidgets[i]:IsVisible() then
-             optionWidgets[i]:Hide()
+           if optionWidget:IsVisible() then
+            optionWidget:Hide()
         else
-         optionWidgets[i]:Show()
+          optionWidget:Show()
           end
        end)
        --Bar navigator
-        local optionWidgetBarNavigator = optionWidgets[i].settings[1]
-        optionWidgetBarNavigator.minusButton:SetScript("OnClick", function () 
-          if i>=2 then
-            UI:HideOptionPanels()
-            optionWidgets[i-1]:Show()
-            optionWidgets[i-1].settings[1].text:SetText("Bar: "..i-1);
-          elseif i ==1 then
-           UI:HideOptionPanels()
-           optionWidgets[#optionWidgets]:Show()
-           optionWidgets[#optionWidgets].settings[1].text:SetText("Bar: "..#frames);
+        
+       barWidget.minusButton:SetScript("OnClick", function ()
+        UI:HideOptionPanels() 
+        if i>=2 then
+            frames[i-1].optionWidgets:Show()
+            frames[i-1].optionWidgets.settings[1].text:SetText("Bar: "..i-1);
+        elseif i ==1 then                  
+           frames[#frames].optionWidgets:Show()
+           frames[#frames].optionWidgets.settings[1].text:SetText("Bar: 1");
           end
         end) 
-        optionWidgetBarNavigator.plusButton:SetScript("OnClick", function ()
+        barWidget.plusButton:SetScript("OnClick", function ()
+          UI:HideOptionPanels()
           if i<#frames then
-            UI:HideOptionPanels()
-            optionWidgets[i+1]:Show()
-            optionWidgets[i+1].settings[1].text:SetText("Bar: "..i+1);
+          frames[i+1].optionWidgets:Show()
+          frames[i+1].optionWidgets.settings[1].text:SetText("Bar: "..i+1);
           elseif i==#frames then
-            UI:HideOptionPanels()
-            optionWidgets[1]:Show()
-            optionWidgets[1].settings[1].text:SetText("Bar: 1");
+        
+          frames[1].optionWidgets:Show()
+          frames[1].optionWidgets.settings[1].text:SetText("Bar: 1");
           end
         end)
         --Scale
@@ -233,7 +244,6 @@ function UI:CreateActionBar(i)--Create action bar + option widgets
       Hide()
       Scripts()
     end
-
     SetupSettings(i) 
 end
 function UI:RemoveActionBar()
@@ -242,7 +252,7 @@ function UI:RemoveActionBar()
       local lastIndex = #frames
       frames[#frames]:Hide()  
       UI:HideOptionPanels()
-      optionWidgets[#frames-1]:Show()
+      frames[#frames-1].optionWidgets:Show()
       framesScale[#frames] = nill 
       framesPosition[#frames] = nill 
       framesAlpha[#frames] = nill 
@@ -260,12 +270,27 @@ function UI:RemoveActionBar()
   end  
 end
 function UI:AddActionBar()
-  if #frames < 30 then
+  if #frames < 30 then  
   UI:CreateActionBar(#frames+1)
   UI:ToggleWidgets(true)
   actionBarsCount = actionBarsCount +1
   end
 end
+function UI:Load()
+  if Config:GetTableCount(frameIDs) >0 then  
+      for frameID,v in pairs(frameIDs) do                     
+        UI:CreateActionBar(frameID)
+        UI:ToggleWidgets(true)       
+      end
+    else
+  local frameID = Config:JoinNumber(API:GetSpecialization(),1)
+  print(frameID)
+  frameIDs[frameID] = frameID
+  UI:CreateActionBar(frameID)
+  UI:ToggleWidgets(true)
+  end
+  UI:UpdateUI()
+end 
 --UI:Widgets-------------------------------
 function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
    --ActionWidgets
@@ -296,18 +321,40 @@ function UI:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
         configWidgets[widget]:Show()
       end          
     else
-      for widget in pairs(frames[i].configWidgets) do
+      for widget in pairs(frames[k].configWidgets) do
         configWidgets[widget]:Hide()
       end 
     end
   end
 
   UI:HideOptionPanels()
-  optionWidgets[#optionWidgets]:Show()
+ 
+for k,v in pairs(frames) do
+  frames[k]:SetMovable(value) 
+  frames[k]:EnableMouse(value)  
+
+  local configWidgets = frames[k].configWidgets
+  if value == true then
+    for widget in pairs(configWidgets) do
+      configWidgets[widget]:Show()
+    end          
+  else
+    for widget in pairs(frames[i].configWidgets) do
+      configWidgets[widget]:Hide()
+    end 
+  end
+
+
+  frames[k].optionWidgets:Show()
+  frames[k]:Show()
+end
+
+
+
 end
 function UI:HideOptionPanels()
-  for i in pairs(optionWidgets) do
-    optionWidgets[i]:Hide()
+  for i in pairs(frames) do
+    frames[i].optionWidgets:Hide()
   end
 end
 --UI:Update-------------------------------
@@ -408,6 +455,7 @@ end
 function UI:SortBars(trackedActions,sortNumber)--handle displayed widget position
   local startxOffset = 0
   local startyOffset =-37
+  print(sortNumber)
   
   for actionID in pairs(trackedActions) do
     local frameNumber = trackedActions[actionID][6]
@@ -443,6 +491,9 @@ function UI:Get()   --get values from SmartBars_UI
              FramesScale = function(self)                                                                                                  
              return framesScale
              end,
+             FrameIDs = function(self)                                                                                                  
+            return frameIDs
+            end,
              FramesPosition = function(self) 
               for i=1,#frames do
                 function CalculateFramePosition(frameIndex)
@@ -472,7 +523,7 @@ function UI:Get()   --get values from SmartBars_UI
          }
  return returnTable
 end
-function UI:SetSavedVariables(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedGlobalHideRest)--set saved variables
+function UI:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedGlobalHideRest,loadedFrameIDs)--set saved variables
  framesPosition = loadedFramesPosition
  framesScale =loadedFramesScale
  framesAlpha = loadedFramesAlpha
@@ -480,6 +531,7 @@ function UI:SetSavedVariables(loadedFramesPosition,loadedFramesScale,loadedFrame
  framesHideRest = loadedFramesHideRest
  actionBarsCount = loadedActionBarsCount
  globalHideRest = loadedGlobalHideRest
+ frameIDs = loadedFrameIDs
 end
 -- Revision version v0.9.8 ---
 
