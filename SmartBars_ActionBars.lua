@@ -222,7 +222,6 @@ function ActionBars:FindIndex(frameID) --return frame index based on frameID
   local frameIndex
   for k,v in pairs(frameIDs) do
     if k==frameID then
-      print(v[2])
       return v[2]      
     end
   end
@@ -230,7 +229,6 @@ end
 function ActionBars:FindFrameID(frameIndex) --return frame index based on frameID
   for k,v in pairs(frameIDs) do
     if v[2]==frameIndex then
-      print(k)
       return k      
     end
   end
