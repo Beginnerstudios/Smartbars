@@ -5,12 +5,14 @@ local Events=SmartBars.Events;
 local Actions
 local Config
 local UI
+local ActionBars
 --Init------------------------------------
 function Events:Init()
 Actions = SmartBars.Actions
 Core = SmartBars.Core
 Config = SmartBars.Config
 UI = SmartBars.UI
+ActionBars = SmartBars.ActionBars
 end
 --Events:Functions------------------------
 function Events:RegisterEvents()
@@ -45,6 +47,8 @@ function Events:RegisterEvents()
   end
   function Event:PLAYER_SPECIALIZATION_CHANGED()
   Config:LoadConfig()
+  ActionBars:Load()
+  ActionBars:HideDifSpecBars()
   local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
   if primaryIsVisible then
   Config:ToggleConfigMode()

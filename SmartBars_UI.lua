@@ -40,18 +40,17 @@ function Scripts()
     UI:UpdateUI()
     end)
      
-      barsWidget.minusButton:SetScript("OnClick", function ()
-        local barCount = ActionBars:Get():ActionBarCount()  
-        if barCount >1 then
+      barsWidget.minusButton:SetScript("OnClick", function ()      
         ActionBars:Remove()
-        barsWidget.textValue:SetText(barCount-1);
-        end
+        ActionBars:ShowLastOptionWidget()
+        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()));
+        
       end) 
   
       barsWidget.plusButton:SetScript("OnClick", function ()   
-        ActionBars:Add()                                     
-        local barCount = ActionBars:Get():ActionBarCount()        
-        barsWidget.textValue:SetText(barCount)
+        ActionBars:Add()    
+        ActionBars:ShowLastOptionWidget()                                      
+        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
         end)
   --Option widgets
   
@@ -86,7 +85,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
       primaryFrameHeight = actionsHeight  
     end
     primaryFrame:SetHeight(primaryFrameHeight)
-    local barCount = ActionBars:Get():ActionBarCount()                                           
+    local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
     primaryOptionsWidgets[3].textValue:SetText(barCount);
   
   end

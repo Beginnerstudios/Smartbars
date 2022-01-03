@@ -19,11 +19,11 @@ local isConfigMode = false
 local currentSpecialization
 local isCleared
 --Save data---
-local currentSaveVersion =93
+local currentSaveVersion =98
 local savedSaveVersion
 ---Public version----------
 local currentVersion = "v - 0.9.8 ALPHA"
-local publicBuild = 97
+local publicBuild = 98
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -54,8 +54,7 @@ UI:UpdateUI()
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionBarCount(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs()}
-    
+    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs()}
 end
 function Config:LoadConfig()  
 Actions:Set(SmartBarsCharacterActions)
@@ -68,7 +67,7 @@ ActionBars:Set(
     SmartBarsSettings[3], --framesalpha
     SmartBarsSettings[4], --framescolumn
     SmartBarsSettings[5],  --framesrest
-    SmartBarsSettings[6],  --global action bar count
+    SmartBarsSettings[6],  --actionBarCount for each spec
     SmartBarsSettings[9]   --frameIdNumbers
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
@@ -80,7 +79,7 @@ function Config:SetDefaults()
         SmartBarsCharacterActions = {}      
     end
     if not SmartBarsSettings then
-        SmartBarsSettings = {{},{},{},{},{},1,false,false,{}}     
+        SmartBarsSettings = {{},{},{},{},{},{},false,false,{}}     
     end 
 end
 function Config:SetDefaultBuild()

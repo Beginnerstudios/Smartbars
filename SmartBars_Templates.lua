@@ -139,7 +139,7 @@ function Templates:ActionBar(index)
           title.text = title:CreateFontString(nil,defaultLayer);
           title.text:SetPoint("CENTER",title,"CENTER",-60,0);
           title.text:SetFontObject(defaultFont)
-          title.text:SetText("BAR: "..index) 
+          title.text:SetText("BAR: "..ActionBars:FindIndex(index)) 
         return title
         end
         function Info()
@@ -332,7 +332,7 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,key)--
   newWidget.plusButton:SetNormalFontObject(defaultFont)  
   newWidget.plusButton.tooltipText ="Change bar."  
   newWidget.plusButton:SetScript("OnClick", function ()
-    if ActionBars:FindIndex(valueToSave[6])< ActionBars:Get():ActionBarCount() then
+    if ActionBars:FindIndex(valueToSave[6])< ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()) then
       valueToSave[6]=valueToSave[6] +1
     end  
   end)

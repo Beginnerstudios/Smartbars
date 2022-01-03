@@ -21,22 +21,25 @@ local frameIDs
 local optionWidgets = {}
 --Saved variables
 local globalHideRest = false
-local actionBarsCount =1
+local actionBarsSpecCount ={}
 local framesPosition = {}
 local framesScale = {}
 local framesAlpha = {}
 local framesColumn ={}
 local framesHideRest = {}
 
-function ActionBars:Add() 
-  actionBarsCount = actionBarsCount +1
-  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
-  frameIDs[frameID] = {frameID,actionBarsCount}
+function ActionBars:Add()  
+  local spec = API:GetSpecialization()
+  if actionBarsSpecCount[spec] < 9 then
+  actionBarsSpecCount[spec] = actionBarsSpecCount[spec]+1
+  local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
+  frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID) 
   ActionBars:ToggleWidgets(true)   
   ActionBars:HideOptionPanels()     
   ActionBars:ShowLastOptionWidget()
   UI:UpdateUI() 
+end
 end 
 function ActionBars:Create(i)--Create action bar + option widgets 
 local primaryFrame = UI:Get():PrimaryFrame()
@@ -58,6 +61,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
 
     function Position()
     if not framesPosition[i]  then
+      local i = ActionBars:FindIndex(i)
       local rowCount =10
       local xOffset = 0   
       local yOffset = 300 - (i*40)
@@ -70,9 +74,11 @@ local primaryFrame = UI:Get():PrimaryFrame()
         xOffset=300
         yOffset=300 - ((i-2*(rowCount))*40)  
         end
+    i = ActionBars:FindFrameID(i)
     frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
     framesPosition[i] = {xOffset,yOffset,point,relativePoint}  
     else
+      
      local xOffset = framesPosition[i][1] 
      local yOffset = framesPosition[i][2]
      local point = framesPosition[i][3]
@@ -138,7 +144,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
       ActionBars:HideOptionPanels() 
       if ActionBars:FindIndex(i)>=2 then
         frames[i-1].optionWidgets:Show()
-        frames[i-1].optionWidgets.settings[1].text:SetText("Bar: "..i-1);
+        frames[i-1].optionWidgets.settings[1].text:SetText("Bar: "..ActionBars:FindIndex(i-1));
       elseif ActionBars:FindIndex(i) ==1 then                  
         ActionBars:ShowLastOptionWidget()
         end
@@ -147,7 +153,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
         ActionBars:HideOptionPanels()
         if frameIDs[i+1] then
         frames[i+1].optionWidgets:Show()
-        frames[i+1].optionWidgets.settings[1].text:SetText("Bar: "..i+1);
+        frames[i+1].optionWidgets.settings[1].text:SetText("Bar: "..ActionBars:FindIndex(i+1));
         else
         local frameID = ActionBars:FindFrameID(1)
         frames[frameID].optionWidgets:Show()
@@ -196,36 +202,45 @@ local primaryFrame = UI:Get():PrimaryFrame()
   SetupSettings(i) 
 end
 function ActionBars:Load()
-  if Config:GetTableCount(frameIDs) >0 then  
-      for frameID,v in pairs(frameIDs) do                     
+  local currentSpecActionsCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())
+  if currentSpecActionsCount then  
+      for frameID,v in pairs(frameIDs) do   
+        if v[3] == API:GetSpecialization() then                  
         ActionBars:Create(frameID)      
+        end
       end   
   else
-  local frameID = Config:JoinNumber(API:GetSpecialization(),actionBarsCount)
-  frameIDs[frameID] = {frameID,actionBarsCount}
+  local spec = API:GetSpecialization()
+  actionBarsSpecCount[spec] = 1
+  local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
+  frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID)
   end
 end 
 function ActionBars:Remove()
-actionBarsCount = actionBarsCount -1
-local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
-frames[lastFrameID]:Hide()
-frames[lastFrameID].optionWidgets:Hide()
-frames[lastFrameID] = nill
-frameIDs[lastFrameID] = nill
-framesScale[lastFrameID] = nill 
-framesPosition[lastFrameID] = nill 
-framesAlpha[lastFrameID] = nill 
-framesHideRest[lastFrameID] =nill
-framesColumn[lastFrameID] = nill
+local spec = API:GetSpecialization()
+if  actionBarsSpecCount[spec] > 1 then
 
-local tA = Actions:GetTracked()
+  local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
+  frames[lastFrameID]:Hide()
+  frames[lastFrameID].optionWidgets:Hide()
+  frames[lastFrameID] = nill
+  frameIDs[lastFrameID] = nill
+  framesScale[lastFrameID] = nill 
+  framesPosition[lastFrameID] = nill 
+  framesAlpha[lastFrameID] = nill 
+  framesHideRest[lastFrameID] =nill
+  framesColumn[lastFrameID] = nill
+  
+  local tA = Actions:GetTracked()
       for k,v in pairs(tA) do
         local barNumber = tA[k][6]        
         if barNumber==lastFrameID then    
           tA[k][6] = tA[k][6]-1
-        end  
-     end
+        end 
+      end 
+      actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
+end
 ActionBars:ShowLastOptionWidget()
 UI:UpdateUI()
 end
@@ -238,7 +253,11 @@ end
 function ActionBars:ShowLastOptionWidget()
   ActionBars:HideOptionPanels()
   local a,lastFrameID = ActionBars:Get():HighestFrameID()
-  frames[lastFrameID].optionWidgets:Show()
+  if frames[lastFrameID].optionWidgets then
+      frames[lastFrameID].optionWidgets:Show()
+      frames[lastFrameID].optionWidgets.settings[1].text:SetText("Bar: "..ActionBars:FindIndex(lastFrameID));
+  end
+
 end
 function ActionBars:ToggleWidgets(value)--Toggle edit boxes for edit in tracked actions
 
@@ -289,7 +308,7 @@ function ActionBars:FindIndex(frameID) --return frame index based on frameID
 end
 function ActionBars:FindFrameID(frameIndex) --return frame index based on frameID
   for k,v in pairs(frameIDs) do
-    if v[2]==frameIndex then
+    if v[2]==frameIndex and v[3] == API:GetSpecialization() then
       return k      
     end
   end
@@ -297,7 +316,6 @@ end
 --Update-----------------
 function ActionBars:StartUpdate()
   updater = CreateFrame("Frame",nil,nil);
-  updater:SetScale(0.75)
   updater:SetScript("OnUpdate", function ()
     ActionBars:UpdateBars()   
     for frameID,v in pairs(frameIDs) do    
@@ -366,25 +384,38 @@ function ActionBars:SortBars(frameID)--handle displayed widget position
   for actionID in pairs(trackedActions) do
     local actionFrameNumber = trackedActions[actionID][6]
     local widget = trackedActions[actionID][3]
-      if actionFrameNumber == frameID then         
+      if actionFrameNumber == frameID and widget:IsVisible() then         
         widget:SetPoint("LEFT",frames[frameID],"LEFT",startxOffset,startyOffset)
         widget:SetParent(frames[frameID])
         startxOffset = startxOffset +50
         if(startxOffset== framesColumn[frameID]*50) then
         startxOffset =0
         startyOffset  = startyOffset-50
-        end                
-      end   
+        end  
+      elseif actionFrameNumber == frameID then  
+        widget:SetPoint("LEFT",frames[frameID],"LEFT",startxOffset,startyOffset)
+        widget:SetParent(frames[frameID])       
+         
+    end
   end
 end
+function ActionBars:HideDifSpecBars()
+for frameID,v in pairs(frameIDs) do
+  if v[3] ~= API:GetSpecialization() then
+    if frames[frameID] then
+    frames[frameID]:Hide()
+    end
+  end
+end  
+end
 --Getter & Setter -- 
-function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsCount,loadedFrameIDs)--set saved variables
+function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsSpecCount,loadedFrameIDs)--set saved variables
   framesPosition = loadedFramesPosition
   framesScale =loadedFramesScale
   framesAlpha = loadedFramesAlpha
   framesColumn = loadedFramesColumn
   framesHideRest = loadedFramesHideRest
-  actionBarsCount = loadedActionBarsCount
+  actionBarsSpecCount = loadedActionBarsSpecCount
   frameIDs = loadedFrameIDs
 end
 function ActionBars:Get()   --get values from SmartBars_UI                      
@@ -396,9 +427,12 @@ function ActionBars:Get()   --get values from SmartBars_UI
              ActionBars = function(self,barIndex)             
               return frames                             
              end,              
-             ActionBarCount = function(self)                                                                                    
-              return actionBarsCount
+             ActionsSpecBarCount = function(self,index)                                                                                    
+            return actionBarsSpecCount[index]
              end,
+             ActionsSpecBarCounts = function(self,index)                                                                                    
+              return actionBarsSpecCount
+               end,
              FramesScale = function(self)                                                                                                  
              return framesScale
              end,
@@ -410,9 +444,9 @@ function ActionBars:Get()   --get values from SmartBars_UI
               local frameID
               for k,v in pairs(frameIDs) do
                 if k~=nil then
-                  if v[2]>highestID then
+                  if v[2]>highestID and v[3]==API:GetSpecialization() then
                     highestID = v[2]
-                    frameID = v[1]
+                    frameID = v[1]                
                 end   
                 end  
             end 
