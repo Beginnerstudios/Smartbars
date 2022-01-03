@@ -1,7 +1,7 @@
 --NameSpaces------------------------------
-local _,SmartBars = ...;
-SmartBars.UI ={};
-local UI=SmartBars.UI;
+local _,SmartBars = ...
+SmartBars.UI ={}
+local UI=SmartBars.UI
 local Actions
 local Config
 local Templates
@@ -43,7 +43,7 @@ function Scripts()
       barsWidget.minusButton:SetScript("OnClick", function ()      
         ActionBars:Remove()
         ActionBars:ShowLastOptionWidget()
-        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()));
+        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
         
       end) 
   
@@ -75,7 +75,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
     end
     primaryOptionsWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
     --Determinate height of primary frame
-    local usedSpellsCount = Config:GetTableCount(API:GetUserActions());
+    local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
     primaryOptionsWidgets[1].usedValue:SetText(usedSpellsCount)
     local actionsHeight = usedSpellsCount/6*60+165
     local primaryFrameHeight
@@ -86,7 +86,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
     end
     primaryFrame:SetHeight(primaryFrameHeight)
     local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
-    primaryOptionsWidgets[3].textValue:SetText(barCount);
+    primaryOptionsWidgets[3].textValue:SetText(barCount)
   
   end
   function RefreshTrackedIcons()--update icons on tracked actions
@@ -96,7 +96,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
     local spellID = tA[actionID][2]
     local actionType = tA[actionID][9]
     local slotID = tA[actionID][1]
-    if widget~=nill then
+    if widget~=nil then
       local newTexture= API:GetActionTexture(spellID,actionType,slotID)
       widget:SetNormalTexture(newTexture)   
     end
@@ -121,6 +121,9 @@ function UI:Get()   --get values from SmartBars_UI
              end            
          }
  return returnTable
+end
+function UI:GetGlobalHideRest()   --get values from SmartBars_UI                                                                                                       
+    return  globalHideRest
 end
 function UI:Set(loadedGlobalHideRest)--set saved variables
  globalHideRest = loadedGlobalHideRest

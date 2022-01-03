@@ -1,11 +1,12 @@
 --NameSpaces------------------------------
-local _,SmartBars = ...;
-SmartBars.Events ={};
-local Events=SmartBars.Events;
+local _,SmartBars = ...
+SmartBars.Events ={}
+local Events=SmartBars.Events
 local Actions
 local Config
 local UI
 local ActionBars
+local Localization
 --Init------------------------------------
 function Events:Init()
 Actions = SmartBars.Actions
@@ -13,22 +14,30 @@ Core = SmartBars.Core
 Config = SmartBars.Config
 UI = SmartBars.UI
 ActionBars = SmartBars.ActionBars
+Localization = SmartBars.Localization
 end
+--Dev strings events-----------------------
+local playerLogin = "PLAYER_LOGIN"
+local playerLogout = "PLAYER_LOGOUT"
+local specChanged ="PLAYER_SPECIALIZATION_CHANGED"
+local glowShow = "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
+local glowHide = "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE"
+local onEvent ="OnEvent"
 --Events:Functions------------------------
 function Events:RegisterEvents()
   Event = { }
   local frame = CreateFrame("Frame")
-  frame:RegisterEvent("PLAYER_LOGIN")
-  frame:RegisterEvent("PLAYER_LOGOUT")
+  frame:RegisterEvent(playerLogin)
+  frame:RegisterEvent(playerLogout)
   Config:CreatePopup()
   if Config:IsCurrentPatch() then
-  frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-  frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
-  frame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+  frame:RegisterEvent(specChanged)
+  frame:RegisterEvent(glowShow)
+  frame:RegisterEvent(glowHide)
   end
  
 
-  frame:SetScript("OnEvent", function(this, event, ...)
+  frame:SetScript(onEvent, function(self, event, ...)
     Event[event](MyAddon, ...)
   end)
 
@@ -36,11 +45,11 @@ function Events:RegisterEvents()
     Config:SetDefaultBuild()
     local version,build,savedBuild = Config:GetSmartBarsInfo()
     if savedBuild < build then
-      SmartBarsCharacterActions = nill
-      SmartBarsSettings = nill
+      SmartBarsCharacterActions = nil
+      SmartBarsSettings = nil
       Config:SetSavedBuild(build) 
       Config:SetDefaults()
-      print("SmartBars - settings reseted.")      
+      print(Localization:SettingsReseted())      
     end 
   end
   function Event:PLAYER_LOGOUT()   
@@ -58,7 +67,7 @@ function Events:RegisterEvents()
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
         local trackedActions = Actions:GetTracked()         
-      for actionID,v in pairs(trackedActions) do                     
+      for actionID in pairs(trackedActions) do                     
       if trackedActions[actionID][2] == a then
         trackedActions[actionID][7] = true
       end 
@@ -67,7 +76,7 @@ function Events:RegisterEvents()
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
     local trackedActions = Actions:GetTracked()               
-    for actionID,v in pairs(trackedActions) do                     
+    for actionID in pairs(trackedActions) do                     
     if trackedActions[actionID][2] ==a then
       trackedActions[actionID][7] = false
     end 

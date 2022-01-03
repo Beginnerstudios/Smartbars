@@ -1,8 +1,8 @@
 ## Interface:20502
 ## Title: SmartBars
-## Notes: Tracking your actions.
+## Notes: Tracking actions you select.
 ## Author: BStudios
-## Version:0.9.2
+## Version:0.9.8
 ## SavedVariablesPerCharacter:SmartBarsCharacterActions,SmartBarsSettings,SmartBarsSavedBuild
 
 SmartBars_Global.lua
@@ -13,5 +13,5 @@ SmartBars_Events.lua
 SmartBars_API.lua
 SmartBars_Templates.lua
 SmartBars_ActionBars.lua
+SmartBars_Localization.lua
 SmartBars_Core.lua
-

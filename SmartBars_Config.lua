@@ -1,10 +1,11 @@
 --NameSpaces------------------------------
-local _,SmartBars = ...;
-SmartBars.Config ={};
-local Config = SmartBars.Config;
+local _,SmartBars = ...
+SmartBars.Config ={}
+local Config = SmartBars.Config
 local UI
 local Actions
 local ActionBars
+local Localization
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
@@ -13,6 +14,7 @@ function Config:Init()
     Global = SmartBars.Global
     API = SmartBars.API
     ActionBars = SmartBars.ActionBars
+    Localization = SmartBars.Localization
 end
 --Config:Functions------------------------
 local isConfigMode = false
@@ -28,10 +30,10 @@ local publicBuild = 98
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
     SLASH_SB1 = "/sb"
-    SlashCmdList["BS"] = function(msg)
+    SlashCmdList["BS"] = function()
     Config:ToggleConfigMode()
     end
-    SlashCmdList["SB"] = function(msg)
+    SlashCmdList["SB"] = function()
     Config:ToggleConfigMode()
     end
 end
@@ -40,7 +42,7 @@ function Config:ToggleConfigMode()
     local usedActions = API:GetUserActions()
 
     if  isConfigMode==false then    
-        Actions:Display(usedActions,primaryFrame,true);  
+        Actions:Display(usedActions,primaryFrame,true)  
         primaryFrame:Show()                
         isConfigMode =true           
         ActionBars:ToggleWidgets(true)            
@@ -105,7 +107,7 @@ function Config:IsConfigMode()
  return isConfigMode
 end
 function Config:ResetAll()  
-    SmartBarsSavedBuild=nill   
+    SmartBarsSavedBuild=nil   
     ReloadUI()
 end
 function Config:CreatePopup()
@@ -146,7 +148,7 @@ end
 -- Utils-----------------------------------
 function Config:GetTableCount(tableArg)
     local count = 0
-    if tableArg ~=nill then
+    if tableArg ~=nil then
         for _ in pairs(tableArg) do count = count + 1 end    
     end
     return count      
@@ -159,14 +161,14 @@ function Config:IsValueSame(value1,value2)
     end
 end
 function Config:JoinNumber(x, y)
-    local z = tostring(x) .. tostring(y);
-    return tonumber(z);
+    local z = tostring(x) .. tostring(y)
+    return tonumber(z)
 end  
 function Config:DisableOldAddon()
     local name, title, notes, enabled, loadable, reason, security =GetAddOnInfo("BS_ActionsTracker")
     if enabled then
         DisableAddOn("BS_ActionsTracker")
-        print("SmartBars - old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.If you dont want get this notification again delete BS_ActionsTracker folder from --/interface/addons")      
+        print(Localization:OldFound())      
     end 
 end  
 function Config:RoundNumber(num,numDecimalPlaces)
