@@ -69,15 +69,15 @@ local primaryFrame = UI:Get():PrimaryFrame()
       local i = ActionBars:FindIndex(i)
       local rowCount =10
       local xOffset = 0   
-      local yOffset = 300 - (i*40)
+      local yOffset = 300 - (i*70)
       local point = "CENTER"
       local relativePoint = "CENTER"
         if i>rowCount and i<=2*rowCount then
           xOffset=150
-          yOffset=300 - ((i-rowCount)*40)  
+          yOffset=300 - ((i-rowCount)*70)  
         elseif i>2*rowCount then
         xOffset=300
-        yOffset=300 - ((i-2*(rowCount))*40)  
+        yOffset=300 - ((i-2*(rowCount))*70)  
         end
     i = ActionBars:FindFrameID(i)
     frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
@@ -117,7 +117,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
     end
     function Columns()
       if not framesColumn[i]  then
-        framesColumn[i] = 10
+        framesColumn[i] = 6
         columnsWidget.text2:SetText(framesColumn[i])
       else
         columnsWidget.text2:SetText(framesColumn[i])
@@ -358,7 +358,10 @@ function ActionBars:UpdateBars() --determinate if widget will be wisible or hidd
         local inRange = API:IsActionInRange(spellID,actionType)       
         widget.charges:SetText(chargesText)          
         if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
-          widget:Show()                         
+          widget:Show()
+          if isBoosted then
+            ActionButton_ShowOverlayGlow(widget)
+          end                      
         else             
           if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
             widget:Hide()  

@@ -49,6 +49,8 @@ local onDragStop ="OnDragStop"
 --Defaultvalues--
 local defaultFrameScale =0.75
 local defaultFrameAlpha = 1
+local minimumScale = 0.3
+local maximumScale = 1.5
 --Templates-----------------------------------------------------
 function Templates:PrimaryFrame() 
     function Frame()
@@ -224,7 +226,7 @@ function Templates:OptionWidget(index)
      scaleWidget.slider:SetPoint(center,scaleWidget,center,0,-20)
      scaleWidget.slider:SetWidth(100)
      scaleWidget.slider:SetHeight(15)
-     scaleWidget.slider:SetMinMaxValues(0.5,1.5)
+     scaleWidget.slider:SetMinMaxValues(minimumScale,maximumScale)
      scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer)
      scaleWidget.text:SetPoint(center,scaleWidget.title,center,75,0)
      scaleWidget.text:SetFontObject(defaultFont)

@@ -20,7 +20,7 @@ local removeLastActionBar ="Remove last Action Bar."
 local createNewActionBar ="Create new Action Bar."
 local hideAllActions ="Hide all tracked actions in rest zone."
 local hideFrameActions="Hide actions in this bar in rest zone."
-local hideActionsTitle ="Hide actions: "
+local hideActionsTitle ="Hide:"
 local displayWhenBoosted ="Check if you want display this spell only when BOOSTED."
 local columnsText = "Columns: "
 local alphaText = "Alpha: "
@@ -30,6 +30,7 @@ local decreaseColumns ="Decrease number of columns."
 local increaseColumns ="Decrease number of columns."
 local settingsTitle ="Settings"
 local editText ="Edit"
+local confirmReset = "Are you sure you want reset SmartBars to default state?"
 --Localization
 function Localization:LoadedMessage()
 return loadedMessage
@@ -99,5 +100,8 @@ function Localization:SettingsTitle()
 end
 function Localization:EditText()
   return editText
+end
+function Localization:ConfirmReset()
+  return confirmReset
 end
 --Revision v 0.9.8 --

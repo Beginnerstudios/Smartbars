@@ -24,7 +24,7 @@ local isCleared
 local currentSaveVersion =98
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.8 ALPHA"
+local currentVersion = "v - 0.9.8 BETA"
 local publicBuild = 98
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -112,7 +112,7 @@ function Config:ResetAll()
 end
 function Config:CreatePopup()
     StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
-      text = "Do you want to reset SmartBars to default state?",
+      text = Localization:ConfirmReset(),
       button1 = "Yes",
       button2 = "No",
       OnAccept = function()
@@ -176,5 +176,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
-
 -- Revision version v0.9.8 -----
