@@ -20,7 +20,6 @@ local frames = {};
 local frameIDs
 local optionWidgets = {}
 --Saved variables
-local globalHideRest = false
 local actionBarsSpecCount ={}
 local framesPosition = {}
 local framesScale = {}
@@ -177,7 +176,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
    
       hideWidget.checkBox:SetScript("OnClick",function (self)
       framesHideRest[i] = self:GetChecked()
-      UpdateUI()
+      UI:UpdateUI()
       end)  
       --Columns widget
   
@@ -330,7 +329,7 @@ function ActionBars:UpdateBars() --determinate if widget will be wisible or hidd
   local configMode = Config:IsConfigMode()
   local userSpec = Config:GetSpec()
   local isResting = Config:GetResting()
-  
+  local globalHideRest = UI:Get():GlobalHideRest()
  
   for actionID in pairs(actions) do  
     local slotID = actions[actionID][1]

@@ -102,7 +102,7 @@ function Templates:PrimaryFrame()
       local widget = CreateFrame("Frame",nil) 
       widget:SetSize(35,35)
       widget.checkBox = CreateFrame("CheckButton",nil, widget,defaultCheckButton,defaultLayer)
-      widget.checkBox:SetChecked(globalHideRest)
+      widget.checkBox:SetChecked(UI:Get():GlobalHideRest())
       widget.checkBox:SetSize(35,35)
       widget.checkBox:SetPoint("CENTER",widget,"CENTER",30,-30);
       widget.checkBox:SetHitRectInsets(0,0,0,0) 
@@ -270,7 +270,9 @@ function Templates:OptionWidget(index)
    restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer);
    restZoneWidget.title:SetPoint("LEFT",restZoneWidget,"CENTER",-50,0);
    restZoneWidget.title:SetFontObject(defaultFont)
-   restZoneWidget.title:SetText("Rest zone: ")   
+   restZoneWidget.title:SetText("Rest zone: ") 
+   local hiderest =ActionBars:Get():FramesHideRest()
+   restZoneWidget.checkBox:SetChecked(hiderest[index])
    return restZoneWidget
    end
    function Title()
