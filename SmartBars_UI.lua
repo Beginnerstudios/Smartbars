@@ -64,7 +64,7 @@ end
 function UI:UpdateUI() ---update all dynamic variables in UI 
   function SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
     --Count of tracked actions for specific spec
-    local trackedActions = Actions:GetTracked()
+    local trackedActions = Actions:Get()
     local trackedActionForSpecCount =0
     for actionID in pairs(trackedActions) do 
       local actionSpec = trackedActions[actionID][5] 
@@ -90,7 +90,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
   
   end
   function RefreshTrackedIcons()--update icons on tracked actions
-  local tA = Actions:GetTracked()
+  local tA = Actions:Get()
   for actionID in pairs(tA) do
     local widget =tA[actionID][3]
     local spellID = tA[actionID][2]
@@ -128,6 +128,6 @@ end
 function UI:Set(loadedGlobalHideRest)--set saved variables
  globalHideRest = loadedGlobalHideRest
 end
--- Revision version v0.9.8 ---
+-- Revision version v0.9.9 ---
 
 

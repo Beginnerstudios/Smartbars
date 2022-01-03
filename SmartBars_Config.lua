@@ -24,7 +24,7 @@ local isCleared
 local currentSaveVersion =98
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.8 BETA"
+local currentVersion = "v - 0.9.9 DEV"
 local publicBuild = 98
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -55,7 +55,7 @@ end
 UI:UpdateUI()
 end
 function Config:SaveConfig()
-    SmartBarsCharacterActions = Actions:GetTracked()   
+    SmartBarsCharacterActions = Actions:Get()   
     SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs()}
 end
 function Config:LoadConfig()  
@@ -176,4 +176,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v0.9.8 -----
+-- Revision version v0.9.9 -----

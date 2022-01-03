@@ -415,4 +415,4 @@ function Templates:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
---Revision v 0.9.8 --
+--Revision v 0.9.9 --

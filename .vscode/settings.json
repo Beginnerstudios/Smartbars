@@ -9,9 +9,7 @@
     ],
     "Lua.diagnostics.globals": [
         "SlashCmdList",
-        "nill",
         "ReloadUI",
-        "Nil",
         "C_Timer",
         "CreateFrame",
         "UIParent",
@@ -26,7 +24,7 @@
         "GetPrimaryTalentTree",
         "CreateFontString",
         "WorldFrame",
-        "v - 0.9.6"
+        "v - 0.9.9"
     ]
 }
 

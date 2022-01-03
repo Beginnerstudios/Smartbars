@@ -66,7 +66,7 @@ function Events:RegisterEvents()
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
-        local trackedActions = Actions:GetTracked()         
+        local trackedActions = Actions:Get()         
       for actionID in pairs(trackedActions) do                     
       if trackedActions[actionID][2] == a then
         trackedActions[actionID][7] = true
@@ -75,7 +75,7 @@ function Events:RegisterEvents()
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
-    local trackedActions = Actions:GetTracked()               
+    local trackedActions = Actions:Get()               
     for actionID in pairs(trackedActions) do                     
     if trackedActions[actionID][2] ==a then
       trackedActions[actionID][7] = false
@@ -83,5 +83,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v0.9.8 ----
+-- Revision version v0.9.9 ----
 

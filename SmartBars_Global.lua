@@ -9,5 +9,5 @@ function Global:GetSmartBarsInfo()
     local smartBarsPublicVersion,smartBarsPublicBuild = SmartBars.Config:GetSmartBarsInfo() 
     return SmartBars.Localization.AddonName(),smartBarsPublicVersion,smartBarsPublicBuild 
 end
--- Revision version v0.9.8 ---------------
+-- Revision version v0.9.9 ---------------
 

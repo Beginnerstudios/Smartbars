@@ -73,7 +73,7 @@ function Actions:Display(actions,frame)
       count=0
       end
       --Compare widgets with tracked actions
-      for _,v in pairs(Actions:GetTracked()) do
+      for _,v in pairs(Actions:Get()) do
       if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],API:GetSpecialization()) then
         actions[k][3]:SetChecked(true)
        end
@@ -132,10 +132,10 @@ function Actions:Delete(actionID)
     trackedActions[actionID]=nil   
 end  
 --Getters & Setters,Reset-----------------------------
-function Actions:Set(tActions)
-    trackedActions = tActions
+function Actions:Set(loadedTrackedActions)
+    trackedActions = loadedTrackedActions
 end
-function Actions:GetTracked()
+function Actions:Get()
     return trackedActions
 end
--- Revision version v0.9.8 ---
+-- Revision version v0.9.9 ---

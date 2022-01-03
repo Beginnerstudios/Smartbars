@@ -25,7 +25,7 @@ Localization:Init()
 Config:DisableOldAddon()
 Events:RegisterEvents()
 Config:CreateCommands()
-C_Timer.After(3, function()   
+C_Timer.After(2, function()   
     Config:LoadConfig() 
     UI:CreatePrimaryFrames()    
     ActionBars:Load()
@@ -33,7 +33,7 @@ C_Timer.After(3, function()
     ActionBars:StartUpdate()    
     print(Localization:LoadedMessage())   
 end)
--- Revision version v0.9.8 ----
+-- Revision version v0.9.9 ----
 
 
 
