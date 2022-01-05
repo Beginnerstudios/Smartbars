@@ -21,11 +21,11 @@ local isConfigMode = false
 local currentSpecialization
 local isCleared
 --Save data---
-local currentSaveVersion =98
+local currentSaveVersion =99
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.9 DEV"
-local publicBuild = 98
+local currentVersion = "v - 0.9.9 ALPHA"
+local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
@@ -86,12 +86,10 @@ function Config:SetDefaults()
     end 
 end
 function Config:ValidateSavedSettings()
-    for i=1,10 do
-        if not SmartBarsSettings[i] then
-            SmartBarsSettings[i] ={}
-            print("hit")
-        end
+    if not SmartBarsSettings or #SmartBarsSettings ~=10 then     
+    SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}} 
     end
+    
 end
 function Config:SetDefaultBuild()
     if not SmartBarsSavedBuild then

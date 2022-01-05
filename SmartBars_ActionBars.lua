@@ -37,20 +37,20 @@ local onUpdate = "OnUpdate"
 --ActionBars----------------------
 function ActionBars:Add()-- add new action bar to current specialization
   local spec = API:GetSpecialization()
-  if actionBarsSpecCount[spec] < 9 then
+  if actionBarsSpecCount[spec] < 10 then
   actionBarsSpecCount[spec] = actionBarsSpecCount[spec]+1
   local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID) 
-  ActionBars:ToggleWidgets(true)   
-  ActionBars:HideOptionPanels()     
-  ActionBars:ShowLastOptionWidget()
+  ActionBars:ToggleWidgets(true)      
+ -- ActionBars:ShowLastOptionWidget()
   UI:UpdateUI() 
 end
 end 
 function ActionBars:Create(i)--create action bar with for specific frameID and setup its default values
-local primaryFrame = UI:Get():PrimaryFrame()
-
+  if not frames then
+    frames ={}
+  end
   frames[i] = Templates:ActionBar(i)
   frames[i]:SetParent(updater) 
 
@@ -142,21 +142,19 @@ local primaryFrame = UI:Get():PrimaryFrame()
        end
     end
     function Scripts()
-    --  optionWidget.CloseButton:SetScript(onClick, function ()
-     -- Config:ToggleConfigMode()
-     -- end) 
+    local editButton = frames[i].configWidgets[1]
+    local optionWidget = frames[i].configWidgets[2]
+    local iconHolder = frames[i].configWidgets[3]
+    local barText = frames[i].configWidgets[2].settings[1].text
      --Edit button
-      frames[i].configWidgets[1].button:SetScript(onClick,function ()
-        ActionBars:HideOptionPanels()
-         if optionWidget:IsVisible() then
-          optionWidget:Hide()
-      else
-        optionWidget:Show()
-        end
+     editButton.button:SetScript(onClick,function ()
+    ActionBars:HideOptionPanels() 
+    optionWidget:Show()
+    barText:SetText(Localization:Bar()..ActionBars:FindIndex(i))
      end)
      --Bar navigator
      barWidget.minusButton:SetScript(onClick, function ()
-      ActionBars:HideOptionPanels() 
+    ActionBars:HideOptionPanels() 
       if ActionBars:FindIndex(i)>=2 then
         frames[i-1].configWidgets[2]:Show()
         frames[i-1].configWidgets[2].settings[1].text:SetText(Localization:Bar()..ActionBars:FindIndex(i-1))
@@ -219,11 +217,9 @@ local primaryFrame = UI:Get():PrimaryFrame()
 end
 function ActionBars:Load()--load existing or create first action bar for current spec
   local currentSpecActionsCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())
-  if currentSpecActionsCount then  
-      for frameID,v in pairs(frameIDs) do   
-        if v[3] == API:GetSpecialization() then                  
-        ActionBars:Create(frameID)      
-        end
+  if currentSpecActionsCount and currentSpecActionsCount~=0 then  
+      for frameID,v in pairs(frameIDs) do                         
+        ActionBars:Create(frameID)             
       end   
   else
   local spec = API:GetSpecialization()
@@ -232,6 +228,7 @@ function ActionBars:Load()--load existing or create first action bar for current
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID)
   end
+
 end 
 function ActionBars:Remove()--remove action bar with highestIndex
 local spec = API:GetSpecialization()
@@ -254,33 +251,29 @@ if  actionBarsSpecCount[spec] > 1 then
         local barNumber = tA[k][6]        
         if barNumber==lastFrameID then    
           tA[k][6] = tA[k][6]-1
-          print(tA[k][6])
         end 
       end 
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
 end
-ActionBars:ShowLastOptionWidget()
+--ActionBars:ShowLastOptionWidget()
 UI:UpdateUI()
 end
 function ActionBars:ToggleWidgets(value)--Toggle config mode widgets
-local actionBarFrameTemplate = "InsetFrameTemplate"
  --Actionbars
-for k in pairs(frames) do
-
- frames[k]:SetMovable(value) 
- frames[k]:EnableMouse(value)  
- 
- local configWidgets = frames[k].configWidgets
-
-   for widget in pairs(configWidgets) do
+for _,v in pairs(frameIDs) do
+  if v[3] == API:GetSpecialization() then
+  local frameID = v[1]
+  local configWidgets = frames[frameID].configWidgets
+  frames[frameID]:SetMovable(value) 
+  frames[frameID]:EnableMouse(value)  
+  for widget in pairs(configWidgets) do
     local editButton = configWidgets[1]
     local optionPanel = configWidgets[2]
     local iconHolder = configWidgets[3]
-
     if value == true then
       editButton:Show() -- edit button
       editButton.button:Show()
-      optionPanel:Show() -- option
+     
       iconHolder:Show() --icon holder   
     else
       editButton:Hide() 
@@ -289,27 +282,45 @@ for k in pairs(frames) do
       iconHolder:Show() 
     end
 
-   end          
-  
+  end          
+end
+
 end
   --ActionWidgets
   for _,v in pairs(Actions:Get()) do
     local widget = v[3]
-   if widget~=nil then
-    if value == true then
-    widget.edit:SetEnabled(true) 
-    widget.group:Show()
-    widget.charges:Hide()  
-   else
-    widget.group:Hide()
-    widget.charges:Show()
-    widget.edit:SetEnabled(value) 
-   end
-  end
+    if v[5] == API:GetSpecialization() then
+      if widget and widget.edit and widget.group and widget.charges then
+        if value == true then
+        widget.edit:SetEnabled(value) 
+        widget.group:Show()
+        widget.charges:Hide()  
+       -- ActionBars:ShowLastOptionWidget()
+       else
+        widget.group:Hide()
+        widget.charges:Show()
+        widget.edit:SetEnabled(value) 
+        ActionBars:HideOptionPanels()
+       end
+       end 
+    end
+  
   
   end
-ActionBars:ShowLastOptionWidget()
 
+
+end
+function ActionBars:Unload()
+  updater:SetScript("OnUpdate",nil)
+  for frameID in pairs(frames) do  
+  if frames[frameID] then
+  frames[frameID]:Hide()
+  frames[frameID].configWidgets[1]:Hide()
+  frames[frameID].configWidgets[2]:Hide()
+  frames[frameID].configWidgets[3]:Hide()
+    end
+  end
+  frames = nil
 end
 --OptionWidgets--------------------------
 function ActionBars:HideOptionPanels()--hide all option Panels
@@ -348,8 +359,10 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
   updater:SetScript(onUpdate, function ()
     local actions = Actions:Get()
     ActionBars:UpdateBars(actions)   
-    for frameID in pairs(frameIDs) do                 
-    ActionBars:SortBars(frameID,actions)    
+    for frameID,v in pairs(frameIDs) do 
+      if v[3] == API:GetSpecialization()then
+        ActionBars:SortBars(frameID,actions)    
+      end              
     end
     end) 
 end
@@ -369,6 +382,7 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
     local displayOnlyWhenBoosted =actions[actionID][8]
     local actionType = actions[actionID][9]  
     
+
     if Config:IsValueSame(actionSpec,userSpec) then  
   
       if globalHideRest == true and isResting ==true and configMode == false then
@@ -402,8 +416,10 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
         end 
       end    
       else
-        widget:Hide()
+      widget:Hide()
     end
+ 
+
   end
      
 end
@@ -414,28 +430,38 @@ function ActionBars:SortBars(frameID,actions)--handle displayed widget position 
   local rowCount = 0
   local iconHolder = frames[frameID].configWidgets[3]
   for actionID in pairs(actions) do
-    local actionFrameNumber = actions[actionID][6]
+    local actionFrameNumber = actions[actionID][6]      
     local widget = actions[actionID][3]
-      if actionFrameNumber == frameID and widget:IsVisible() then         
+      if actionFrameNumber == frameID and widget:IsVisible() then  
         widget:SetPoint("LEFT",iconHolder,"LEFT",startxOffset,startyOffset)        
+        widget:SetParent(iconHolder)       
         startxOffset = startxOffset +50
         if(startxOffset== framesColumn[frameID]*50) then
         startxOffset =0
         startyOffset  = startyOffset-50
         end  
       elseif actionFrameNumber == frameID then  
-        widget:SetPoint("LEFT",iconHolder,"LEFT",startxOffset,startyOffset)      
+        widget:SetPoint("LEFT",iconHolder,"LEFT",startxOffset,startyOffset)        
+        widget:SetParent(iconHolder)  
       end
+    end
   end
-end
+  
+  
+
 function ActionBars:HideDifSpecBars()--hide bars what are not in current specialization
 for frameID,v in pairs(frameIDs) do
   if v[3] ~= API:GetSpecialization() then
     if frames[frameID] then
-    frames[frameID]:Hide()
+    frames[frameID]:Hide()   
+    frames[frameID].configWidgets[1]:Hide()    
+    frames[frameID].configWidgets[2]:Hide()  
+    frames[frameID].configWidgets[3]:Hide()  
     end
   end
-end  
+  
+
+end
 end
 --Getter & Setter ------------ 
 function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsSpecCount,loadedFrameIDs,loadedFramesRows)
@@ -451,8 +477,8 @@ end
 function ActionBars:Get()                 
   local returnTable =
          {                         
-             ActionBar = function(self,barIndex)             
-                return frames[barIndex]                             
+             ActionBar = function(self,barIndex)              
+                return frames[barIndex]                                        
              end,  
              ActionBars = function(self)             
               return frames                             
@@ -477,13 +503,12 @@ function ActionBars:Get()
               local frameID
               for k,v in pairs(frameIDs) do
                 if k~=nil then
-                  if v[2]>highestID and v[3]==API:GetSpecialization() then
+                  if v[2]>=highestID and v[3]==API:GetSpecialization() then
                     highestID = v[2]
                     frameID = v[1]                
                 end   
                 end  
-            end 
-            --(highestID.."|"..frameID)                                                                                           
+            end                                                                                       
               return highestID,frameID
             end,
             FramesPosition = function(self) 

@@ -18,6 +18,7 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local displayedActions = {}
+local currentSpecActions = {}
 --Actions:Functions-----------------------
 function Actions:Add(action) 
     if action[2]/action[2] ==1 then
@@ -89,9 +90,9 @@ function Actions:Display(actions,frame)
   end                                                               
 function Actions:Load()
     local actions = trackedActions
-    if actions ~=nil then                 
-        for actionID in pairs(actions) do                     
-        Actions:Create(actions[actionID],false,true,actionID)  
+    if Config:GetTableCount(actions)>0 then                 
+        for actionID,v in pairs(actions) do                   
+            Actions:Create(actions[actionID],false,true,actionID)                    
         end       
     end
     UI:UpdateUI()
@@ -106,25 +107,24 @@ function Actions:Create(action,isEnabled,isExisting,key)
     local a
     if isExisting==true then
         curretSpec = action[5]
-        trackedFrame = action[6]
-      
+        trackedFrame = action[6]      
         showOnlyWhenBoosted = action[8]
         actionID = key  
-        actionType = action[9]     
+        actionType = action[9]       
     else  
-        actionID= Config:JoinNumber(action[2],Config:GetSpec())
+        actionID= Config:JoinNumber(action[2],API:GetSpecialization())
         curretSpec= API:GetSpecialization()
         a,trackedFrame = ActionBars:Get():HighestFrameID()  
         showOnlyWhenBoosted = false
         actionType = action[6]
-    end  
- 
-        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
-        trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
-        trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled,actionID) 
-        trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  
-  
+    end    
+      trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
+      trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
+      trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled,actionID) 
+      trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  
     
+  
+       
 
 end
 function Actions:Delete(actionID)

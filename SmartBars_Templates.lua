@@ -163,8 +163,8 @@ function Templates:ActionBar(index)
         actionBar:SetClampedToScreen(true)  
         return actionBar
         end
+        local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
         function Edit()
-          local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
           edit:SetPoint(center,actionBar,center,0,0)  
           edit:SetSize(50,50)         
           edit.button = CreateFrame(button,nil,actionBar,defaultButton,defaultLayer)
@@ -179,29 +179,27 @@ function Templates:ActionBar(index)
         end
         function OptionWidget()
           local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,defaultLayer)
-          optionWidget:SetIgnoreParentScale(true)
-          optionWidget:SetPoint(left,UI:Get():PrimaryFrame(),right,25,0)   
-          optionWidget:SetSize(150,400)   
-          optionWidget:SetScale(0.75)      
-          optionWidget:Hide()  
-          optionWidget:EnableMouse(false)  
+          optionWidget:SetPoint(left,edit,right,10,125)   
+          optionWidget:SetSize(150,250)   
+          optionWidget:SetScale(0.75)       
+          optionWidget:EnableMouse(false)          
          function BarNavigator()
           local barNavigator = CreateFrame(frame,nil,nil,nil,defaultLayer)       
           barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer)
-          barNavigator.text:SetPoint(center,barNavigator,center,0,0)
+          barNavigator.text:SetPoint(center,barNavigator,center,0,-20)
           barNavigator.text:SetFontObject(defaultFont)
           barNavigator.text:SetText(Localization:Bar()..index)
           barNavigator.text2 = barNavigator:CreateFontString(nil,defaultLayer)
-          barNavigator.text2:SetPoint(center,barNavigator,center,-15,0)
+          barNavigator.text2:SetPoint(center,barNavigator,center,-15,-20)
           barNavigator.text2:SetFontObject(defaultFont)  
          barNavigator.minusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
-         barNavigator.minusButton:SetPoint(center, barNavigator, center, -35, 0)
+         barNavigator.minusButton:SetPoint(center, barNavigator, center, -35, -20)
          barNavigator.minusButton:SetSize(25,25)
          barNavigator.minusButton:SetText(nextLeft)
          barNavigator.minusButton:SetNormalFontObject(defaultFont)    
         
           barNavigator.plusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
-          barNavigator.plusButton:SetPoint(center, barNavigator, center, 35, 0)
+          barNavigator.plusButton:SetPoint(center, barNavigator, center, 35, -20)
           barNavigator.plusButton:SetSize(25,25)
           barNavigator.plusButton:SetText(nextRight)
           barNavigator.plusButton:SetNormalFontObject(defaultFont)   
@@ -283,25 +281,19 @@ function Templates:ActionBar(index)
          restZoneWidget.checkBox:SetChecked(hiderest[index])
          return restZoneWidget
          end
-         function Title()
-          local title = optionWidget:CreateFontString(nil,defaultLayer)
-          title:SetPoint(left,optionWidget.TitleBg,left,0,-2)
-          title:SetFontObject(defaultFont)
-          title:SetText(Localization:SettingsTitle())       
-        return title   
-         end
-        optionWidget.settings = {BarNavigator(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
-        local yOfs =60
+      
+        optionWidget.settings = {BarNavigator(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget()}   
+        local yOfs =0
         for k in pairs(optionWidget.settings) do
           optionWidget.settings[k]:SetPoint(center, optionWidget,top, 0, (yOfs)*-1)
           optionWidget.settings[k]:SetParent(optionWidget)
-          optionWidget.settings[k]:SetSize(50,50)
-          yOfs = yOfs+60    
+          optionWidget.settings[k]:SetSize(35,35)
+          yOfs = yOfs+55   
         end
         return optionWidget
         end
         function IconHolder()
-          local iconHolder = CreateFrame(frame,nil,nil,actionBarFrameTemplate,defaultLayer)
+          local iconHolder = CreateFrame(frame,nil,nil,nil,defaultLayer)
           iconHolder:SetPoint(center,actionBar,center,0,-50)   
           iconHolder:SetSize(50,50)       
           iconHolder:EnableMouse(false)  

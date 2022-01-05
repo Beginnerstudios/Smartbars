@@ -42,15 +42,15 @@ function Scripts()
      
       barsWidget.minusButton:SetScript("OnClick", function ()      
         ActionBars:Remove()
-        ActionBars:ShowLastOptionWidget()
-        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
+     --   ActionBars:ShowLastOptionWidget()
+     --   barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
         
       end) 
   
       barsWidget.plusButton:SetScript("OnClick", function ()   
         ActionBars:Add()    
-        ActionBars:ShowLastOptionWidget()                                      
-        barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
+     --   ActionBars:ShowLastOptionWidget()                                      
+     --   barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
         end)
   --Option widgets
   
@@ -92,13 +92,15 @@ function UI:UpdateUI() ---update all dynamic variables in UI
   function RefreshTrackedIcons()--update icons on tracked actions
   local tA = Actions:Get()
   for actionID in pairs(tA) do
-    local widget =tA[actionID][3]
+    if actionID and tA[actionID][5]== API:GetSpecialization()  then
+      local widget =tA[actionID][3]
     local spellID = tA[actionID][2]
     local actionType = tA[actionID][9]
     local slotID = tA[actionID][1]
-    if widget~=nil then
+    if widget  then
       local newTexture= API:GetActionTexture(spellID,actionType,slotID)
       widget:SetNormalTexture(newTexture)   
+    end
     end
   end
   end

@@ -56,14 +56,16 @@ function Events:RegisterEvents()
   function Event:PLAYER_LOGOUT()   
   end
   function Event:PLAYER_SPECIALIZATION_CHANGED()
-  Config:LoadConfig()
-  ActionBars:Load()
-  ActionBars:HideDifSpecBars()
+    ActionBars:Unload()
+    Config:LoadConfig()
+    ActionBars:Load()
+    ActionBars:StartUpdate()
+ 
   local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
   if primaryIsVisible then
   Config:ToggleConfigMode()
   end
-  UI:UpdateUI()       
+ UI:UpdateUI()       
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
