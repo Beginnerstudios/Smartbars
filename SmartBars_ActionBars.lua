@@ -240,6 +240,8 @@ if  actionBarsSpecCount[spec] > 1 then
   local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
   frames[lastFrameID]:Hide()
   frames[lastFrameID].configWidgets[2]:Hide()
+  frames[lastFrameID].configWidgets[1]:Hide()
+  frames[lastFrameID].configWidgets[3]:Hide()
   frames[lastFrameID] = nil
   frameIDs[lastFrameID] = nil
   framesScale[lastFrameID] = nil 
