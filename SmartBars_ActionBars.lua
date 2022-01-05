@@ -171,7 +171,7 @@ local primaryFrame = UI:Get():PrimaryFrame()
         frames[i+1].configWidgets[2].settings[1].text:SetText(Localization:Bar()..ActionBars:FindIndex(i+1))
         else
         local frameID = ActionBars:FindFrameID(1)
-        frames[frameID].configWidgets:Show()
+        frames[frameID].configWidgets[2]:Show()
         end
       end)
       --Scale
@@ -236,7 +236,6 @@ end
 function ActionBars:Remove()--remove action bar with highestIndex
 local spec = API:GetSpecialization()
 if  actionBarsSpecCount[spec] > 1 then
-
   local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
   frames[lastFrameID]:Hide()
   frames[lastFrameID].configWidgets[2]:Hide()
@@ -255,6 +254,7 @@ if  actionBarsSpecCount[spec] > 1 then
         local barNumber = tA[k][6]        
         if barNumber==lastFrameID then    
           tA[k][6] = tA[k][6]-1
+          print(tA[k][6])
         end 
       end 
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
@@ -271,22 +271,26 @@ for k in pairs(frames) do
  frames[k]:EnableMouse(value)  
  
  local configWidgets = frames[k].configWidgets
- if value == true then
-   for widget in pairs(frames[k].configWidgets[2]) do
-    frames[k].configWidgets[1]:Show() -- edit button
-    frames[k].configWidgets[1].button:Show()
-    frames[k].configWidgets[2]:Show() -- 
-    frames[k].configWidgets[3]:Show() --icon holder    
-   end          
- else
-   for widget in pairs(frames[k].configWidgets[2]) do
-    frames[k].configWidgets[1]:Hide() 
-    frames[k].configWidgets[1].button:Hide()
-    frames[k].configWidgets[2]:Hide()   
-    frames[k].configWidgets[3]:Show() 
-    end 
- end
 
+   for widget in pairs(configWidgets) do
+    local editButton = configWidgets[1]
+    local optionPanel = configWidgets[2]
+    local iconHolder = configWidgets[3]
+
+    if value == true then
+      editButton:Show() -- edit button
+      editButton.button:Show()
+      optionPanel:Show() -- option
+      iconHolder:Show() --icon holder   
+    else
+      editButton:Hide() 
+      editButton.button:Hide()
+      optionPanel:Hide()   
+      iconHolder:Show() 
+    end
+
+   end          
+  
 end
   --ActionWidgets
   for _,v in pairs(Actions:Get()) do
@@ -300,7 +304,6 @@ end
     widget.group:Hide()
     widget.charges:Show()
     widget.edit:SetEnabled(value) 
- 
    end
   end
   
@@ -316,11 +319,11 @@ function ActionBars:HideOptionPanels()--hide all option Panels
 end
 function ActionBars:ShowLastOptionWidget() -- display optionWidget with highest index
   ActionBars:HideOptionPanels()
-  local a,lastFrameID = ActionBars:Get():HighestFrameID()
-  if frames[lastFrameID].optionWidgets then
-      frames[lastFrameID].configWidgets[2]:Show()
-      frames[lastFrameID].configWidgets[2].settings[1].text:SetText(Localization:Bar()..ActionBars:FindIndex(lastFrameID))
-  end
+  local a,lastFrameID = ActionBars:Get():HighestFrameID() 
+  local optionWidget = frames[lastFrameID].configWidgets[2]
+  local barText = frames[lastFrameID].configWidgets[2].settings[1].text
+  optionWidget:Show()
+  barText:SetText(Localization:Bar()..ActionBars:FindIndex(lastFrameID))
 
 end
 --Find-------------------------
@@ -345,10 +348,8 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
   updater:SetScript(onUpdate, function ()
     local actions = Actions:Get()
     ActionBars:UpdateBars(actions)   
-    for frameID in pairs(frameIDs) do    
-    if frames[frameID]~=nil then                 
-    ActionBars:SortBars(frameID,actions)  
-    end  
+    for frameID in pairs(frameIDs) do                 
+    ActionBars:SortBars(frameID,actions)    
     end
     end) 
 end
