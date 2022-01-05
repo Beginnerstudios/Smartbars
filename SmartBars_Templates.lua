@@ -19,6 +19,7 @@ end
 local defaultFont = "GameFontHighLight"
 local defaultLayer = "OVERLAY"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
+local actionBarFrameTemplate = "InsetFrameTemplate"
 local optionsSliderTemplate = "OptionsSliderTemplate"
 local defaultButton = "UIPanelButtonTemplate"
 local defaultCheckButton = "OptionsCheckButtonTemplate"
@@ -59,7 +60,8 @@ function Templates:PrimaryFrame()
       frame:Hide()
       frame:SetSize(320,0)
       frame:SetScale(defaultFrameScale)
-      frame:SetPoint(center,nil,center,-450,100)        
+      frame:SetPoint(center,nil,center,-450,100)  
+      frame:SetClampedToScreen(true)      
       frame.resetButton = CreateFrame(button, nil, frame,defaultButton)
       frame.resetButton:SetPoint(right,frame.TitleBg,right,-50,0)
       frame.resetButton:SetSize(50,15)
@@ -153,161 +155,167 @@ function Templates:PrimaryFrame()
     return primaryFrame,primaryOptionsWidgets
 end
 function Templates:ActionBar(index)     
-        local actionBar = CreateFrame(frame,nil,nil)
+        local actionBar = CreateFrame(frame,nil,nil,nil)
         function Frame()
         Templates:SetFrameMoveable(actionBar)
         actionBar:SetMovable(true)
-        actionBar:SetSize(150,75)
+        actionBar:SetSize(50,50)
+        actionBar:SetClampedToScreen(true)  
         return actionBar
         end
-        function Title()
-          local title = CreateFrame(frame,nil,actionBar,nil,defaultLayer)
-          title:SetPoint(center,actionBar,center,0,-1)   
-          title:SetSize(50,20)                         
-          title.text = title:CreateFontString(nil,defaultLayer)
-          title.text:SetPoint(center,title,center,-60,0)
-          title.text:SetFontObject(defaultFont)
-          title.text:SetText(Localization:Bar()..ActionBars:FindIndex(index)) 
-        return title
-        end
         function Edit()
-          local edit = CreateFrame(button,nil,actionBar,defaultButton,defaultLayer)
-          edit:SetPoint(left,actionBar,center,-40,-1)   
-          edit:SetSize(40,20)                 
-          edit.text = edit:CreateFontString(nil,defaultLayer)
-          edit.text:SetPoint(center,edit,center,0,0)
-          edit.text:SetFontObject(defaultFont)
-          edit.text:SetText(Localization:EditText())       
+          local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
+          edit:SetPoint(center,actionBar,center,0,0)  
+          edit:SetSize(50,50)         
+          edit.button = CreateFrame(button,nil,actionBar,defaultButton,defaultLayer)
+          edit.button:Hide()
+          edit.button:SetPoint(center,edit,center,0,0)   
+          edit.button:SetSize(40,20)                 
+          edit.button.text = edit:CreateFontString(nil,defaultLayer)
+          edit.button.text:SetPoint(center,edit.button,center,0,0)
+          edit.button.text:SetFontObject(defaultFont)    
+          edit.button.text:SetText(Localization:Bar()..ActionBars:FindIndex(index)) 
           return edit  
         end
+        function OptionWidget()
+          local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,defaultLayer)
+          optionWidget:SetIgnoreParentScale(true)
+          optionWidget:SetPoint(left,UI:Get():PrimaryFrame(),right,25,0)   
+          optionWidget:SetSize(150,400)   
+          optionWidget:SetScale(0.75)      
+          optionWidget:Hide()  
+          optionWidget:EnableMouse(false)  
+         function BarNavigator()
+          local barNavigator = CreateFrame(frame,nil,nil,nil,defaultLayer)       
+          barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer)
+          barNavigator.text:SetPoint(center,barNavigator,center,0,0)
+          barNavigator.text:SetFontObject(defaultFont)
+          barNavigator.text:SetText(Localization:Bar()..index)
+          barNavigator.text2 = barNavigator:CreateFontString(nil,defaultLayer)
+          barNavigator.text2:SetPoint(center,barNavigator,center,-15,0)
+          barNavigator.text2:SetFontObject(defaultFont)  
+         barNavigator.minusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
+         barNavigator.minusButton:SetPoint(center, barNavigator, center, -35, 0)
+         barNavigator.minusButton:SetSize(25,25)
+         barNavigator.minusButton:SetText(nextLeft)
+         barNavigator.minusButton:SetNormalFontObject(defaultFont)    
+        
+          barNavigator.plusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
+          barNavigator.plusButton:SetPoint(center, barNavigator, center, 35, 0)
+          barNavigator.plusButton:SetSize(25,25)
+          barNavigator.plusButton:SetText(nextRight)
+          barNavigator.plusButton:SetNormalFontObject(defaultFont)   
+          
+          return barNavigator
+         end
+         function ScaleSlider()           
+           local scaleWidget = CreateFrame(frame,nil)
+           scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer)
+           scaleWidget.title:SetPoint(left,scaleWidget,center,-50,0)
+           scaleWidget.title:SetFontObject(defaultFont)
+           scaleWidget.title:SetText(Localization:ScaleText())  
+           scaleWidget.slider = CreateFrame(slider,nil, scaleWidget,optionsSliderTemplate)
+           scaleWidget.slider:SetPoint(center,scaleWidget,center,0,-20)
+           scaleWidget.slider:SetWidth(100)
+           scaleWidget.slider:SetHeight(15)
+           scaleWidget.slider:SetMinMaxValues(minimumScale,maximumScale)
+           scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer)
+           scaleWidget.text:SetPoint(center,scaleWidget.title,center,75,0)
+           scaleWidget.text:SetFontObject(defaultFont)
+           scaleWidget.slider:SetStepsPerPage(10)      
+        
+      
+         return scaleWidget
+         end
+         function AlphaSlider()           
+           local alphaWidget = CreateFrame(frame,nil)
+           alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer)
+           alphaWidget.title:SetPoint(left,alphaWidget,center,-50,0)
+           alphaWidget.title:SetFontObject(defaultFont)
+           alphaWidget.title:SetText(Localization:AlphaText())  
+           alphaWidget.slider = CreateFrame(slider,nil, alphaWidget,optionsSliderTemplate)
+           alphaWidget.slider:SetPoint(center,alphaWidget,center,0,-20)
+           alphaWidget.slider:SetWidth(100)
+           alphaWidget.slider:SetHeight(15)
+           alphaWidget.slider:SetMinMaxValues(0.3,1)
+           alphaWidget.text = alphaWidget:CreateFontString(nil,defaultLayer)
+           alphaWidget.text:SetPoint(center,alphaWidget.title,center,70,0)
+           alphaWidget.text:SetFontObject(defaultFont)
+           alphaWidget.slider:SetStepsPerPage(10)             
+         return alphaWidget
+         end
+         function ColumnsWidgets()
+         local columnsWidget = CreateFrame(frame,nil) 
+         columnsWidget.text = columnsWidget:CreateFontString(nil,defaultLayer)
+         columnsWidget.text:SetPoint(left,columnsWidget,center,-50,0)
+         columnsWidget.text:SetFontObject(defaultFont)
+         columnsWidget.text:SetText(Localization:ColumnText())
+         columnsWidget.text2 = columnsWidget:CreateFontString(nil,defaultLayer)
+         columnsWidget.text2:SetPoint(center,columnsWidget,center,35,0)
+         columnsWidget.text2:SetFontObject(defaultFont)
+      
+         columnsWidget.minusButton = CreateFrame(button,nil, columnsWidget,defaultButton,defaultLayer)
+         columnsWidget.minusButton:SetPoint(left, columnsWidget, center, 0, -20)
+         columnsWidget.minusButton:SetSize(25,25)
+         columnsWidget.minusButton:SetText(minus)
+         columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
+         columnsWidget.minusButton.tooltipText = Localization:DecreaseColumns()  
+         columnsWidget.plusButton = CreateFrame(button,nil, columnsWidget,defaultButton,defaultLayer)
+         columnsWidget.plusButton:SetPoint(left, columnsWidget, center, 22, -20)
+         columnsWidget.plusButton:SetSize(25,25)
+         columnsWidget.plusButton:SetText(plus)
+         columnsWidget.plusButton:SetNormalFontObject(defaultFont) 
+         columnsWidget.plusButton.tooltipText = Localization:IncreaseColumns() 
+         return columnsWidget
+         end      
+         function RestZoneWidget()
+         local restZoneWidget = CreateFrame(frame,nil) 
+         restZoneWidget.checkBox = CreateFrame(checkButton,nil,restZoneWidget,defaultCheckButton,defaultLayer)
+         restZoneWidget.checkBox.tooltipText = Localization:HideFrameActions()
+         restZoneWidget.checkBox:SetHitRectInsets(0,0,0,0) 
+         restZoneWidget.checkBox:SetSize(35,35)
+         restZoneWidget.checkBox:SetPoint(right,restZoneWidget,center,50,00)
+         restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer)
+         restZoneWidget.title:SetPoint(left,restZoneWidget,center,-50,0)
+         restZoneWidget.title:SetFontObject(defaultFont)
+         restZoneWidget.title:SetText(Localization:HideActionsTitle()) 
+         local hiderest =ActionBars:Get():FramesHideRest()
+         restZoneWidget.checkBox:SetChecked(hiderest[index])
+         return restZoneWidget
+         end
+         function Title()
+          local title = optionWidget:CreateFontString(nil,defaultLayer)
+          title:SetPoint(left,optionWidget.TitleBg,left,0,-2)
+          title:SetFontObject(defaultFont)
+          title:SetText(Localization:SettingsTitle())       
+        return title   
+         end
+        optionWidget.settings = {BarNavigator(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
+        local yOfs =60
+        for k in pairs(optionWidget.settings) do
+          optionWidget.settings[k]:SetPoint(center, optionWidget,top, 0, (yOfs)*-1)
+          optionWidget.settings[k]:SetParent(optionWidget)
+          optionWidget.settings[k]:SetSize(50,50)
+          yOfs = yOfs+60    
+        end
+        return optionWidget
+        end
+        function IconHolder()
+          local iconHolder = CreateFrame(frame,nil,nil,actionBarFrameTemplate,defaultLayer)
+          iconHolder:SetPoint(center,actionBar,center,0,-50)   
+          iconHolder:SetSize(50,50)       
+          iconHolder:EnableMouse(false)  
+          return iconHolder
+        end
         actionBar=Frame()       
-        actionBar.configWidgets = {Title(),Edit()}
-        for k in pairs(actionBar.configWidgets) do
-          actionBar.configWidgets[k]:Hide()
+        actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
+        for k in pairs(actionBar.configWidgets) do       
+          if k~=3 then
+            actionBar.configWidgets[k]:Hide()
+          end
         end
         return actionBar
 end 
-function Templates:OptionWidget(index)
-    local optionWidget = CreateFrame(frame,nil,nil,basicFrameWithInset,defaultLayer)
-    optionWidget:SetPoint(left,UI:Get():PrimaryFrame(),right,0,0)   
-    optionWidget:SetSize(150,400)         
-    optionWidget:Hide() 
-    optionWidget:EnableMouse(false)  
-   function BarNavigator()
-    local barNavigator = CreateFrame(frame,nil,nil,nil,defaultLayer)       
-    barNavigator.text = barNavigator:CreateFontString(nil,defaultLayer)
-    barNavigator.text:SetPoint(center,barNavigator,center,0,0)
-    barNavigator.text:SetFontObject(defaultFont)
-    barNavigator.text:SetText(Localization:Bar()..index)
-    barNavigator.text2 = barNavigator:CreateFontString(nil,defaultLayer)
-    barNavigator.text2:SetPoint(center,barNavigator,center,-15,0)
-    barNavigator.text2:SetFontObject(defaultFont)  
-   barNavigator.minusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
-   barNavigator.minusButton:SetPoint(center, barNavigator, center, -35, 0)
-   barNavigator.minusButton:SetSize(25,25)
-   barNavigator.minusButton:SetText(nextLeft)
-   barNavigator.minusButton:SetNormalFontObject(defaultFont)    
-  
-    barNavigator.plusButton = CreateFrame(button,nil, barNavigator,defaultButton,defaultLayer)
-    barNavigator.plusButton:SetPoint(center, barNavigator, center, 35, 0)
-    barNavigator.plusButton:SetSize(25,25)
-    barNavigator.plusButton:SetText(nextRight)
-    barNavigator.plusButton:SetNormalFontObject(defaultFont)   
-    
-    return barNavigator
-   end
-   function ScaleSlider()           
-     local scaleWidget = CreateFrame(frame,nil)
-     scaleWidget.title = scaleWidget:CreateFontString(nil,defaultLayer)
-     scaleWidget.title:SetPoint(left,scaleWidget,center,-50,0)
-     scaleWidget.title:SetFontObject(defaultFont)
-     scaleWidget.title:SetText(Localization:ScaleText())  
-     scaleWidget.slider = CreateFrame(slider,nil, scaleWidget,optionsSliderTemplate)
-     scaleWidget.slider:SetPoint(center,scaleWidget,center,0,-20)
-     scaleWidget.slider:SetWidth(100)
-     scaleWidget.slider:SetHeight(15)
-     scaleWidget.slider:SetMinMaxValues(minimumScale,maximumScale)
-     scaleWidget.text = scaleWidget:CreateFontString(nil,defaultLayer)
-     scaleWidget.text:SetPoint(center,scaleWidget.title,center,75,0)
-     scaleWidget.text:SetFontObject(defaultFont)
-     scaleWidget.slider:SetStepsPerPage(10)      
-  
-
-   return scaleWidget
-   end
-   function AlphaSlider()           
-     local alphaWidget = CreateFrame(frame,nil)
-     alphaWidget.title = alphaWidget:CreateFontString(nil,defaultLayer)
-     alphaWidget.title:SetPoint(left,alphaWidget,center,-50,0)
-     alphaWidget.title:SetFontObject(defaultFont)
-     alphaWidget.title:SetText(Localization:AlphaText())  
-     alphaWidget.slider = CreateFrame(slider,nil, alphaWidget,optionsSliderTemplate)
-     alphaWidget.slider:SetPoint(center,alphaWidget,center,0,-20)
-     alphaWidget.slider:SetWidth(100)
-     alphaWidget.slider:SetHeight(15)
-     alphaWidget.slider:SetMinMaxValues(0.3,1)
-     alphaWidget.text = alphaWidget:CreateFontString(nil,defaultLayer)
-     alphaWidget.text:SetPoint(center,alphaWidget.title,center,70,0)
-     alphaWidget.text:SetFontObject(defaultFont)
-     alphaWidget.slider:SetStepsPerPage(10)             
-   return alphaWidget
-   end
-   function ColumnsWidgets()
-   local columnsWidget = CreateFrame(frame,nil) 
-   columnsWidget.text = columnsWidget:CreateFontString(nil,defaultLayer)
-   columnsWidget.text:SetPoint(left,columnsWidget,center,-50,0)
-   columnsWidget.text:SetFontObject(defaultFont)
-   columnsWidget.text:SetText(Localization:ColumnText())
-   columnsWidget.text2 = columnsWidget:CreateFontString(nil,defaultLayer)
-   columnsWidget.text2:SetPoint(center,columnsWidget,center,35,0)
-   columnsWidget.text2:SetFontObject(defaultFont)
-
-   columnsWidget.minusButton = CreateFrame(button,nil, columnsWidget,defaultButton,defaultLayer)
-   columnsWidget.minusButton:SetPoint(left, columnsWidget, center, 0, -20)
-   columnsWidget.minusButton:SetSize(25,25)
-   columnsWidget.minusButton:SetText(minus)
-   columnsWidget.minusButton:SetNormalFontObject(defaultFont)    
-   columnsWidget.minusButton.tooltipText = Localization:DecreaseColumns()  
-   columnsWidget.plusButton = CreateFrame(button,nil, columnsWidget,defaultButton,defaultLayer)
-   columnsWidget.plusButton:SetPoint(left, columnsWidget, center, 22, -20)
-   columnsWidget.plusButton:SetSize(25,25)
-   columnsWidget.plusButton:SetText(plus)
-   columnsWidget.plusButton:SetNormalFontObject(defaultFont) 
-   columnsWidget.plusButton.tooltipText = Localization:IncreaseColumns() 
-   return columnsWidget
-   end      
-   function RestZoneWidget()
-   local restZoneWidget = CreateFrame(frame,nil) 
-   restZoneWidget.checkBox = CreateFrame(checkButton,nil,restZoneWidget,defaultCheckButton,defaultLayer)
-   restZoneWidget.checkBox.tooltipText = Localization:HideFrameActions()
-   restZoneWidget.checkBox:SetHitRectInsets(0,0,0,0) 
-   restZoneWidget.checkBox:SetSize(35,35)
-   restZoneWidget.checkBox:SetPoint(right,restZoneWidget,center,50,00)
-   restZoneWidget.title = restZoneWidget:CreateFontString(nil,defaultLayer)
-   restZoneWidget.title:SetPoint(left,restZoneWidget,center,-50,0)
-   restZoneWidget.title:SetFontObject(defaultFont)
-   restZoneWidget.title:SetText(Localization:HideActionsTitle()) 
-   local hiderest =ActionBars:Get():FramesHideRest()
-   restZoneWidget.checkBox:SetChecked(hiderest[index])
-   return restZoneWidget
-   end
-   function Title()
-    local title = optionWidget:CreateFontString(nil,defaultLayer)
-    title:SetPoint(left,optionWidget.TitleBg,left,0,-2)
-    title:SetFontObject(defaultFont)
-    title:SetText(Localization:SettingsTitle())       
-  return title   
-   end
-  optionWidget.settings = {BarNavigator(),ScaleSlider(),AlphaSlider(),ColumnsWidgets(),RestZoneWidget(),Title()}   
-  local yOfs =60
-  for k in pairs(optionWidget.settings) do
-    optionWidget.settings[k]:SetPoint(center, optionWidget,top, 0, (yOfs)*-1)
-    optionWidget.settings[k]:SetParent(optionWidget)
-    optionWidget.settings[k]:SetSize(50,50)
-    yOfs = yOfs+60    
-  end
-  return optionWidget
-end
 function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
   local yOfs = -15
   local newWidget = CreateFrame(frame,nil, parentWidget)

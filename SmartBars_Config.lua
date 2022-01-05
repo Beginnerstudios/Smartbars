@@ -56,7 +56,7 @@ UI:UpdateUI()
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:Get()   
-    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs()}
+    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs(),ActionBars:Get():FramesRows()}
 end
 function Config:LoadConfig()  
 Actions:Set(SmartBarsCharacterActions)
@@ -70,7 +70,8 @@ ActionBars:Set(
     SmartBarsSettings[4], --framescolumn
     SmartBarsSettings[5],  --framesrest
     SmartBarsSettings[6],  --actionBarCount for each spec
-    SmartBarsSettings[9]   --frameIdNumbers
+    SmartBarsSettings[9],   --frameIdNumbers
+    SmartBarsSettings[10]   --framesRows
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
@@ -81,8 +82,16 @@ function Config:SetDefaults()
         SmartBarsCharacterActions = {}      
     end
     if not SmartBarsSettings then
-        SmartBarsSettings = {{},{},{},{},{},{},false,false,{}}     
+        SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}}     
     end 
+end
+function Config:ValidateSavedSettings()
+    for i=1,10 do
+        if not SmartBarsSettings[i] then
+            SmartBarsSettings[i] ={}
+            print("hit")
+        end
+    end
 end
 function Config:SetDefaultBuild()
     if not SmartBarsSavedBuild then

@@ -119,7 +119,7 @@ function Actions:Create(action,isEnabled,isExisting,key)
         actionType = action[6]
     end  
  
-        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame),true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
+        trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
         trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
         trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled,actionID) 
         trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  

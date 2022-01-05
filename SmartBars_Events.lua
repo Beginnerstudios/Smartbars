@@ -43,6 +43,7 @@ function Events:RegisterEvents()
 
   function Event:PLAYER_LOGIN() 
     Config:SetDefaultBuild()
+    Config:ValidateSavedSettings()
     local version,build,savedBuild = Config:GetSmartBarsInfo()
     if savedBuild < build then
       SmartBarsCharacterActions = nil
