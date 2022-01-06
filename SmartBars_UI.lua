@@ -37,20 +37,12 @@ function Scripts()
   
     restZoneWidget.checkBox:SetScript("OnClick",function (self)
     globalHideRest = self:GetChecked()
-    UI:UpdateUI()
-    end)
-     
+    end)   
       barsWidget.minusButton:SetScript("OnClick", function ()      
         ActionBars:Remove()
-     --   ActionBars:ShowLastOptionWidget()
-     --   barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
-        
       end) 
-  
       barsWidget.plusButton:SetScript("OnClick", function ()   
-        ActionBars:Add()    
-     --   ActionBars:ShowLastOptionWidget()                                      
-     --   barsWidget.textValue:SetText(ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()))
+        ActionBars:Add()     
         end)
   --Option widgets
   

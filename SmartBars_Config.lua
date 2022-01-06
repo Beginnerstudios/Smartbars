@@ -21,10 +21,10 @@ local isConfigMode = false
 local currentSpecialization
 local isCleared
 --Save data---
-local currentSaveVersion =99
+local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.9 ALPHA"
+local currentVersion = "v - 0.9.9"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()

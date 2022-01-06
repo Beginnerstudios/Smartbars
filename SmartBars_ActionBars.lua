@@ -37,13 +37,12 @@ local onUpdate = "OnUpdate"
 --ActionBars----------------------
 function ActionBars:Add()-- add new action bar to current specialization
   local spec = API:GetSpecialization()
-  if actionBarsSpecCount[spec] < 10 then
+  if actionBarsSpecCount[spec] < 9 then
   actionBarsSpecCount[spec] = actionBarsSpecCount[spec]+1
   local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID) 
   ActionBars:ToggleWidgets(true)      
- -- ActionBars:ShowLastOptionWidget()
   UI:UpdateUI() 
 end
 end 
@@ -54,7 +53,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
   frames[i] = Templates:ActionBar(i)
   frames[i]:SetParent(updater) 
 
-  function SetupSettings(i)--Setup variables for action bar position,scale etc..
+  function SetupActionBars(i)--Setup variables for action bar position,scale etc..
     local defaultFrameScale = 0.75
     local defaultFrameAlpha = 1
     local scaleWidget = frames[i].configWidgets[2].settings[2]
@@ -63,22 +62,17 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     local hideWidget = frames[i].configWidgets[2].settings[5]
     local optionWidget = frames[i].configWidgets[2]
     local barWidget = frames[i].configWidgets[2].settings[1]
-  
-
     function Position()
     if not framesPosition[i]  then
       local i = ActionBars:FindIndex(i)
-      local rowCount =10
-      local xOffset = 0   
-      local yOffset = 300 - (i*70)
+      local rowCount =5
+      local xOffset = -100   
+      local yOffset = 280 - (i*70)
       local point = "CENTER"
       local relativePoint = "CENTER"
         if i>rowCount and i<=2*rowCount then
-          xOffset=150
-          yOffset=300 - ((i-rowCount)*70)  
-        elseif i>2*rowCount then
-        xOffset=300
-        yOffset=300 - ((i-2*(rowCount))*70)  
+          xOffset=100
+          yOffset=280 - ((i-rowCount)*70)          
         end
     i = ActionBars:FindFrameID(i)
     frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
@@ -141,69 +135,95 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
          hideWidget.checkBox:SetChecked(value)
        end
     end
-    function Scripts()
-    local editButton = frames[i].configWidgets[1]
+    function Scripts()    
     local optionWidget = frames[i].configWidgets[2]
     local iconHolder = frames[i].configWidgets[3]
     local barText = frames[i].configWidgets[2].settings[1].text
-     --Edit button
-     editButton.button:SetScript(onClick,function ()
-    ActionBars:HideOptionPanels() 
-    optionWidget:Show()
-    barText:SetText(Localization:Bar()..ActionBars:FindIndex(i))
-     end)
-     --Bar navigator
-     barWidget.minusButton:SetScript(onClick, function ()
-    ActionBars:HideOptionPanels() 
-      if ActionBars:FindIndex(i)>=2 then
-        frames[i-1].configWidgets[2]:Show()
-        frames[i-1].configWidgets[2].settings[1].text:SetText(Localization:Bar()..ActionBars:FindIndex(i-1))
-      elseif ActionBars:FindIndex(i) ==1 then                  
-        ActionBars:ShowLastOptionWidget()
+    function EditButton()
+      local editButton = frames[i].configWidgets[1] 
+      editButton.button:SetScript(onClick,function ()
+        if optionWidget:IsVisible() then
+          optionWidget:Hide()
+        else
+          optionWidget:Show()
         end
+        barText:SetText(Localization:Bar()..ActionBars:FindIndex(i))
+      end) 
+    end 
+    function BarNavigator()
+      barWidget.minusButton:SetScript(onClick, function ()
+        ActionBars:HideOptionPanels() 
+         if ActionBars:FindIndex(i)>=2 then
+          local previousWidget = frames[i-1].configWidgets[2]
+          local previousText = frames[i-1].configWidgets[2].settings[1].text
+           previousWidget:Show()
+           previousText:SetText(Localization:Bar()..ActionBars:FindIndex(i-1))
+         elseif ActionBars:FindIndex(i) ==1 then                  
+          function ShowLastOptionWidget()
+            ActionBars:HideOptionPanels()
+            local a,lastFrameID = ActionBars:Get():HighestFrameID() 
+            local optionWidget = frames[lastFrameID].configWidgets[2]
+            local barText = frames[lastFrameID].configWidgets[2].settings[1].text
+            optionWidget:Show()
+            barText:SetText(Localization:Bar()..ActionBars:FindIndex(lastFrameID))
+ 
+          end
+          ShowLastOptionWidget()
+           end
       end) 
       barWidget.plusButton:SetScript(onClick, function ()
-        ActionBars:HideOptionPanels()
-        if frameIDs[i+1] then
-        frames[i+1].configWidgets[2]:Show()
-        frames[i+1].configWidgets[2].settings[1].text:SetText(Localization:Bar()..ActionBars:FindIndex(i+1))
-        else
-        local frameID = ActionBars:FindFrameID(1)
-        frames[frameID].configWidgets[2]:Show()
-        end
+           ActionBars:HideOptionPanels()
+           if frameIDs[i+1] then
+            local nextWidget = frames[i+1].configWidgets[2]
+            local nextText = frames[i+1].configWidgets[2].settings[1].text
+          nextWidget:Show()
+          nextText:SetText(Localization:Bar()..ActionBars:FindIndex(i+1))
+           else  
+            local frameID = i
+            optionWidget:Show()       
+           
+           end
       end)
-      --Scale
-
+    end
+    function Scale()
       scaleWidget.slider:SetScript(onValueChanged, function (self) 
-      frames[i].configWidgets[3]:SetScale(self:GetValue())  
-      framesScale[i] = self:GetValue()      
-      scaleWidget.text:SetText(Config:RoundNumber(framesScale[i],2))      
-      end)   
-      --Alpha
-    
-      alphaWidget.slider:SetScript(onValueChanged, function (self)  
-      frames[i].configWidgets[3]:SetAlpha(self:GetValue()) 
-      framesAlpha[i] = self:GetValue() 
-      alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i],2))    
-        end)
-      --Rest zone widget
-   
+        iconHolder:SetScale(self:GetValue())  
+        framesScale[i] = self:GetValue()      
+        scaleWidget.text:SetText(Config:RoundNumber(framesScale[i],2))      
+        end) 
+    end     
+    function Alpha()
+        alphaWidget.slider:SetScript(onValueChanged, function (self)  
+          iconHolder:SetAlpha(self:GetValue()) 
+          framesAlpha[i] = self:GetValue() 
+          alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i],2))    
+            end)  
+    end
+    function Hide()
       hideWidget.checkBox:SetScript(onClick,function (self)
-      framesHideRest[i] = self:GetChecked()
-      UI:UpdateUI()
-      end)  
-      --Columns widget
-  
+        framesHideRest[i] = self:GetChecked()
+        UI:UpdateUI()
+        end) 
+    end
+    function Columns()
       columnsWidget.minusButton:SetScript(onClick, function ()
-      if framesColumn[i]>= 2 then
-      framesColumn[i] = framesColumn[i] -1
-      columnsWidget.text2:SetText(framesColumn[i])
-      end
-      end) 
-      columnsWidget.plusButton:SetScript(onClick, function ()  
-      framesColumn[i] = framesColumn[i] +1
-      columnsWidget.text2:SetText(framesColumn[i])  
-      end)
+        if framesColumn[i]>= 2 then
+        framesColumn[i] = framesColumn[i] -1
+        columnsWidget.text2:SetText(framesColumn[i])
+        end
+        end) 
+        columnsWidget.plusButton:SetScript(onClick, function ()  
+        framesColumn[i] = framesColumn[i] +1
+        columnsWidget.text2:SetText(framesColumn[i])  
+        end)
+    end
+    EditButton()  
+    BarNavigator() 
+    Scale()
+    Alpha()
+    Hide()
+    Columns()
+
     end
     Position()
     Scale()
@@ -213,7 +233,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     Hide()
     Scripts()
   end
-  SetupSettings(i) 
+  SetupActionBars(i) 
 end
 function ActionBars:Load()--load existing or create first action bar for current spec
   local currentSpecActionsCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())
@@ -255,60 +275,7 @@ if  actionBarsSpecCount[spec] > 1 then
       end 
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
 end
---ActionBars:ShowLastOptionWidget()
 UI:UpdateUI()
-end
-function ActionBars:ToggleWidgets(value)--Toggle config mode widgets
- --Actionbars
-for _,v in pairs(frameIDs) do
-  if v[3] == API:GetSpecialization() then
-  local frameID = v[1]
-  local configWidgets = frames[frameID].configWidgets
-  frames[frameID]:SetMovable(value) 
-  frames[frameID]:EnableMouse(value)  
-  for widget in pairs(configWidgets) do
-    local editButton = configWidgets[1]
-    local optionPanel = configWidgets[2]
-    local iconHolder = configWidgets[3]
-    if value == true then
-      editButton:Show() -- edit button
-      editButton.button:Show()
-     
-      iconHolder:Show() --icon holder   
-    else
-      editButton:Hide() 
-      editButton.button:Hide()
-      optionPanel:Hide()   
-      iconHolder:Show() 
-    end
-
-  end          
-end
-
-end
-  --ActionWidgets
-  for _,v in pairs(Actions:Get()) do
-    local widget = v[3]
-    if v[5] == API:GetSpecialization() then
-      if widget and widget.edit and widget.group and widget.charges then
-        if value == true then
-        widget.edit:SetEnabled(value) 
-        widget.group:Show()
-        widget.charges:Hide()  
-       -- ActionBars:ShowLastOptionWidget()
-       else
-        widget.group:Hide()
-        widget.charges:Show()
-        widget.edit:SetEnabled(value) 
-        ActionBars:HideOptionPanels()
-       end
-       end 
-    end
-  
-  
-  end
-
-
 end
 function ActionBars:Unload()
   updater:SetScript("OnUpdate",nil)
@@ -318,25 +285,65 @@ function ActionBars:Unload()
   frames[frameID].configWidgets[1]:Hide()
   frames[frameID].configWidgets[2]:Hide()
   frames[frameID].configWidgets[3]:Hide()
-    end
+  end
   end
   frames = nil
 end
---OptionWidgets--------------------------
+--Widgets--------------------------
 function ActionBars:HideOptionPanels()--hide all option Panels
   for i in pairs(frames) do
     frames[i].configWidgets[2]:Hide()
   end
 end
-function ActionBars:ShowLastOptionWidget() -- display optionWidget with highest index
-  ActionBars:HideOptionPanels()
-  local a,lastFrameID = ActionBars:Get():HighestFrameID() 
-  local optionWidget = frames[lastFrameID].configWidgets[2]
-  local barText = frames[lastFrameID].configWidgets[2].settings[1].text
-  optionWidget:Show()
-  barText:SetText(Localization:Bar()..ActionBars:FindIndex(lastFrameID))
-
-end
+function ActionBars:ToggleWidgets(value)--Toggle config mode widgets
+  --Actionbars
+ for _,v in pairs(frameIDs) do
+   if v[3] == API:GetSpecialization() then
+   local frameID = v[1]
+   local configWidgets = frames[frameID].configWidgets
+   frames[frameID]:SetMovable(value) 
+   frames[frameID]:EnableMouse(value)  
+   for widget in pairs(configWidgets) do
+     local editButton = configWidgets[1]
+     local optionPanel = configWidgets[2]
+     local iconHolder = configWidgets[3]
+     if value == true then
+       editButton:Show() -- edit button
+       editButton.button:Show()
+      
+       iconHolder:Show() --icon holder   
+     else
+       editButton:Hide() 
+       editButton.button:Hide()
+       optionPanel:Hide()   
+       iconHolder:Show() 
+     end
+ 
+   end          
+ end
+ 
+ end
+  --ActionWidgets
+ for _,v in pairs(Actions:Get()) do
+     local widget = v[3]
+     if v[5] == API:GetSpecialization() then
+       if widget and widget.edit and widget.group and widget.charges then
+         if value == true then
+         widget.edit:SetEnabled(value) 
+         widget.group:Show()
+         widget.charges:Hide()  
+        else
+         widget.group:Hide()
+         widget.charges:Show()
+         widget.edit:SetEnabled(value) 
+         ActionBars:HideOptionPanels()
+        end
+        end 
+     end
+   
+   
+ end
+ end
 --Find-------------------------
 function ActionBars:FindIndex(frameID) --return frameIndex based on frameID
   local frameIndex
@@ -446,23 +453,6 @@ function ActionBars:SortBars(frameID,actions)--handle displayed widget position 
       end
     end
   end
-  
-  
-
-function ActionBars:HideDifSpecBars()--hide bars what are not in current specialization
-for frameID,v in pairs(frameIDs) do
-  if v[3] ~= API:GetSpecialization() then
-    if frames[frameID] then
-    frames[frameID]:Hide()   
-    frames[frameID].configWidgets[1]:Hide()    
-    frames[frameID].configWidgets[2]:Hide()  
-    frames[frameID].configWidgets[3]:Hide()  
-    end
-  end
-  
-
-end
-end
 --Getter & Setter ------------ 
 function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsSpecCount,loadedFrameIDs,loadedFramesRows)
   framesPosition = loadedFramesPosition

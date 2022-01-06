@@ -1,8 +1,8 @@
-## Interface: 11401
+## Interface:11401 
 ## Title: SmartBars
 ## Notes: Tracking actions you select.
 ## Author: BStudios
-## Version:0.9.8
+## Version:0.9.9
 ## SavedVariablesPerCharacter:SmartBarsCharacterActions,SmartBarsSettings,SmartBarsSavedBuild
 
 SmartBars_Global.lua
@@ -15,4 +15,3 @@ SmartBars_Templates.lua
 SmartBars_ActionBars.lua
 SmartBars_Localization.lua
 SmartBars_Core.lua
-

@@ -33,7 +33,7 @@ C_Timer.After(2, function()
     ActionBars:StartUpdate()    
     print(Localization:LoadedMessage())   
 end)
--- Revision version v0.9.9 ----
+-- Revision version v0.9.9 -----
 
 
 
