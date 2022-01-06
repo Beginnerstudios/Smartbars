@@ -18,6 +18,8 @@ end
 -----DEV XML Variables--------------
 local defaultFont = "GameFontHighLight"
 local defaultLayer = "ARTWORK"
+local backgroundFrameStrata ="BACKGROUND"
+local highFrameStrata="HIGH"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
 local actionBarFrameTemplate = "InsetFrameTemplate"
 local optionsSliderTemplate = "OptionsSliderTemplate"
@@ -58,6 +60,7 @@ function Templates:PrimaryFrame()
     function Frame()
       local frame = CreateFrame(frame,nil,nil,basicFrameWithInset,defaultLayer)
       Templates:SetFrameMoveable(frame)  
+      frame:SetFrameStrata(backgroundFrameStrata)
       frame:Hide()
       frame:SetSize(320,0)
       frame:SetScale(defaultFrameScale)
@@ -156,21 +159,22 @@ function Templates:PrimaryFrame()
     return primaryFrame,primaryOptionsWidgets
 end
 function Templates:ActionBar(index)     
-        local actionBar = CreateFrame(frame,nil,nil,nil)
+        local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)
         function Frame()
         Templates:SetFrameMoveable(actionBar)
+        actionBar:SetFrameStrata("LOW")
         actionBar:SetMovable(true)
-        actionBar:SetSize(50,50)
+        actionBar:SetSize(20,20)
         actionBar:SetClampedToScreen(true)  
         return actionBar
         end
         local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
         function Edit()
           edit:SetPoint(center,actionBar,center,0,0)  
-          edit:SetSize(50,50)         
+          edit:SetSize(15,15)         
           edit.button = CreateFrame(button,nil,actionBar,defaultButton,defaultLayer)
           edit.button:Hide()
-          edit.button:SetPoint(center,edit,center,0,0)   
+          edit.button:SetPoint(center,edit,center,30,0)   
           edit.button:SetSize(40,20)                 
           edit.button.text = edit.button:CreateFontString(nil,defaultLayer)
           edit.button.text:SetPoint(center,edit.button,center,0,0)
@@ -180,7 +184,8 @@ function Templates:ActionBar(index)
         end
         function OptionWidget()
           local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,overlayLayer)
-          optionWidget:SetPoint(left,edit,right,10,125)   
+          optionWidget:SetFrameStrata(highFrameStrata)
+          optionWidget:SetPoint(left,edit,right,10,140)   
           optionWidget:SetSize(150,250)   
           optionWidget:SetScale(0.75)       
           optionWidget:EnableMouse(false)        

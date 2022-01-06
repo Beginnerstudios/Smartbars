@@ -24,7 +24,7 @@ local isCleared
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 0.9.9"
+local currentVersion = "v - 1.0.0"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -84,12 +84,6 @@ function Config:SetDefaults()
     if not SmartBarsSettings then
         SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}}     
     end 
-end
-function Config:ValidateSavedSettings()
-    if not SmartBarsSettings or #SmartBarsSettings ~=10 then     
-    SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}} 
-    end
-    
 end
 function Config:SetDefaultBuild()
     if not SmartBarsSavedBuild then

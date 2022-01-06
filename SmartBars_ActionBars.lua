@@ -142,7 +142,9 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     function EditButton()
       local editButton = frames[i].configWidgets[1] 
       editButton.button:SetScript(onClick,function ()
+        
         if optionWidget:IsVisible() then
+          ActionBars:HideOptionPanels()
           optionWidget:Hide()
         else
           optionWidget:Show()
