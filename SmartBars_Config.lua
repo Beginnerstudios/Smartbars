@@ -45,10 +45,10 @@ function Config:ToggleConfigMode()
         Actions:Display(usedActions,primaryFrame,true)  
         primaryFrame:Show()                
         isConfigMode =true           
-        ActionBars:ToggleWidgets(true)            
+        ActionBars:Toggle(true)            
     else
         primaryFrame:Hide()                                               
-        ActionBars:ToggleWidgets(false)
+        ActionBars:Toggle(false)
         Config:SaveConfig()
         isConfigMode =false 
 end

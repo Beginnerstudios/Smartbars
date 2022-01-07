@@ -42,7 +42,7 @@ function ActionBars:Add()-- add new action bar to current specialization
   local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID) 
-  ActionBars:ToggleWidgets(true)      
+  ActionBars:Toggle(true)      
   UI:UpdateUI() 
 end
 end 
@@ -260,9 +260,7 @@ local spec = API:GetSpecialization()
 if  actionBarsSpecCount[spec] > 1 then
   local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
   frames[lastFrameID]:Hide()
-  frames[lastFrameID].configWidgets[2]:Hide()
   frames[lastFrameID].configWidgets[1]:Hide()
-  frames[lastFrameID].configWidgets[3]:Hide()
   frames[lastFrameID] = nil
   frameIDs[lastFrameID] = nil
   framesScale[lastFrameID] = nil 
@@ -283,24 +281,21 @@ end
 UI:UpdateUI()
 end
 function ActionBars:Unload()
-  updater:SetScript("OnUpdate",nil)
+  updater:SetScript(onUpdate,nil)
   for frameID in pairs(frames) do  
   if frames[frameID] then
   frames[frameID]:Hide()
-  frames[frameID].configWidgets[1]:Hide()
-  frames[frameID].configWidgets[2]:Hide()
-  frames[frameID].configWidgets[3]:Hide()
   end
   end
   frames = nil
 end
 --Widgets--------------------------
 function ActionBars:HideOptionPanels()--hide all option Panels
-  for i in pairs(frames) do
-    frames[i].configWidgets[2]:Hide()
+  for frameID in pairs(frames) do
+    frames[frameID].configWidgets[2]:Hide()
   end
 end
-function ActionBars:ToggleWidgets(value)--Toggle config mode widgets
+function ActionBars:Toggle(value)--Toggle config mode widgets
   --Actionbars
  for _,v in pairs(frameIDs) do
    if v[3] == API:GetSpecialization() then
@@ -370,15 +365,15 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
   updater = CreateFrame("Frame",nil,nil)
   updater:SetScript(onUpdate, function ()
     local actions = Actions:Get()
-    ActionBars:UpdateBars(actions)   
+    ActionBars:Update(actions)   
     for frameID,v in pairs(frameIDs) do 
       if v[3] == API:GetSpecialization()then
-        ActionBars:SortBars(frameID,actions)    
+        ActionBars:Sort(frameID,actions)    
       end              
     end
     end) 
 end
-function ActionBars:UpdateBars(actions) --determinate if widget will be visible or hidden
+function ActionBars:Update(actions) --determinate if widget will be visible or hidden
   local configMode = Config:IsConfigMode()
   local userSpec = Config:GetSpec()
   local isResting = Config:GetResting()
@@ -444,7 +439,7 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
   end
      
 end
-function ActionBars:SortBars(frameID,actions)--handle displayed widget position and parent
+function ActionBars:Sort(frameID,actions)--handle displayed widget position and parent
   local startxOffset = 0
   local startyOffset = 0
   local count =0
