@@ -63,7 +63,6 @@ function Templates:PrimaryFrame()
       local frame = CreateFrame(frame,nil,nil,basicFrameWithInset,defaultLayer)
       Templates:SetFrameMoveable(frame)  
       frame:SetFrameStrata(backgroundFrameStrata)
-      frame:Hide()
       frame:SetSize(320,0)
       frame:SetScale(defaultFrameScale)
       frame:SetPoint(center,nil,center,-450,100)  
@@ -406,6 +405,7 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked)--Return widg
    actionWidget:SetHighlightTexture(nil)
    actionWidget:SetPushedTexture(nil) 
   else
+    actionWidget:SetFrameStrata(backgroundFrameStrata)
    actionWidget:SetHighlightTexture(newTexture)
    actionWidget:SetPushedTexture(newTexture)
   end

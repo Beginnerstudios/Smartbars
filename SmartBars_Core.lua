@@ -11,7 +11,6 @@ local Templates = SmartBars.Templates
 local ActionBars = SmartBars.ActionBars
 local Localization = SmartBars.Localization
 --LoadingMessage--------------------------
---Core:Functions--------------------------
 --Init------------------------------------
 UI:Init()
 Actions:Init()
@@ -21,16 +20,28 @@ API:Init()
 Templates:Init()
 ActionBars:Init()
 Localization:Init()
---Program run-----------------------------
-Config:DisableOldAddon()
-Events:RegisterEvents()
-Config:CreateCommands()
-C_Timer.After(2, function()   
-    Config:LoadConfig() 
-    UI:Create()    
+--Core:Functions--------------------------
+function Core:Init()
+    Config:DisableOldAddon()
+    Events:RegisterEvents()
+    Config:CreateCommands()  
+end
+function Core:Unload()
+    ActionBars:StopUpdate()
+    ActionBars:Unload()
+    Actions:Unload()
+end
+function Core:Load()
+    Config:LoadConfig()   
     ActionBars:Load()
     Actions:Load()
-    ActionBars:StartUpdate()    
+    ActionBars:StartUpdate()  
+    UI:RefreshTrackedIcons()
+end
+--Program run-----------------------------
+Core:Init()
+C_Timer.After(2, function()   
+    Core:Load()   
     print(Localization:LoadedMessage())   
 end)
 -- Revision version v1.0.2 -----

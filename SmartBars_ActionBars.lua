@@ -43,7 +43,7 @@ function ActionBars:Add()-- add new action bar to current specialization
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
   ActionBars:Create(frameID) 
   ActionBars:Toggle(true)      
-  UI:UpdateUI() 
+  UI:Update() 
 end
 end 
 function ActionBars:Create(i)--create action bar with for specific frameID and setup its default values
@@ -207,7 +207,6 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     function Hide()
       hideWidget.checkBox:SetScript(onClick,function (self)
         framesHideRest[i] = self:GetChecked()
-        UI:UpdateUI()
         end) 
     end
     function Columns()
@@ -269,7 +268,7 @@ if  actionBarsSpecCount[spec] > 1 then
   framesHideRest[lastFrameID] =nil
   framesColumn[lastFrameID] = nil
   
-  local tA = Actions:Get()
+  local tA = Actions:GetCurrent()
       for k in pairs(tA) do
         local barNumber = tA[k][6]        
         if barNumber==lastFrameID then    
@@ -278,10 +277,12 @@ if  actionBarsSpecCount[spec] > 1 then
       end 
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
 end
-UI:UpdateUI()
+UI:Update()
+end
+function ActionBars:StopUpdate()
+updater:SetScript(onUpdate,nil)
 end
 function ActionBars:Unload()
-  updater:SetScript(onUpdate,nil)
   for frameID in pairs(frames) do  
   if frames[frameID] then
   frames[frameID]:Hide()
@@ -324,7 +325,7 @@ function ActionBars:Toggle(value)--Toggle config mode widgets
  
  end
   --ActionWidgets
- for _,v in pairs(Actions:Get()) do
+ for _,v in pairs(Actions:GetCurrent()) do
      local widget = v[3]
      if v[5] == API:GetSpecialization() then
        if widget and widget.edit and widget.group and widget.charges then
@@ -364,7 +365,7 @@ end
 function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate event (refreshing actions every frame)
   updater = CreateFrame("Frame",nil,nil)
   updater:SetScript(onUpdate, function ()
-    local actions = Actions:Get()
+    local actions = Actions:GetCurrent()
     ActionBars:Update(actions)   
     for frameID,v in pairs(frameIDs) do 
       if v[3] == API:GetSpecialization()then

@@ -38,24 +38,19 @@ function Config:CreateCommands()
     end
 end
 function Config:ToggleConfigMode()
-    local primaryFrame = UI:Get():PrimaryFrame()
-    local usedActions = API:GetUserActions()
-
-    if  isConfigMode==false then    
-        Actions:Display(usedActions,primaryFrame,true)  
-        primaryFrame:Show()                
+    if  isConfigMode==false then   
+        UI:Create()              
         isConfigMode =true           
         ActionBars:Toggle(true)            
     else
-        primaryFrame:Hide()                                               
+        UI:Delete()                                            
         ActionBars:Toggle(false)
         Config:SaveConfig()
         isConfigMode =false 
 end
-UI:UpdateUI()
 end
 function Config:SaveConfig()
-    SmartBarsCharacterActions = Actions:Get()   
+    SmartBarsCharacterActions = Actions:GetTracked()   
     SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs(),ActionBars:Get():FramesRows()}
 end
 function Config:LoadConfig()  

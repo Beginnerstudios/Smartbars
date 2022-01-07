@@ -25,6 +25,7 @@ function Scripts()
 
     --Primary Frame
   primaryFrame.CloseButton:SetScript("OnClick", function ()
+  UI:Delete()
   Config:ToggleConfigMode()
     end) 
     primaryFrame.resetButton:SetScript("OnClick", function ()
@@ -49,14 +50,58 @@ function Scripts()
   
 
 end
- primaryFrame,primaryOptionsWidgets = Templates:PrimaryFrame()
- Scripts()
+primaryFrame,primaryOptionsWidgets = Templates:PrimaryFrame()
+Scripts()
+function CreateUserActions(actions)
+  local xOffstet = 0
+  local yOffset = -20
+  local count = 0 
+  for k in pairs(actions) do
+    local widget = actions[k][3]
+    widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
+    widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
+    local actionType =actions[k][6]
+    local actionID = actions[k][2]
+    local actionName = API:GetDisplayedActionInfo(actionID,actionType)
+    if actionType =="item" then
+      widget.tooltipText = actionType.." - "..actionName
+    else
+      widget.tooltipText = actionName
+    end
+    xOffstet = xOffstet+50
+    count = count +1
+    --Next line after 12 spells
+    if(count==6) then
+      yOffset = yOffset -55
+      xOffstet = 0
+      count=0
+    end
+    --Compare widgets with tracked actions
+    for _,v in pairs(Actions:GetTracked()) do
+      if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],API:GetSpecialization()) then
+        widget:SetChecked(true)
+      end
+    end
+    -- ACTION WIDGETS -- EVENTS 
+    widget:SetScript("OnClick",function (self) 
+    Actions:Add(actions[k]) end)  
+  end  
+  UI:Update()
+end 
+CreateUserActions(API:GetUserActions(),primaryFrame)    
+end
+function UI:Delete()
+  if primaryFrame and primaryOptionsWidgets then
+    primaryFrame:Hide()
+    primaryFrame = nil
+    primaryOptionsWidgets = nil
+  end
 end
 --UI:Update-------------------------------
-function UI:UpdateUI() ---update all dynamic variables in UI 
+function UI:Update() ---update all dynamic variables in UI 
   function SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
     --Count of tracked actions for specific spec
-    local trackedActions = Actions:Get()
+    local trackedActions = Actions:GetCurrent()
     local trackedActionForSpecCount =0
     for actionID in pairs(trackedActions) do 
       local actionSpec = trackedActions[actionID][5] 
@@ -81,23 +126,7 @@ function UI:UpdateUI() ---update all dynamic variables in UI
     primaryOptionsWidgets[3].textValue:SetText(barCount)
   
   end
-  function RefreshTrackedIcons()--update icons on tracked actions
-  local tA = Actions:Get()
-  for actionID in pairs(tA) do
-    if actionID and tA[actionID][5]== API:GetSpecialization()  then
-      local widget =tA[actionID][3]
-    local spellID = tA[actionID][2]
-    local actionType = tA[actionID][9]
-    local slotID = tA[actionID][1]
-    if widget  then
-      local newTexture= API:GetActionTexture(spellID,actionType,slotID)
-      widget:SetNormalTexture(newTexture)   
-    end
-    end
-  end
-  end
     SetupPrimaryFrame()
-    RefreshTrackedIcons()
     Config:SaveConfig()
 end
 --Getters & Setters-----------------------------
@@ -116,6 +145,21 @@ function UI:Get()   --get values from SmartBars_UI
          }
  return returnTable
 end
+function UI:RefreshTrackedIcons()--update icons on tracked actions
+  local cA = Actions:GetCurrent()
+  for actionID in pairs(cA) do
+    if actionID and cA[actionID][5]== API:GetSpecialization()  then
+      local widget =cA[actionID][3]
+    local spellID = cA[actionID][2]
+    local actionType = cA[actionID][9]
+    local slotID = cA[actionID][1]
+    if widget  then
+      local newTexture= API:GetActionTexture(spellID,actionType,slotID)
+      widget:SetNormalTexture(newTexture)   
+    end
+    end
+  end
+  end
 function UI:GetGlobalHideRest()   --get values from SmartBars_UI                                                                                                       
     return  globalHideRest
 end

@@ -53,20 +53,20 @@ function Events:RegisterEvents()
   function Event:PLAYER_LOGOUT()   
   end
   function Event:PLAYER_SPECIALIZATION_CHANGED()
-    ActionBars:Unload()
-    Config:LoadConfig()
-    ActionBars:Load()
-    ActionBars:StartUpdate()
- 
-  local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
-  if primaryIsVisible then
-  Config:ToggleConfigMode()
+  Core:Unload()
+  Core:Load()
+  if UI:Get():PrimaryFrame() then
+    local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
+    if primaryIsVisible then
+      UI:Delete()
+      Config:ToggleConfigMode()
+      end 
   end
- UI:UpdateUI()       
+ 
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
-        local trackedActions = Actions:Get()         
+        local trackedActions = Actions:GetCurrent()         
       for actionID in pairs(trackedActions) do                     
       if trackedActions[actionID][2] == a then
         trackedActions[actionID][7] = true
@@ -75,7 +75,7 @@ function Events:RegisterEvents()
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
-    local trackedActions = Actions:Get()               
+    local trackedActions = Actions:GetCurrent()               
     for actionID in pairs(trackedActions) do                     
     if trackedActions[actionID][2] ==a then
       trackedActions[actionID][7] = false

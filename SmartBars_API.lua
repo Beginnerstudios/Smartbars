@@ -42,7 +42,7 @@ function API:GetActionCooldown(spellID,actionType)
    
 end
 function API:GetBuildInfo()
-    local version,build,date,iterface = GetBuildInfo()
+    local iterface = select(4, GetBuildInfo(pvptalent))
     return iterface  
 end
 function API:IsUsableAction(action,actionType)
@@ -64,8 +64,7 @@ function API:GetPlayerAuraBySpellID(spellID)
     else   
         local buffIndex
        for buffIndex=1,32 do
-        local   name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, 
-        buffID, canApply = UnitBuff(player, buffIndex)     
+        local buffID = select(10, UnitBuff(player, buffIndex))   
         if buffID ~=nil then 
             if buffID ==spellID then       
                 return true
@@ -101,7 +100,7 @@ function API:GetActionCharges(slotID,actionType)
       return currentItemCharges
     end
  elseif actionType ==spell then
-    local currentSpellCharges, maxCharges, cooldownStart, cooldownDuration, chargeModRate = GetSpellCharges(slotID)
+    local currentSpellCharges = GetSpellCharges(slotID)
   
     if currentSpellCharges == 0 or currentSpellCharges==nil  then 
         return ""
@@ -118,7 +117,7 @@ function API:GetUserActions()
     local slotCount = 120
     local allSlotTable = {}
         for i=1,slotCount do
-            local actionType,actionID,subType = API:GetActionInfo(i)
+            local actionType,actionID = API:GetActionInfo(i)
                  if actionID ~=nil and strmatch(actionID,"%d") and actionType==spell or actionType ==item then
                     allSlotTable[actionID] = {i,actionID,nil,"",currentSpecialization,actionType}           --- [1]slot id [2]spellID
                 end
