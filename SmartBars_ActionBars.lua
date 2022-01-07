@@ -382,6 +382,7 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
   local configMode = Config:IsConfigMode()
   local userSpec = Config:GetSpec()
   local isResting = Config:GetResting()
+  local isPvPing = Config:GetPvPing()
   local globalHideRest = UI:GetGlobalHideRest()
  
   for actionID in pairs(actions) do  
@@ -393,10 +394,13 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
     local isBoosted = actions[actionID][7]   
     local displayOnlyWhenBoosted =actions[actionID][8]
     local actionType = actions[actionID][9]  
+    local isPVPspell = actions[actionID][10]  
     
 
     if Config:IsValueSame(actionSpec,userSpec) then  
-  
+      if spellID ==  353082 then
+       -- print(isPVPspell)        
+      end
       if globalHideRest == true and isResting ==true and configMode == false then
        widget:Hide()
       else
@@ -407,9 +411,9 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
         widget.charges:SetText(chargesText)          
         if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
           widget:Show()
-          if isBoosted then
-            ActionButton_ShowOverlayGlow(widget)
-          end                      
+          if isBoosted == true then
+            ActionButton_ShowOverlayGlow(widget)       
+          end                             
         else             
           if isResting and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted or globalHideRest == true and isResting  then  
             widget:Hide()  
@@ -420,8 +424,13 @@ function ActionBars:UpdateBars(actions) --determinate if widget will be visible 
               local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
               if isUserBuffedBy then
                 widget:Hide()                      
-              else                
-                widget:Show() 
+              else     
+                if isPvPing == false and isPVPspell == true then
+                  widget:Hide()
+                else
+                  widget:Show()               
+                  ActionButton_HideOverlayGlow(widget)
+                end           
               end                                                            
             end         
           end   

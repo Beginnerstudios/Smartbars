@@ -425,7 +425,9 @@ function Templates:SetFrameMoveable(frame)
       frame.configWidgets[3]:SetFrameStrata(tooltipFrameStrata) 
       frame:SetFrameStrata("TOOLTIP") 
     end
+    if frame.configWidgets then
     HandleLayers()
+    end
 
   frame:StartMoving()
   end)
@@ -438,7 +440,9 @@ function Templates:SetFrameMoveable(frame)
       frame.configWidgets[3]:SetFrameStrata(mediumFrameStrata) 
       frame.configWidgets[1].button.text:SetDrawLayer("BACKGROUND")
     end
+    if frame.configWidgets then
     HandleLayers()
+    end
   frame:StopMovingOrSizing()
   Config:SaveConfig()
   end)

@@ -76,6 +76,20 @@ end
    
       
 end
+function API:IsPVPTalent(spellID)
+    if Config:IsCurrentPatch() then       
+        local talents = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
+        for _,pvptalent in pairs(talents) do
+            local talentID = select(6, GetPvpTalentInfoByID(pvptalent))
+            if talentID == spellID then
+                return true
+            end
+        end 
+    else
+      return false
+    end
+
+end
 function API:GetActionCharges(slotID,actionType)  
  
  if actionType==item then
@@ -113,6 +127,13 @@ function API:GetUserActions()
 end
 function API:IsResting()
     return IsResting()
+end
+function API:IsPvPing()
+    if Config:IsCurrentPatch() then
+    return C_PvP.IsWarModeDesired()
+    else
+        return false
+    end
 end
 function API:IsActionInRange(slotID,actionType)
   

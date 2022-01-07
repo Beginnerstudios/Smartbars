@@ -105,20 +105,27 @@ function Actions:Create(action,isEnabled,isExisting,key)
     local showOnlyWhenBoosted = nil
     local actionType = nil
     local a
+    local isPVP
     if isExisting==true then
         curretSpec = action[5]
         trackedFrame = action[6]      
         showOnlyWhenBoosted = action[8]
         actionID = key  
-        actionType = action[9]       
+        actionType = action[9]  
+        if not action[10] then
+        isPVP = API:IsPVPTalent(action[2])
+        else
+        isPVP = action[10]
+        end     
     else  
         actionID= Config:JoinNumber(action[2],API:GetSpecialization())
         curretSpec= API:GetSpecialization()
         a,trackedFrame = ActionBars:Get():HighestFrameID()  
         showOnlyWhenBoosted = false
         actionType = action[6]
+        isPVP = API:IsPVPTalent(action[2])
     end    
-      trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType} 
+      trackedActions[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType,isPVP} 
       trackedActions[actionID][3].edit = Templates:CreateEditBox(trackedActions[actionID][3],trackedActions[actionID],isEnabled)  
       trackedActions[actionID][3].group = Templates:CreateGroupLayout(trackedActions[actionID][3],trackedActions[actionID],isEnabled,actionID) 
       trackedActions[actionID][3].charges = Templates:CreateFontString(trackedActions[actionID][3],15)  
