@@ -24,7 +24,7 @@ local isCleared
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.1"
+local currentVersion = "v - 1.0.2 DEV"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -124,7 +124,7 @@ function Config:CreatePopup()
       hideOnEscape = true,
       preferredIndex = 3,
     }
-  end
+end
 --Getter&Setter----------------------------
 function Config:GetSpec()
     return currentSpecialization   
@@ -180,4 +180,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v0.9.9 -----
+-- Revision version v 1.0.2 -----

@@ -27,7 +27,7 @@ local alphaText = "Alpha: "
 local scaleText = "Scale: "
 local changeBar ="Change bar."
 local decreaseColumns ="Decrease number of columns."
-local increaseColumns ="Decrease number of columns."
+local increaseColumns ="Increase number of columns."
 local settingsTitle ="Settings"
 local editText ="Edit"
 local confirmReset = "Are you sure you want reset SmartBars to default state?"
@@ -104,4 +104,4 @@ end
 function Localization:ConfirmReset()
   return confirmReset
 end
---Revision v 1.0.0 ---
+--Revision v 1.0.2 ---

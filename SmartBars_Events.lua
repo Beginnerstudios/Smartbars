@@ -35,8 +35,6 @@ function Events:RegisterEvents()
   frame:RegisterEvent(glowShow)
   frame:RegisterEvent(glowHide)
   end
- 
-
   frame:SetScript(onEvent, function(self, event, ...)
     Event[event](MyAddon, ...)
   end)
@@ -85,5 +83,5 @@ function Events:RegisterEvents()
   end
   end
 end
--- Revision version v1.0.0 ----.
+-- Revision version v1.0.2 ----.
 

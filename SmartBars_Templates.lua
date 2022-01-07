@@ -447,4 +447,4 @@ function Templates:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
---Revision v 1.0.0 --
+--Revision v 1.0.2 --

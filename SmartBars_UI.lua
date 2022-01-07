@@ -20,7 +20,7 @@ local primaryOptionsWidgets = {}
 --Saved variables
 local globalHideRest = false
 --UI:Frames-------------------------------
-function UI:CreatePrimaryFrames()--Create primary frame + ActionUpdater frame 
+function UI:Create()--Create primary frame + ActionUpdater frame 
 function Scripts()
 
     --Primary Frame

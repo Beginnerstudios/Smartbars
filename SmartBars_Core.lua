@@ -27,13 +27,13 @@ Events:RegisterEvents()
 Config:CreateCommands()
 C_Timer.After(2, function()   
     Config:LoadConfig() 
-    UI:CreatePrimaryFrames()    
+    UI:Create()    
     ActionBars:Load()
     Actions:Load()
     ActionBars:StartUpdate()    
     print(Localization:LoadedMessage())   
 end)
--- Revision version v1.0.0 -----
+-- Revision version v1.0.2 -----
 
 
 

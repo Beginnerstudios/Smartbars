@@ -461,7 +461,7 @@ function ActionBars:Sort(frameID,actions)--handle displayed widget position and 
         widget:SetParent(iconHolder)  
       end
     end
-  end
+end
 --Getter & Setter ------------ 
 function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsSpecCount,loadedFrameIDs,loadedFramesRows)
   framesPosition = loadedFramesPosition

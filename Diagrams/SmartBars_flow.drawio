@@ -40,7 +40,7 @@
                 <mxCell id="2" value="User view" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-30" y="280" width="1020" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="&lt;div&gt;v - 1.0.0&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="13" value="&lt;div&gt;v - 1.0.2&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-30" y="340" width="150" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="ActionBars" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">

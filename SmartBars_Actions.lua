@@ -18,7 +18,6 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local displayedActions = {}
-local currentSpecActions = {}
 --Actions:Functions-----------------------
 function Actions:Add(action) 
     if action[2]/action[2] ==1 then
@@ -87,7 +86,7 @@ function Actions:Display(actions,frame)
     end  
   displayedActions = actions
   UI:UpdateUI()
-  end                                                               
+end                                                               
 function Actions:Load()
     local actions = trackedActions
     if Config:GetTableCount(actions)>0 then                 
@@ -145,4 +144,4 @@ end
 function Actions:Get()
     return trackedActions
 end
--- Revision version v1.0.0 ----
+-- Revision version v1.0.2 ----
