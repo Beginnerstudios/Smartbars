@@ -141,13 +141,16 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     local barText = frames[i].configWidgets[2].settings[1].text
     function EditButton()
       local editButton = frames[i].configWidgets[1] 
-      editButton.button:SetScript(onClick,function ()
-        
+      editButton.button:SetScript(onClick,function ()        
         if optionWidget:IsVisible() then
-          ActionBars:HideOptionPanels()
           optionWidget:Hide()
         else
           optionWidget:Show()
+          for k,v in pairs(frames) do
+            if k ~=i then
+              frames[k].configWidgets[2]:Hide()
+            end
+          end
         end
         barText:SetText(Localization:Bar()..ActionBars:FindIndex(i))
       end) 

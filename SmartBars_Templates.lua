@@ -20,6 +20,8 @@ local defaultFont = "GameFontHighLight"
 local defaultLayer = "ARTWORK"
 local backgroundFrameStrata ="BACKGROUND"
 local highFrameStrata="HIGH"
+local mediumFrameStrata = "MEDIUM"
+local tooltipFrameStrata = "TOOLTIP"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
 local actionBarFrameTemplate = "InsetFrameTemplate"
 local optionsSliderTemplate = "OptionsSliderTemplate"
@@ -162,7 +164,7 @@ function Templates:ActionBar(index)
         local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)
         function Frame()
         Templates:SetFrameMoveable(actionBar)
-        actionBar:SetFrameStrata("LOW")
+        actionBar:SetFrameStrata(mediumFrameStrata)
         actionBar:SetMovable(true)
         actionBar:SetSize(20,20)
         actionBar:SetClampedToScreen(true)  
@@ -171,12 +173,13 @@ function Templates:ActionBar(index)
         local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
         function Edit()
           edit:SetPoint(center,actionBar,center,0,0)  
+          actionBar:SetFrameStrata(backgroundFrameStrata)
           edit:SetSize(15,15)         
-          edit.button = CreateFrame(button,nil,actionBar,defaultButton,defaultLayer)
+          edit.button = CreateFrame(button,nil,actionBar,defaultButton,"BACKGROUND")
           edit.button:Hide()
           edit.button:SetPoint(center,edit,center,30,0)   
           edit.button:SetSize(40,20)                 
-          edit.button.text = edit.button:CreateFontString(nil,defaultLayer)
+          edit.button.text = edit.button:CreateFontString(nil,"BACKGROUND")
           edit.button.text:SetPoint(center,edit.button,center,0,0)
           edit.button.text:SetFontObject(defaultFont)    
           edit.button.text:SetText(Localization:Bar()..ActionBars:FindIndex(index)) 
@@ -399,6 +402,7 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked)--Return widg
   local spellID = action[2] 
   local newTexture= API:GetActionTexture(spellID,action[6],action[1])
   if isTracked then
+    actionWidget:SetFrameStrata(mediumFrameStrata)
    actionWidget:SetHighlightTexture(nil)
    actionWidget:SetPushedTexture(nil) 
   else
@@ -414,11 +418,29 @@ function Templates:SetFrameMoveable(frame)
   frame:SetMovable(true)
   frame:RegisterForDrag(leftButton)
   frame:SetScript(onDragStart,function ()
+    function HandleLayers()
+      frame.configWidgets[1]:SetFrameStrata(tooltipFrameStrata)  
+      frame.configWidgets[1].button.text:SetDrawLayer("OVERLAY")
+      frame.configWidgets[2]:SetFrameStrata(tooltipFrameStrata)  
+      frame.configWidgets[3]:SetFrameStrata(tooltipFrameStrata) 
+      frame:SetFrameStrata("TOOLTIP") 
+    end
+    HandleLayers()
+
   frame:StartMoving()
   end)
   frame:SetScript(onDragStop,function ()
+    function HandleLayers()
+      frame:SetFrameStrata(mediumFrameStrata) 
+      frame.configWidgets[1]:SetFrameStrata(backgroundFrameStrata)  
+      frame.configWidgets[1].button:SetFrameStrata("BACKGROUND")
+      frame.configWidgets[2]:SetFrameStrata(highFrameStrata)  
+      frame.configWidgets[3]:SetFrameStrata(mediumFrameStrata) 
+      frame.configWidgets[1].button.text:SetDrawLayer("BACKGROUND")
+    end
+    HandleLayers()
   frame:StopMovingOrSizing()
   Config:SaveConfig()
   end)
 end
---Revision v 0.9.9 --
+--Revision v 1.0.0 --

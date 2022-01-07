@@ -24,7 +24,7 @@ local isCleared
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.0"
+local currentVersion = "v - 1.0.0 BETA"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()

@@ -2,7 +2,7 @@
 ## Title: SmartBars
 ## Notes: Tracking actions you select.
 ## Author: BStudios
-## Version:0.9.9
+## Version:1.0.0
 ## SavedVariablesPerCharacter:SmartBarsCharacterActions,SmartBarsSettings,SmartBarsSavedBuild
 
 SmartBars_Global.lua

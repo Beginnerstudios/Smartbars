@@ -122,6 +122,6 @@ end
 function UI:Set(loadedGlobalHideRest)--set saved variables
  globalHideRest = loadedGlobalHideRest
 end
--- Revision version v0.9.9 ---
+-- Revision version v1.0.0 ---
 
 
