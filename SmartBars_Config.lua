@@ -20,24 +20,25 @@ end
 local isConfigMode = false
 local currentSpecialization
 local isCleared
+local globalHideRest
 --Save data---
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.2 DEV"
+local currentVersion = "v - 1.0.2 BETA"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_BS1 = "/bs"
     SLASH_SB1 = "/sb"
     SlashCmdList["BS"] = function()
-    Config:ToggleConfigMode()
+    Config:Toggle()
     end
     SlashCmdList["SB"] = function()
-    Config:ToggleConfigMode()
+    Config:Toggle()
     end
 end
-function Config:ToggleConfigMode()
+function Config:Toggle()
     if  isConfigMode==false then   
         UI:Create()              
         isConfigMode =true           
@@ -51,13 +52,11 @@ end
 end
 function Config:SaveConfig()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),UI:Get():GlobalHideRest(),isCleared,ActionBars:Get():FrameIDs(),ActionBars:Get():FramesRows()}
+    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),globalHideRest,isCleared,ActionBars:Get():FrameIDs(),ActionBars:Get():FramesRows()}
 end
 function Config:LoadConfig()  
-Actions:Set(SmartBarsCharacterActions)
-UI:Set(    
-    SmartBarsSettings[7]  --global hide in restzone    
-)
+Actions:Set(SmartBarsCharacterActions)   
+globalHideRest=SmartBarsSettings[7]  --global hide in restzone    
 ActionBars:Set(
     SmartBarsSettings[1], --framesposition
     SmartBarsSettings[2], --framesscale
@@ -120,15 +119,15 @@ function Config:CreatePopup()
       preferredIndex = 3,
     }
 end
+function Config:SetGlobalHideRest(value)
+globalHideRest = value
+end
 --Getter&Setter----------------------------
 function Config:GetSpec()
     return currentSpecialization   
 end
-function Config:GetResting()
-    return API:IsResting()
-end
-function Config:GetPvPing()
-    return API:IsPvPing()
+function Config:GetGlobalHideRest()
+    return globalHideRest
 end
 function Config:GetSmartBarsPublicInfo()
     local smartBarsVersion = currentVersion

@@ -22,6 +22,7 @@ local playerLogout = "PLAYER_LOGOUT"
 local specChanged ="PLAYER_SPECIALIZATION_CHANGED"
 local glowShow = "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
 local glowHide = "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE"
+local toggleWarmode = "WAR_MODE_STATUS_UPDATE"
 local onEvent ="OnEvent"
 --Events:Functions------------------------
 function Events:RegisterEvents()
@@ -31,6 +32,7 @@ function Events:RegisterEvents()
   frame:RegisterEvent(playerLogout)
   Config:CreatePopup()
   if Config:IsCurrentPatch() then
+  frame:RegisterEvent(toggleWarmode)
   frame:RegisterEvent(specChanged)
   frame:RegisterEvent(glowShow)
   frame:RegisterEvent(glowHide)
@@ -38,7 +40,9 @@ function Events:RegisterEvents()
   frame:SetScript(onEvent, function(self, event, ...)
     Event[event](MyAddon, ...)
   end)
-
+  function Event:WAR_MODE_STATUS_UPDATE(...) 
+    print(...)         
+  end
   function Event:PLAYER_LOGIN() 
     Config:SetDefaultBuild()
     local version,build,savedBuild = Config:GetSmartBarsInfo()
@@ -55,14 +59,10 @@ function Events:RegisterEvents()
   function Event:PLAYER_SPECIALIZATION_CHANGED()
   Core:Unload()
   Core:Load()
-  if UI:Get():PrimaryFrame() then
-    local primaryIsVisible = UI:Get():PrimaryFrame():IsVisible()
-    if primaryIsVisible then
+  if UI:GetIsVisible()==true then
       UI:Delete()
-      Config:ToggleConfigMode()
-      end 
-  end
- 
+      Config:Toggle()
+  end 
   end
   function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...

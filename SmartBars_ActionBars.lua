@@ -164,7 +164,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
            previousWidget:Show()
            previousText:SetText(Localization:Bar()..ActionBars:FindIndex(i-1))
          elseif ActionBars:FindIndex(i) ==1 then                  
-          function ShowLastOptionWidget()
+        function ShowLastOptionWidget()
             ActionBars:HideOptionPanels()
             local a,lastFrameID = ActionBars:Get():HighestFrameID() 
             local optionWidget = frames[lastFrameID].configWidgets[2]
@@ -172,9 +172,9 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
             optionWidget:Show()
             barText:SetText(Localization:Bar()..ActionBars:FindIndex(lastFrameID))
  
-          end
+        end
           ShowLastOptionWidget()
-           end
+        end
       end) 
       barWidget.plusButton:SetScript(onClick, function ()
            ActionBars:HideOptionPanels()
@@ -375,11 +375,11 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
     end) 
 end
 function ActionBars:Update(actions) --determinate if widget will be visible or hidden
-  local configMode = Config:IsConfigMode()
-  local userSpec = Config:GetSpec()
-  local isResting = Config:GetResting()
-  local isPvPing = Config:GetPvPing()
-  local globalHideRest = UI:GetGlobalHideRest()
+  local configMode = Config:IsConfigMode() --1 in config
+  local userSpec = Config:GetSpec() -- 1 in config
+  local isResting = API:IsResting() --1 in config
+  local isPvPing = API:IsPvPing() -- 1 in config
+  local globalHideRest = Config:GetGlobalHideRest() --1 ab 1 ui
  
   for actionID in pairs(actions) do  
     local slotID = actions[actionID][1]

@@ -15,43 +15,36 @@ ActionBars = SmartBars.ActionBars
 end
 --Variables-------------------------------
 --Primaryframe
-local primaryFrame   
-local primaryOptionsWidgets = {}
---Saved variables
-local globalHideRest = false
+local primaryFrame 
+local isVisible = false  
+--DevEvents--
+local onClick ="OnClick"
+
 --UI:Frames-------------------------------
 function UI:Create()--Create primary frame + ActionUpdater frame 
 function Scripts()
-
-    --Primary Frame
-  primaryFrame.CloseButton:SetScript("OnClick", function ()
+local configWidgets = primaryFrame.configWidgets
+primaryFrame.CloseButton:SetScript(onClick, function ()
   UI:Delete()
-  Config:ToggleConfigMode()
-    end) 
-    primaryFrame.resetButton:SetScript("OnClick", function ()
-      StaticPopup_Show ("SMARTBARS_RESETCONFIRM")  
-    end)
-    ---Primary options widgets
-    local staticTitles = primaryOptionsWidgets[1]
-    local restZoneWidget = primaryOptionsWidgets[2]
-    local barsWidget = primaryOptionsWidgets[3]
-  
-    restZoneWidget.checkBox:SetScript("OnClick",function (self)
-    globalHideRest = self:GetChecked()
-    end)   
-      barsWidget.minusButton:SetScript("OnClick", function ()      
-        ActionBars:Remove()
-      end) 
-      barsWidget.plusButton:SetScript("OnClick", function ()   
-        ActionBars:Add()     
-        end)
-  --Option widgets
-  
-  
-
+  Config:Toggle()
+end) 
+primaryFrame.resetButton:SetScript(onClick, function ()
+  local confirmPopup = "SMARTBARS_RESETCONFIRM"
+  StaticPopup_Show (confirmPopup)  
+end)
+local staticTitles = configWidgets[1]
+local restZoneWidget = configWidgets[2]
+local barsWidget = configWidgets[3]
+restZoneWidget.checkBox:SetScript(onClick,function (self)
+Config:SetGlobalHideRest(self:GetChecked())
+end)   
+barsWidget.minusButton:SetScript(onClick, function ()      
+  ActionBars:Remove()
+end) 
+barsWidget.plusButton:SetScript(onClick, function ()   
+  ActionBars:Add()     
+end)
 end
-primaryFrame,primaryOptionsWidgets = Templates:PrimaryFrame()
-Scripts()
 function CreateUserActions(actions)
   local xOffstet = 0
   local yOffset = -20
@@ -88,13 +81,16 @@ function CreateUserActions(actions)
   end  
   UI:Update()
 end 
-CreateUserActions(API:GetUserActions(),primaryFrame)    
+primaryFrame = Templates:PrimaryFrame()
+Scripts()
+CreateUserActions(API:GetUserActions(),primaryFrame)   
+isVisible = true 
 end
 function UI:Delete()
-  if primaryFrame and primaryOptionsWidgets then
+  if primaryFrame then
     primaryFrame:Hide()
     primaryFrame = nil
-    primaryOptionsWidgets = nil
+    isVisible = false 
   end
 end
 --UI:Update-------------------------------
@@ -103,17 +99,19 @@ function UI:Update() ---update all dynamic variables in UI
     --Count of tracked actions for specific spec
     local trackedActions = Actions:GetCurrent()
     local trackedActionForSpecCount =0
+    local configWidgets = primaryFrame.configWidgets
     for actionID in pairs(trackedActions) do 
       local actionSpec = trackedActions[actionID][5] 
-      local currentSpec = Config:GetSpec()
+      local currentSpec = API:GetSpecialization()
       if Config:IsValueSame(actionSpec,currentSpec) then
         trackedActionForSpecCount = trackedActionForSpecCount +1
       end
     end
-    primaryOptionsWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
+    configWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
     --Determinate height of primary frame
     local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
-    primaryOptionsWidgets[1].usedValue:SetText(usedSpellsCount)
+    configWidgets[1].usedValue:SetText(usedSpellsCount)
+    configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
     local actionsHeight = usedSpellsCount/6*60+165
     local primaryFrameHeight
     if usedSpellsCount<=18 then 
@@ -123,27 +121,15 @@ function UI:Update() ---update all dynamic variables in UI
     end
     primaryFrame:SetHeight(primaryFrameHeight)
     local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
-    primaryOptionsWidgets[3].textValue:SetText(barCount)
+    configWidgets[3].textValue:SetText(barCount)
   
   end
     SetupPrimaryFrame()
     Config:SaveConfig()
 end
 --Getters & Setters-----------------------------
-function UI:Get()   --get values from SmartBars_UI                      
-  local returnTable =
-         {                                         
-             CurrentSpec = function(self)                                                                                    
-                return  currentSpecialization             
-             end,           
-             GlobalHideRest = function(self)                                                                                    
-              return  globalHideRest
-             end,          
-             PrimaryFrame = function(self)                                                                                    
-             return  primaryFrame
-             end            
-         }
- return returnTable
+function UI:GetIsVisible()
+return isVisible
 end
 function UI:RefreshTrackedIcons()--update icons on tracked actions
   local cA = Actions:GetCurrent()
@@ -159,13 +145,8 @@ function UI:RefreshTrackedIcons()--update icons on tracked actions
     end
     end
   end
-  end
-function UI:GetGlobalHideRest()   --get values from SmartBars_UI                                                                                                       
-    return  globalHideRest
 end
-function UI:Set(loadedGlobalHideRest)--set saved variables
- globalHideRest = loadedGlobalHideRest
-end
--- Revision version v1.0.0 ---
+
+-- Revision version v1.0.2 ---
 
 

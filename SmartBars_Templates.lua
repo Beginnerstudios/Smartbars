@@ -137,7 +137,6 @@ function Templates:PrimaryFrame()
       local widget = CreateFrame(frame,nil) 
       widget:SetSize(35,35)
       widget.checkBox = CreateFrame(checkButton,nil, widget,defaultCheckButton,defaultLayer)
-      widget.checkBox:SetChecked(UI:Get():GlobalHideRest())
       widget.checkBox:SetSize(35,35)
       widget.checkBox:SetPoint(center,widget,center,30,-30)
       widget.checkBox:SetHitRectInsets(0,0,0,0) 
@@ -149,33 +148,33 @@ function Templates:PrimaryFrame()
       return widget
     end
     local primaryFrame = Frame()
-    local primaryOptionsWidgets = {StaticTitles(),RestZoneWidget(),BarsWidget()}   
+    primaryFrame.configWidgets = {StaticTitles(),RestZoneWidget(),BarsWidget()}   
     local xOfs =0
-    for k in pairs(primaryOptionsWidgets) do
-      primaryOptionsWidgets[k]:SetPoint(left, primaryFrame.TitleBg, left,(xOfs), -30)
-      primaryOptionsWidgets[k]:SetParent(primaryFrame)
-      primaryOptionsWidgets[k]:SetSize(80,80)
-        xOfs = xOfs+105
-    end   
-    return primaryFrame,primaryOptionsWidgets
+      for k in pairs(primaryFrame.configWidgets) do
+      primaryFrame.configWidgets[k]:SetPoint(left, primaryFrame.TitleBg, left,(xOfs), -30)
+      primaryFrame.configWidgets[k]:SetParent(primaryFrame)
+      primaryFrame.configWidgets[k]:SetSize(80,80)
+      xOfs = xOfs+105
+      end   
+    return primaryFrame
 end
 function Templates:ActionBar(index)     
-        local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)
-        function Frame()
-        Templates:SetFrameMoveable(actionBar)
-        actionBar:SetFrameStrata(mediumFrameStrata)
-        actionBar:SetMovable(true)
-        actionBar:SetSize(20,20)
-        actionBar:SetClampedToScreen(true)  
-        return actionBar
-        end
-        local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
-        function Edit()
-          edit:SetPoint(center,actionBar,center,0,0)  
-          actionBar:SetFrameStrata(backgroundFrameStrata)
-          edit:SetSize(15,15)         
-          edit.button = CreateFrame(button,nil,actionBar,defaultButton,backgroundFrameStrata)
-          edit.button:Hide()
+        
+local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)  
+function Frame()
+  Templates:SetFrameMoveable(actionBar)
+  actionBar:SetFrameStrata(backgroundFrameStrata)
+  actionBar:SetMovable(true)
+  actionBar:SetSize(20,20)
+  actionBar:SetClampedToScreen(true)  
+  return actionBar
+end      
+local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
+function Edit()
+edit:SetPoint(center,actionBar,center,0,0)  
+edit:SetSize(15,15)         
+edit.button = CreateFrame(button,nil,actionBar,defaultButton,backgroundFrameStrata)
+edit.button:Hide()
           edit.button:SetPoint(center,edit,center,30,0)   
           edit.button:SetSize(40,20)                 
           edit.button.text = edit.button:CreateFontString(nil,"BACKGROUND")
@@ -183,8 +182,8 @@ function Templates:ActionBar(index)
           edit.button.text:SetFontObject(defaultFont)    
           edit.button.text:SetText(Localization:Bar()..ActionBars:FindIndex(index)) 
           return edit  
-        end
-        function OptionWidget()
+end
+function OptionWidget()
           local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,overlayLayer)
           optionWidget:SetFrameStrata(highFrameStrata)
           optionWidget:SetPoint(left,edit,right,10,140)   
@@ -299,22 +298,22 @@ function Templates:ActionBar(index)
           yOfs = yOfs+55   
         end
         return optionWidget
-        end
-        function IconHolder()
+end
+function IconHolder()
           local iconHolder = CreateFrame(frame,nil,nil,nil,overlayLayer)
           iconHolder:SetPoint(center,actionBar,center,0,-50)   
           iconHolder:SetSize(50,50)       
           iconHolder:EnableMouse(false)  
           return iconHolder
-        end
-        actionBar=Frame()       
-        actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
-        for k in pairs(actionBar.configWidgets) do       
-          if k~=3 then
-            actionBar.configWidgets[k]:Hide()
-          end
-        end
-        return actionBar
+end
+local actionBar=Frame()       
+actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
+  for k in pairs(actionBar.configWidgets) do       
+    if k~=3 then
+    actionBar.configWidgets[k]:Hide()
+    end
+  end
+return actionBar
 end 
 function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
   local yOfs = -15
@@ -402,12 +401,12 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked)--Return widg
   local newTexture= API:GetActionTexture(spellID,action[6],action[1])
   if isTracked then
     actionWidget:SetFrameStrata(mediumFrameStrata)
-   actionWidget:SetHighlightTexture(nil)
-   actionWidget:SetPushedTexture(nil) 
+    actionWidget:SetHighlightTexture(nil)
+    actionWidget:SetPushedTexture(nil) 
   else
-    actionWidget:SetFrameStrata(backgroundFrameStrata)
-   actionWidget:SetHighlightTexture(newTexture)
-   actionWidget:SetPushedTexture(newTexture)
+    actionWidget:SetFrameStrata(mediumFrameStrata)
+    actionWidget:SetHighlightTexture(newTexture)
+    actionWidget:SetPushedTexture(newTexture)
   end
   actionWidget:SetNormalTexture(newTexture)
  
@@ -418,32 +417,18 @@ function Templates:SetFrameMoveable(frame)
   frame:SetMovable(true)
   frame:RegisterForDrag(leftButton)
   frame:SetScript(onDragStart,function ()
-    function HandleLayers()
-      frame.configWidgets[1]:SetFrameStrata(tooltipFrameStrata)  
-      frame.configWidgets[1].button.text:SetDrawLayer("OVERLAY")
-      frame.configWidgets[2]:SetFrameStrata(tooltipFrameStrata)  
-      frame.configWidgets[3]:SetFrameStrata(tooltipFrameStrata) 
-      frame:SetFrameStrata("TOOLTIP") 
+    frame:SetFrameStrata(tooltipFrameStrata)  
+    if frame.configWidgets[3] then
+      frame.configWidgets[3]:SetFrameStrata(tooltipFrameStrata)
     end
-    if frame.configWidgets then
-    HandleLayers()
-    end
-
-  frame:StartMoving()
+    frame:StartMoving()
   end)
   frame:SetScript(onDragStop,function ()
-    function HandleLayers()
-      frame:SetFrameStrata(mediumFrameStrata) 
-      frame.configWidgets[1]:SetFrameStrata(backgroundFrameStrata)  
-      frame.configWidgets[1].button:SetFrameStrata("BACKGROUND")
-      frame.configWidgets[2]:SetFrameStrata(highFrameStrata)  
-      frame.configWidgets[3]:SetFrameStrata(mediumFrameStrata) 
-      frame.configWidgets[1].button.text:SetDrawLayer("BACKGROUND")
+    frame:SetFrameStrata(mediumFrameStrata) 
+    if frame.configWidgets[3] then
+      frame.configWidgets[3]:SetFrameStrata(backgroundFrameStrata)
     end
-    if frame.configWidgets then
-    HandleLayers()
-    end
-  frame:StopMovingOrSizing()
+    frame:StopMovingOrSizing()
   Config:SaveConfig()
   end)
 end
