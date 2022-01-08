@@ -8,7 +8,7 @@ function Localization:Init()
 end
 --Variables-----
 local addonName = "SmartBars - "
-local loadedMessage = addonName.."/bs or /sb for settings.\n"
+local loadedMessage = addonName.."/sb for settings.\n"
 local bar = "Bar: "
 local oldFound = addonName.."old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.If you dont want get this notification again delete BS_ActionsTracker folder from --/interface/addons."
 local settingsReseted = addonName.."settings reseted."

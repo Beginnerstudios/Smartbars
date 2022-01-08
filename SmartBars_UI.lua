@@ -87,6 +87,22 @@ primaryFrame = Templates:PrimaryFrame()
 Scripts()
 CreateUserActions(API:GetUserActions(),primaryFrame)   
 isVisible = true 
+local function Drag()
+  local onDragStart="OnDragStart"
+local onDragStop ="OnDragStop"
+local highFrameStrata ="HIGH"
+local tooltipFrameStrata = "TOOLTIP"
+  primaryFrame:SetScript(onDragStart,function ()
+  primaryFrame:SetFrameStrata(tooltipFrameStrata)     
+  primaryFrame:StartMoving()
+  end)
+  primaryFrame:SetScript(onDragStop,function ()
+    primaryFrame:SetFrameStrata(highFrameStrata) 
+    primaryFrame:StopMovingOrSizing()
+    Config:SaveConfig()
+  end)
+end
+Drag()
 end
 function UI:Delete()
   if primaryFrame then

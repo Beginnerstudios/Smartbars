@@ -52,8 +52,6 @@ local emptyText = " "
 --DevEvents--
 local onClick ="OnClick"
 local onEditFocusLost = "OnEditFocusLost"
-local onDragStart="OnDragStart"
-local onDragStop ="OnDragStop"
 --Defaultvalues--
 local defaultFrameScale =0.75
 local defaultFrameAlpha = 1
@@ -418,21 +416,6 @@ function Templates:SetFrameMoveable(frame)
   frame:EnableMouse(true)
   frame:SetMovable(true)
   frame:RegisterForDrag(leftButton)
-  frame:SetScript(onDragStart,function ()
-    frame:SetFrameStrata(tooltipFrameStrata)  
-    if frame.configWidgets[3] then
-      frame.configWidgets[3]:SetFrameStrata(tooltipFrameStrata)
-    end
-    frame:StartMoving()
-  end)
-  frame:SetScript(onDragStop,function ()
-    frame:SetFrameStrata(mediumFrameStrata) 
-    if frame.configWidgets[3] then
-      frame.configWidgets[3]:SetFrameStrata(backgroundFrameStrata)
-    end
-    frame:StopMovingOrSizing()
-  Config:SaveConfig()
-  end)
 end
 
 --Revision v 1.0.2 --

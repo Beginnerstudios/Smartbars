@@ -223,12 +223,35 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
         columnsWidget.text2:SetText(framesColumn[i])  
         end)
     end
+    local function Drag()
+      local onDragStart="OnDragStart"
+      local onDragStop ="OnDragStop"
+      local backgroundFrameStrata ="BACKGROUND"
+      local tooltipFrameStrata = "TOOLTIP"
+      frames[i]:SetScript(onDragStart,function ()
+        frames[i]:SetFrameStrata(tooltipFrameStrata)  
+        frames[i].configWidgets[3]:SetFrameStrata(tooltipFrameStrata)
+        frames[i].configWidgets[2]:SetFrameStrata(tooltipFrameStrata)
+        frames[i].configWidgets[1]:SetFrameStrata(tooltipFrameStrata)
+        frames[i]:StartMoving()
+      end)
+      frames[i]:SetScript(onDragStop,function ()
+        frames[i]:SetFrameStrata(backgroundFrameStrata) 
+      
+          frames[i].configWidgets[3]:SetFrameStrata(backgroundFrameStrata)
+          frames[i].configWidgets[2]:SetFrameStrata(backgroundFrameStrata)
+          frames[i].configWidgets[1]:SetFrameStrata(backgroundFrameStrata)   
+        frames[i]:StopMovingOrSizing()
+      Config:SaveConfig()
+      end)
+    end
     EditButton()  
     BarNavigator() 
     Scale()
     Alpha()
     Hide()
     Columns()
+    Drag()
 
     end
     Position()
@@ -288,6 +311,8 @@ function ActionBars:Unload()
   for frameID in pairs(frames) do  
   if frames[frameID] then
   frames[frameID]:Hide()
+  frames[frameID].configWidgets[1]:Hide() --Hide iconholder 
+  frames[frameID].configWidgets[2]:Hide() --Hide iconholder 
   frames[frameID].configWidgets[3]:Hide() --Hide iconholder 
   end
   end

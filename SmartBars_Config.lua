@@ -34,11 +34,7 @@ local currentVersion = "v - 1.0.2 BETA"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()
-    SLASH_BS1 = "/bs"
     SLASH_SB1 = "/sb"
-    SlashCmdList["BS"] = function()
-    Config:Toggle()
-    end
     SlashCmdList["SB"] = function()
     Config:Toggle()
     end
