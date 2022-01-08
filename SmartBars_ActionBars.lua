@@ -137,7 +137,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     local function Scripts()    
     local optionWidget = frames[i].configWidgets[2]
     local iconHolder = frames[i].configWidgets[3]
-    local barText = frames[i].configWidgets[2].settings[1].text
+--    local barText = frames[i].configWidgets[2].settings[1].text
     local barText = frames[i].configWidgets[2].settings[1].text
     local function EditButton()
       local editButton = frames[i].configWidgets[1] 
@@ -432,7 +432,7 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
       else
         local chargesText = API:GetActionCharges(spellID,actionType) 
         local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
-        local _, duration, onCooldown = API:GetActionCooldown(spellID,actionType,slotID)  
+        local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
         local inRange = API:IsActionInRange(spellID,actionType)       
         widget.charges:SetText(chargesText)          
         if configMode or isBoosted and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
@@ -537,10 +537,10 @@ end
 function ActionBars:GetSV()                 
   local returnTable =
          {                                               
-            ActionsSpecBarCounts = function(self)                                                                                    
+            FramesSpecBarCounts = function(self)                                                                                    
             return actionBarsSpecCount
                end,
-             FramesScale = function(self)                                                                                                  
+            FramesScale = function(self)                                                                                                  
              return framesScale
              end,
             FrameIDs = function(self)                                                                                                  
@@ -551,10 +551,10 @@ function ActionBars:GetSV()
               end,         
             FramesPosition = function(self) 
               for k in pairs(frames) do
-                local frameIndex = k
+                --local frameIndex = k
                 if k then
-                  local function CalculateFramePosition(frameIndex)
-                    local point, _, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
+                  local function CalculateFramePosition(k)
+                    local point, _, relativePoint, xOfs, yOfs = frames[k]:GetPoint(1)
                     local function round2(num, numDecimalPlaces)
                       return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
                     end

@@ -53,7 +53,7 @@ end
 end
 function Config:Save()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():ActionsSpecBarCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
+    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecBarCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
 end
 function Config:LoadConfig()  
 Actions:Set(SmartBarsCharacterActions)   
