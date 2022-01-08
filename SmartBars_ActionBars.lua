@@ -53,7 +53,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
   frames[i] = Templates:ActionBar(i)
   frames[i]:SetParent(updater) 
 
-  function SetupActionBars(i)--Setup variables for action bar position,scale etc..
+  local function SetupActionBars(i)--Setup variables for action bar position,scale etc..
     local defaultFrameScale = 0.75
     local defaultFrameAlpha = 1
     local scaleWidget = frames[i].configWidgets[2].settings[2]
@@ -62,7 +62,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     local hideWidget = frames[i].configWidgets[2].settings[5]
     local optionWidget = frames[i].configWidgets[2]
     local barWidget = frames[i].configWidgets[2].settings[1]
-    function Position()
+    local function Position()
     if not framesPosition[i]  then
       local i = ActionBars:FindIndex(i)
       local rowCount =5
@@ -86,7 +86,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
      frames[i]:SetPoint(point,nil,relativePoint,xOffset,yOffset)
     end
     end
-    function Scale()
+    local function Scale()
       if not framesScale[i]  then      
         frames[i].configWidgets[3]:SetScale(defaultFrameScale)
         scaleWidget.slider:SetValue(defaultFrameScale)
@@ -98,7 +98,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
         scaleWidget.text:SetText(Config:RoundNumber(scale,2))
       end       
     end
-    function Alpha()
+    local function Alpha()
       if not framesAlpha[i]  then
         frames[i].configWidgets[3]:SetAlpha(defaultFrameAlpha)
         alphaWidget.slider:SetValue(defaultFrameAlpha)
@@ -110,7 +110,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
         alphaWidget.text:SetText(Config:RoundNumber(alpha,2))
       end 
     end
-    function Columns()
+    local function Columns()
       if not framesColumn[i]  then
         framesColumn[i] = 5
         columnsWidget.text2:SetText(framesColumn[i])
@@ -119,7 +119,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
  
       end
     end
-    function Rows()
+    local function Rows()
       if not framesRows[i] then
         framesRows[i] = 1
       --  frames[i]:Height((framesRows[i]*50)+25)
@@ -127,7 +127,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
       --  frames[i]:Height((framesRows[i]*50)+25)
       end
     end
-    function Hide()
+    local function Hide()
       if not framesHideRest[i]  then    
         hideWidget.checkBox:SetChecked(false)
        else
@@ -135,11 +135,11 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
          hideWidget.checkBox:SetChecked(value)
        end
     end
-    function Scripts()    
+    local function Scripts()    
     local optionWidget = frames[i].configWidgets[2]
     local iconHolder = frames[i].configWidgets[3]
     local barText = frames[i].configWidgets[2].settings[1].text
-    function EditButton()
+    local function EditButton()
       local editButton = frames[i].configWidgets[1] 
       editButton.button:SetScript(onClick,function ()        
         if optionWidget:IsVisible() then
@@ -155,7 +155,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
         barText:SetText(Localization:Bar()..ActionBars:FindIndex(i))
       end) 
     end 
-    function BarNavigator()
+    local function BarNavigator()
       barWidget.minusButton:SetScript(onClick, function ()
         ActionBars:HideOptionPanels() 
          if ActionBars:FindIndex(i)>=2 then
@@ -164,7 +164,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
            previousWidget:Show()
            previousText:SetText(Localization:Bar()..ActionBars:FindIndex(i-1))
          elseif ActionBars:FindIndex(i) ==1 then                  
-        function ShowLastOptionWidget()
+        local function ShowLastOptionWidget()
             ActionBars:HideOptionPanels()
             local a,lastFrameID = ActionBars:Get():HighestFrameID() 
             local optionWidget = frames[lastFrameID].configWidgets[2]
@@ -190,26 +190,26 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
            end
       end)
     end
-    function Scale()
+    local function Scale()
       scaleWidget.slider:SetScript(onValueChanged, function (self) 
         iconHolder:SetScale(self:GetValue())  
         framesScale[i] = self:GetValue()      
         scaleWidget.text:SetText(Config:RoundNumber(framesScale[i],2))      
         end) 
     end     
-    function Alpha()
+    local function Alpha()
         alphaWidget.slider:SetScript(onValueChanged, function (self)  
           iconHolder:SetAlpha(self:GetValue()) 
           framesAlpha[i] = self:GetValue() 
           alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i],2))    
             end)  
     end
-    function Hide()
+    local function Hide()
       hideWidget.checkBox:SetScript(onClick,function (self)
         framesHideRest[i] = self:GetChecked()
         end) 
     end
-    function Columns()
+    local function Columns()
       columnsWidget.minusButton:SetScript(onClick, function ()
         if framesColumn[i]>= 2 then
         framesColumn[i] = framesColumn[i] -1
@@ -377,8 +377,8 @@ end
 function ActionBars:Update(actions) --determinate if widget will be visible or hidden
   local configMode = Config:IsConfigMode() --1 in config
   local userSpec = Config:GetSpec() -- 1 in config
-  local isResting = API:IsResting() --1 in config
-  local isPvPing = API:IsPvPing() -- 1 in config
+  local isResting = Config:GetResting() --1 in config
+  local isPvPing = Config:GetPVP() -- 1 in config
   local globalHideRest = Config:GetGlobalHideRest() --1 ab 1 ui
  
   for actionID in pairs(actions) do  
@@ -421,8 +421,10 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
                 if isPvPing == false and isPVPspell == true then
                   widget:Hide()
                 else
-                  widget:Show()               
-                  ActionButton_HideOverlayGlow(widget)
+                  widget:Show()       
+                  if widget then                   
+                    ActionButton_HideOverlayGlow(widget)
+                  end        
                 end           
               end                                                            
             end         
@@ -512,7 +514,7 @@ function ActionBars:Get()
               for k in pairs(frames) do
                 local frameIndex = k
                 if k then
-                  function CalculateFramePosition(frameIndex)
+                  local function CalculateFramePosition(frameIndex)
                     local point, relativeTo, relativePoint, xOfs, yOfs = frames[frameIndex]:GetPoint(1)
                     local function round2(num, numDecimalPlaces)
                       return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
@@ -520,9 +522,10 @@ function ActionBars:Get()
                     return {round2(xOfs,2),round2(yOfs,2),point,relativePoint}
                     
                   end 
+                  framesPosition[k]=CalculateFramePosition(k)   
                 end
                 
-                framesPosition[k]=CalculateFramePosition(k)              
+                           
               end
                 return framesPosition         
             end,

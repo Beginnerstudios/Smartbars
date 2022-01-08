@@ -59,7 +59,7 @@ local minimumScale = 0.3
 local maximumScale = 1.5
 --Templates-----------------------------------------------------
 function Templates:PrimaryFrame() 
-    function Frame()
+    local function Frame()
       local frame = CreateFrame(frame,nil,nil,basicFrameWithInset,defaultLayer)
       Templates:SetFrameMoveable(frame)  
       frame:SetFrameStrata(backgroundFrameStrata)
@@ -79,7 +79,7 @@ function Templates:PrimaryFrame()
       frame.title:SetText(Localization:AddonName()..Config:GetSmartBarsInfo())
     return frame
     end     
-    function StaticTitles()
+    local function StaticTitles()
       local titles = CreateFrame(frame,nil,UIConfig) 
       titles.usedStatic = titles:CreateFontString(nil,defaultLayer)
       titles.usedStatic:SetPoint(left,titles,left,10,0)
@@ -107,7 +107,7 @@ function Templates:PrimaryFrame()
       titles.usedValue:SetText(zero)
       return titles
     end
-    function BarsWidget()
+    local function BarsWidget()
       local barsWidget = CreateFrame(frame,nil) 
       barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultLayer)
       barsWidget.textStatic:SetPoint(left,barsWidget,center,-30,0)
@@ -133,7 +133,7 @@ function Templates:PrimaryFrame()
       barsWidget.plusButton.tooltipText =Localization:AddActionBar()
       return barsWidget
     end
-    function RestZoneWidget()
+    local function RestZoneWidget()
       local widget = CreateFrame(frame,nil) 
       widget:SetSize(35,35)
       widget.checkBox = CreateFrame(checkButton,nil, widget,defaultCheckButton,defaultLayer)
@@ -161,7 +161,7 @@ end
 function Templates:ActionBar(index)     
         
 local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)  
-function Frame()
+local function Frame()
   Templates:SetFrameMoveable(actionBar)
   actionBar:SetFrameStrata(backgroundFrameStrata)
   actionBar:SetMovable(true)
@@ -170,7 +170,7 @@ function Frame()
   return actionBar
 end      
 local edit = CreateFrame(frame,nil,nil,actionBarFrameTemplate)
-function Edit()
+local function Edit()
 edit:SetPoint(center,actionBar,center,0,0)  
 edit:SetSize(15,15)         
 edit.button = CreateFrame(button,nil,actionBar,defaultButton,backgroundFrameStrata)
@@ -183,14 +183,14 @@ edit.button:Hide()
           edit.button.text:SetText(Localization:Bar()..ActionBars:FindIndex(index)) 
           return edit  
 end
-function OptionWidget()
+local function OptionWidget()
           local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,overlayLayer)
           optionWidget:SetFrameStrata(highFrameStrata)
           optionWidget:SetPoint(left,edit,right,10,140)   
           optionWidget:SetSize(150,250)   
           optionWidget:SetScale(0.75)       
           optionWidget:EnableMouse(false)        
-         function BarNavigator()
+         local function BarNavigator()
           local barNavigator = CreateFrame(frame,nil,nil,nil,overlayLayer)       
           barNavigator.text = barNavigator:CreateFontString(nil,overlayLayer)
           barNavigator.text:SetPoint(center,barNavigator,center,0,-20)
@@ -213,7 +213,7 @@ function OptionWidget()
           
           return barNavigator
          end
-         function ScaleSlider()           
+         local function ScaleSlider()           
            local scaleWidget = CreateFrame(frame,nil)
            scaleWidget.title = scaleWidget:CreateFontString(nil,overlayLayer)
            scaleWidget.title:SetPoint(left,scaleWidget,center,-50,0)
@@ -232,7 +232,7 @@ function OptionWidget()
       
          return scaleWidget
          end
-         function AlphaSlider()           
+         local function AlphaSlider()           
            local alphaWidget = CreateFrame(frame,nil)
            alphaWidget.title = alphaWidget:CreateFontString(nil,overlayLayer)
            alphaWidget.title:SetPoint(left,alphaWidget,center,-50,0)
@@ -249,7 +249,7 @@ function OptionWidget()
            alphaWidget.slider:SetStepsPerPage(10)             
          return alphaWidget
          end
-         function ColumnsWidgets()
+         local function ColumnsWidgets()
          local columnsWidget = CreateFrame(frame,nil) 
          columnsWidget.text = columnsWidget:CreateFontString(nil,overlayLayer)
          columnsWidget.text:SetPoint(left,columnsWidget,center,-50,0)
@@ -273,7 +273,7 @@ function OptionWidget()
          columnsWidget.plusButton.tooltipText = Localization:IncreaseColumns() 
          return columnsWidget
          end      
-         function RestZoneWidget()
+         local function RestZoneWidget()
          local restZoneWidget = CreateFrame(frame,nil) 
          restZoneWidget.checkBox = CreateFrame(checkButton,nil,restZoneWidget,defaultCheckButton,overlayLayer)
          restZoneWidget.checkBox.tooltipText = Localization:HideFrameActions()
@@ -299,7 +299,7 @@ function OptionWidget()
         end
         return optionWidget
 end
-function IconHolder()
+local function IconHolder()
           local iconHolder = CreateFrame(frame,nil,nil,nil,overlayLayer)
           iconHolder:SetPoint(center,actionBar,center,0,-50)   
           iconHolder:SetSize(50,50)       
@@ -432,4 +432,5 @@ function Templates:SetFrameMoveable(frame)
   Config:SaveConfig()
   end)
 end
+
 --Revision v 1.0.2 --

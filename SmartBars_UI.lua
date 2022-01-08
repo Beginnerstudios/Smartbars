@@ -6,12 +6,14 @@ local Actions
 local Config
 local Templates
 local ActionBars
+local API
 --Init------------------------------------
 function UI:Init()
 Actions = SmartBars.Actions
 Config = SmartBars.Config
 Templates = SmartBars.Templates
 ActionBars = SmartBars.ActionBars
+API = SmartBars.API
 end
 --Variables-------------------------------
 --Primaryframe
@@ -22,7 +24,7 @@ local onClick ="OnClick"
 
 --UI:Frames-------------------------------
 function UI:Create()--Create primary frame + ActionUpdater frame 
-function Scripts()
+local function Scripts()
 local configWidgets = primaryFrame.configWidgets
 primaryFrame.CloseButton:SetScript(onClick, function ()
   UI:Delete()
@@ -45,7 +47,7 @@ barsWidget.plusButton:SetScript(onClick, function ()
   ActionBars:Add()     
 end)
 end
-function CreateUserActions(actions)
+local function CreateUserActions(actions)
   local xOffstet = 0
   local yOffset = -20
   local count = 0 
@@ -95,7 +97,7 @@ function UI:Delete()
 end
 --UI:Update-------------------------------
 function UI:Update() ---update all dynamic variables in UI 
-  function SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
+  local function SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
     --Count of tracked actions for specific spec
     local trackedActions = Actions:GetCurrent()
     local trackedActionForSpecCount =0

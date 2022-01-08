@@ -10,6 +10,7 @@ local API = SmartBars.API
 local Templates = SmartBars.Templates
 local ActionBars = SmartBars.ActionBars
 local Localization = SmartBars.Localization
+local Core = SmartBars.Core
 --LoadingMessage--------------------------
 --Init------------------------------------
 UI:Init()

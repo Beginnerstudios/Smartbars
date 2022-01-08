@@ -6,6 +6,9 @@ local UI
 local Actions
 local ActionBars
 local Localization
+local Core
+local Global
+local API
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
@@ -21,6 +24,8 @@ local isConfigMode = false
 local currentSpecialization
 local isCleared
 local globalHideRest
+local pvp
+local resting
 --Save data---
 local currentSaveVersion =99.1
 local savedSaveVersion
@@ -126,6 +131,9 @@ end
 function Config:GetSpec()
     return currentSpecialization   
 end
+function Config:GetResting()
+    return resting   
+end
 function Config:GetGlobalHideRest()
     return globalHideRest
 end
@@ -142,6 +150,15 @@ function Config:GetSmartBarsInfo()
 end
 function Config:SetSpec(currentSpec)
     currentSpecialization = currentSpec    
+end
+function Config:SetPVP(value)
+    pvp = value
+end
+function Config:SetResting(value)
+    resting = value
+end
+function Config:GetPVP()
+   return pvp
 end
 -- Utils-----------------------------------
 function Config:GetTableCount(tableArg)

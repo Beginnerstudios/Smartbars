@@ -7,6 +7,7 @@ local Config
 local UI
 local ActionBars
 local Localization
+local Core
 --Init------------------------------------
 function Events:Init()
 Actions = SmartBars.Actions
@@ -22,14 +23,16 @@ local playerLogout = "PLAYER_LOGOUT"
 local specChanged ="PLAYER_SPECIALIZATION_CHANGED"
 local glowShow = "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
 local glowHide = "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE"
-local toggleWarmode = "WAR_MODE_STATUS_UPDATE"
+local updateResting = "PLAYER_UPDATE_RESTING"
+local toggleWarmode = "SPELLS_CHANGED"
 local onEvent ="OnEvent"
+local MyEvent = {}
 --Events:Functions------------------------
 function Events:RegisterEvents()
-  Event = { }
   local frame = CreateFrame("Frame")
   frame:RegisterEvent(playerLogin)
   frame:RegisterEvent(playerLogout)
+  frame:RegisterEvent(updateResting)
   Config:CreatePopup()
   if Config:IsCurrentPatch() then
   frame:RegisterEvent(toggleWarmode)
@@ -38,12 +41,19 @@ function Events:RegisterEvents()
   frame:RegisterEvent(glowHide)
   end
   frame:SetScript(onEvent, function(self, event, ...)
-    Event[event](MyAddon, ...)
+    MyEvent[event](Event, ...)
   end)
-  function Event:WAR_MODE_STATUS_UPDATE(...) 
-    print(...)         
+  function MyEvent:SPELLS_CHANGED() 
+   C_Timer.After(1, function()      
+   Config:SetPVP(API:IsPvPing()) 
+  end)
   end
-  function Event:PLAYER_LOGIN() 
+  function MyEvent:PLAYER_UPDATE_RESTING() 
+    C_Timer.After(1, function()      
+    Config:SetResting(API:IsResting()) 
+   end)
+   end
+  function MyEvent:PLAYER_LOGIN() 
     Config:SetDefaultBuild()
     local version,build,savedBuild = Config:GetSmartBarsInfo()
     if savedBuild < build then
@@ -53,11 +63,12 @@ function Events:RegisterEvents()
       Config:SetDefaults()
       print(Localization:SettingsReseted())      
     end 
-    Config:SetSpec(currentSpec)
+    Config:SetSpec(API:GetSpecialization())
+    Config:SetResting(API:IsResting()) 
   end
-  function Event:PLAYER_LOGOUT()   
+  function MyEvent:PLAYER_LOGOUT()   
   end
-  function Event:PLAYER_SPECIALIZATION_CHANGED()
+  function MyEvent:PLAYER_SPECIALIZATION_CHANGED()
   Config:SetSpec(API:GetSpecialization())  
   Core:Unload()
   Core:Load()
@@ -66,7 +77,7 @@ function Events:RegisterEvents()
       Config:Toggle()
   end 
   end
-  function Event:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
+  function MyEvent:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
         local trackedActions = Actions:GetCurrent()         
       for actionID in pairs(trackedActions) do                     
@@ -75,7 +86,7 @@ function Events:RegisterEvents()
       end 
     end
   end
-  function Event:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
+  function MyEvent:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(...)
     local a = ... 
     local trackedActions = Actions:GetCurrent()               
     for actionID in pairs(trackedActions) do                     
@@ -84,6 +95,8 @@ function Events:RegisterEvents()
     end 
   end
   end
+
+ 
 end
 -- Revision version v1.0.2 ----.
 
