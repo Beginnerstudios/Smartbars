@@ -5,7 +5,7 @@ local Events=SmartBars.Events
 local Actions
 local Config
 local UI
-local ActionBars
+--local ActionBars
 local Localization
 local Core
 local API
@@ -15,7 +15,7 @@ Actions = SmartBars.Actions
 Core = SmartBars.Core
 Config = SmartBars.Config
 UI = SmartBars.UI
-ActionBars = SmartBars.ActionBars
+--ActionBars = SmartBars.ActionBars
 Localization = SmartBars.Localization
 API = SmartBars.API
 end
@@ -57,7 +57,8 @@ function Events:RegisterEvents()
    end
   function MyEvent:PLAYER_LOGIN() 
     Config:SetDefaultBuild()
-    local version,build,savedBuild = Config:GetSmartBarsInfo()
+    local build = select(2,Config:GetSmartBarsInfo())
+    local savedBuild = select(3,Config:GetSmartBarsInfo())
     if savedBuild < build then
       SmartBarsCharacterActions = nil
       SmartBarsSettings = nil

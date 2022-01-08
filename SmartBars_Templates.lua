@@ -3,16 +3,12 @@ local _,SmartBars = ...
 SmartBars.Templates ={}
 local Templates=SmartBars.Templates
 local Config
-local UI
-local Actions
 local ActionBars
 local Localization
 local API
 --Init------------------------------------
 function Templates:Init()
 Config = SmartBars.Config
-UI = SmartBars.UI
-Actions = SmartBars.Actions
 ActionBars = SmartBars.ActionBars
 Localization = SmartBars.Localization
 API = SmartBars.API
@@ -21,7 +17,6 @@ end
 local defaultFont = "GameFontHighLight"
 local defaultLayer = "ARTWORK"
 local backgroundFrameStrata ="BACKGROUND"
-local highFrameStrata="HIGH"
 local mediumFrameStrata = "MEDIUM"
 local tooltipFrameStrata = "TOOLTIP"
 local basicFrameWithInset = "BasicFrameTemplateWithInset"
@@ -51,7 +46,6 @@ local zero = "0"
 local emptyText = " "
 --Defaultvalues--
 local defaultFrameScale =0.75
-local defaultFrameAlpha = 1
 local minimumScale = 0.3
 local maximumScale = 1.5
 --Templates-----------------------------------------------------
@@ -284,8 +278,8 @@ local function OptionWidget()
          restZoneWidget.title:SetPoint(left,restZoneWidget,center,-50,0)
          restZoneWidget.title:SetFontObject(defaultFont)
          restZoneWidget.title:SetText(Localization:HideActionsTitle()) 
-         local hiderest =ActionBars:Get():FramesHideRest()
-         restZoneWidget.checkBox:SetChecked(hiderest[index])
+        -- local hiderest =ActionBars:Get():FramesHideRest()
+        -- restZoneWidget.checkBox:SetChecked(hiderest[index])
          return restZoneWidget
          end
       
@@ -315,7 +309,7 @@ actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
   end
 return actionBar
 end 
-function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,actionID)--Add group layout to desired widget
+function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
   local yOfs = -15
   local newWidget = CreateFrame(frame,nil, parentWidget)
   newWidget:SetPoint(center,parentWidget,center,0,0)

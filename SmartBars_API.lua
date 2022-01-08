@@ -62,7 +62,7 @@ function API:GetPlayerAuraBySpellID(spellID)
         return true
         end
     else   
-        local buffIndex
+       -- local buffIndex
        for buffIndex=1,32 do
         local buffID = select(10, UnitBuff(player, buffIndex))   
         if buffID ~=nil then 

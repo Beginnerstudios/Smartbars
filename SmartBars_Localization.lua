@@ -31,6 +31,7 @@ local increaseColumns ="Increase number of columns."
 local settingsTitle ="Settings"
 local editText ="Edit"
 local confirmReset = "Are you sure you want reset SmartBars to default state?"
+local confirmRemoveBar = "Are you sure you want remove this bar? Your actions will be moved to previous bar."
 --Localization
 function Localization:LoadedMessage()
 return loadedMessage
@@ -103,5 +104,8 @@ function Localization:EditText()
 end
 function Localization:ConfirmReset()
   return confirmReset
+end
+function Localization:ConfirmRemoveBar()
+  return confirmRemoveBar
 end
 --Revision v 1.0.2 ---

@@ -6,15 +6,15 @@ local UI
 local Actions
 local ActionBars
 local Localization
-local Core
-local Global
+--local Core
+--local Global
 local API
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
-    Core = SmartBars.Core
+--    Core = SmartBars.Core
     Actions = SmartBars.Actions
-    Global = SmartBars.Global
+ --   Global = SmartBars.Global
     API = SmartBars.API
     ActionBars = SmartBars.ActionBars
     Localization = SmartBars.Localization
@@ -31,7 +31,7 @@ local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
 local currentVersion = "v - 1.0.3 DEV"
-local publicBuild = 99
+local publicBuild = 103
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -47,13 +47,13 @@ function Config:Toggle()
     else
         UI:Delete()                                            
         ActionBars:Toggle(false)
-        Config:SaveConfig()
+        Config:Save()
         isConfigMode =false 
 end
 end
-function Config:SaveConfig()
+function Config:Save()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:Get():FramesPosition(),ActionBars:Get():FramesScale(),ActionBars:Get():FramesAlpha(),ActionBars:Get():FramesColumn(),ActionBars:Get():FramesHideRest(),ActionBars:Get():ActionsSpecBarCounts(),globalHideRest,isCleared,ActionBars:Get():FrameIDs(),ActionBars:Get():FramesRows()}
+    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():ActionsSpecBarCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
 end
 function Config:LoadConfig()  
 Actions:Set(SmartBarsCharacterActions)   
@@ -119,6 +119,18 @@ function Config:CreatePopup()
       hideOnEscape = true,
       preferredIndex = 3,
     }
+    StaticPopupDialogs["SMARTBARS_REMOVEBARCONFIRM"] = {
+        text = Localization:ConfirmRemoveBar(),
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+            ActionBars:Remove()
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+      }
 end
 function Config:SetGlobalHideRest(value)
 globalHideRest = value
@@ -176,7 +188,7 @@ function Config:JoinNumber(x, y)
     return tonumber(z)
 end  
 function Config:DisableOldAddon()
-    local name, title, notes, enabled, loadable, reason, security =GetAddOnInfo("BS_ActionsTracker")
+    local enabled = select(4,GetAddOnInfo("BS_ActionsTracker"))
     if enabled then
         DisableAddOn("BS_ActionsTracker")
         print(Localization:OldFound())      

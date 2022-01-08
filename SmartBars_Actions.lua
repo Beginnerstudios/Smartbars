@@ -2,14 +2,14 @@
 local _,SmartBars = ...
 SmartBars.Actions ={}
 local Actions = SmartBars.Actions
-local UI
+--local UI
 local API
 local Config
 local Templates
 local ActionBars
 --Init------------------------------------
 function Actions:Init()
-    UI = SmartBars.UI
+  --  UI = SmartBars.UI
     API = SmartBars.API
     Config = SmartBars.Config
     Templates = SmartBars.Templates
@@ -33,7 +33,6 @@ function Actions:Add(action)
       else  
       Actions:Create(action,true,false)          
     end         
-  UI:Update() 
 end    
 function Actions:Unload()
   local cA = Actions:GetCurrent()
@@ -67,7 +66,6 @@ function Actions:Create(action,isEnabled,isExisting,key)
     local isBoosted = false
     local showOnlyWhenBoosted = nil
     local actionType = nil
-    local a
     local isPVP
     if isExisting==true then
         curretSpec = action[5]
@@ -83,7 +81,7 @@ function Actions:Create(action,isEnabled,isExisting,key)
     else  
         actionID= Config:JoinNumber(action[2],API:GetSpecialization())
         curretSpec= API:GetSpecialization()
-        a,trackedFrame = ActionBars:Get():HighestFrameID()  
+        trackedFrame =select(2, ActionBars:Get():HighestFrameID())  
         showOnlyWhenBoosted = false
         actionType = action[6]
         isPVP = API:IsPVPTalent(action[2])

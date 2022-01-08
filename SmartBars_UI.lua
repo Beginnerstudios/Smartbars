@@ -24,41 +24,44 @@ local onClick ="OnClick"
 
 --UI:Frames-------------------------------
 function UI:Create()--Create primary frame + ActionUpdater frame 
-local function Scripts()
-local configWidgets = primaryFrame.configWidgets
-primaryFrame.CloseButton:SetScript(onClick, function ()
-  UI:Delete()
-  Config:Toggle()
-end) 
-primaryFrame.resetButton:SetScript(onClick, function ()
-  local confirmPopup = "SMARTBARS_RESETCONFIRM"
-  StaticPopup_Show (confirmPopup)  
-end)
-local staticTitles = configWidgets[1]
-local restZoneWidget = configWidgets[2]
-local barsWidget = configWidgets[3]
-restZoneWidget.checkBox:SetScript(onClick,function (self)
-Config:SetGlobalHideRest(self:GetChecked())
-end)   
-barsWidget.minusButton:SetScript(onClick, function ()      
-  ActionBars:Remove()
-end) 
-barsWidget.plusButton:SetScript(onClick, function ()   
-  ActionBars:Add()     
-end)
-end
-local function CreateUserActions(actions)
-  local xOffstet = 0
-  local yOffset = -20
-  local count = 0 
-  for k in pairs(actions) do
-    local widget = actions[k][3]
-    widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
-    widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
-    local actionType =actions[k][6]
-    local actionID = actions[k][2]
-    local actionName = API:GetDisplayedActionInfo(actionID,actionType)
-    if actionType =="item" then
+  local function Scripts()
+    local configWidgets = primaryFrame.configWidgets
+    primaryFrame.CloseButton:SetScript(onClick, function ()
+      UI:Delete()
+      Config:Toggle()
+    end) 
+    primaryFrame.resetButton:SetScript(onClick, function ()
+      local confirmPopup = "SMARTBARS_RESETCONFIRM"
+      StaticPopup_Show (confirmPopup)  
+    end)
+   -- local staticTitles = configWidgets[1]
+    local restZoneWidget = configWidgets[2]
+    local barsWidget = configWidgets[3]
+    restZoneWidget.checkBox:SetScript(onClick,function (self)
+      Config:SetGlobalHideRest(self:GetChecked())
+    end)   
+    barsWidget.minusButton:SetScript(onClick, function () 
+      if ActionBars:Get():ActionsSpecBarCount(Config:GetSpec()) >1 then
+        local removeBarConfirm = "SMARTBARS_REMOVEBARCONFIRM"
+        StaticPopup_Show (removeBarConfirm)  
+      end      
+    end) 
+    barsWidget.plusButton:SetScript(onClick, function ()   
+      ActionBars:Add()     
+    end)
+  end
+  local function CreateActions(actions)
+    local xOffstet = 0
+    local yOffset = -20
+    local count = 0 
+    for k in pairs(actions) do
+      local widget = actions[k][3]
+      widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
+      widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
+      local actionType =actions[k][6]
+      local actionID = actions[k][2]
+      local actionName = API:GetDisplayedActionInfo(actionID,actionType)
+      if actionType =="item" then
       widget.tooltipText = actionType.." - "..actionName
     else
       widget.tooltipText = actionName
@@ -81,12 +84,41 @@ local function CreateUserActions(actions)
     widget:SetScript("OnClick",function (self) 
     Actions:Add(actions[k]) end)  
   end  
-  UI:Update()
-end 
+  end 
+  local function Setup() 
+  --Count of tracked actions for specific spec
+  local trackedActions = Actions:GetCurrent()
+  local trackedActionForSpecCount =0
+  local configWidgets = primaryFrame.configWidgets
+  for actionID in pairs(trackedActions) do 
+    local actionSpec = trackedActions[actionID][5] 
+    local currentSpec = API:GetSpecialization()
+    if Config:IsValueSame(actionSpec,currentSpec) then
+      trackedActionForSpecCount = trackedActionForSpecCount +1
+    end
+  end
+  configWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
+  --Determinate height of primary frame
+  local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
+  configWidgets[1].usedValue:SetText(usedSpellsCount)
+  configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
+  local actionsHeight = usedSpellsCount/6*60+165
+  local primaryFrameHeight
+  if usedSpellsCount<=18 then 
+    primaryFrameHeight = 350
+    else 
+    primaryFrameHeight = actionsHeight  
+  end
+  primaryFrame:SetHeight(primaryFrameHeight)
+  local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
+  configWidgets[3].textValue:SetText(barCount)
+
+  end
 primaryFrame = Templates:PrimaryFrame()
-Scripts()
-CreateUserActions(API:GetUserActions(),primaryFrame)   
-isVisible = true 
+  Setup()
+  Scripts()
+  CreateActions(API:GetUserActions(),primaryFrame)   
+  isVisible = true 
 local function Drag()
   local onDragStart="OnDragStart"
 local onDragStop ="OnDragStop"
@@ -99,7 +131,6 @@ local tooltipFrameStrata = "TOOLTIP"
   primaryFrame:SetScript(onDragStop,function ()
     primaryFrame:SetFrameStrata(highFrameStrata) 
     primaryFrame:StopMovingOrSizing()
-    Config:SaveConfig()
   end)
 end
 Drag()
@@ -112,39 +143,6 @@ function UI:Delete()
   end
 end
 --UI:Update-------------------------------
-function UI:Update() ---update all dynamic variables in UI 
-  local function SetupPrimaryFrame() --handle height of primary frame and primary options widgets + update values for used/tracked actions
-    --Count of tracked actions for specific spec
-    local trackedActions = Actions:GetCurrent()
-    local trackedActionForSpecCount =0
-    local configWidgets = primaryFrame.configWidgets
-    for actionID in pairs(trackedActions) do 
-      local actionSpec = trackedActions[actionID][5] 
-      local currentSpec = API:GetSpecialization()
-      if Config:IsValueSame(actionSpec,currentSpec) then
-        trackedActionForSpecCount = trackedActionForSpecCount +1
-      end
-    end
-    configWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
-    --Determinate height of primary frame
-    local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
-    configWidgets[1].usedValue:SetText(usedSpellsCount)
-    configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
-    local actionsHeight = usedSpellsCount/6*60+165
-    local primaryFrameHeight
-    if usedSpellsCount<=18 then 
-      primaryFrameHeight = 350
-      else 
-      primaryFrameHeight = actionsHeight  
-    end
-    primaryFrame:SetHeight(primaryFrameHeight)
-    local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
-    configWidgets[3].textValue:SetText(barCount)
-  
-  end
-    SetupPrimaryFrame()
-    Config:SaveConfig()
-end
 --Getters & Setters-----------------------------
 function UI:GetIsVisible()
 return isVisible
