@@ -53,10 +53,12 @@ function Events:RegisterEvents()
       Config:SetDefaults()
       print(Localization:SettingsReseted())      
     end 
+    Config:SetSpec(currentSpec)
   end
   function Event:PLAYER_LOGOUT()   
   end
   function Event:PLAYER_SPECIALIZATION_CHANGED()
+  Config:SetSpec(API:GetSpecialization())  
   Core:Unload()
   Core:Load()
   if UI:GetIsVisible()==true then

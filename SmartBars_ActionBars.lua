@@ -36,7 +36,7 @@ local onUpdate = "OnUpdate"
 
 --ActionBars----------------------
 function ActionBars:Add()-- add new action bar to current specialization
-  local spec = API:GetSpecialization()
+  local spec = Config:GetSpec()
   if actionBarsSpecCount[spec] < 9 then
   actionBarsSpecCount[spec] = actionBarsSpecCount[spec]+1
   local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
@@ -246,7 +246,7 @@ function ActionBars:Load()--load existing or create first action bar for current
         ActionBars:Create(frameID)             
       end   
   else
-  local spec = API:GetSpecialization()
+  local spec = Config:GetSpec()
   actionBarsSpecCount[spec] = 1
   local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
   frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
@@ -255,7 +255,7 @@ function ActionBars:Load()--load existing or create first action bar for current
 
 end 
 function ActionBars:Remove()--remove action bar with highestIndex
-local spec = API:GetSpecialization()
+local spec = Config:GetSpec()
 if  actionBarsSpecCount[spec] > 1 then
   local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
   frames[lastFrameID]:Hide()
@@ -299,7 +299,7 @@ end
 function ActionBars:Toggle(value)--Toggle config mode widgets
   --Actionbars
  for _,v in pairs(frameIDs) do
-   if v[3] == API:GetSpecialization() then
+   if v[3] == Config:GetSpec() then
    local frameID = v[1]
    local configWidgets = frames[frameID].configWidgets
    frames[frameID]:SetMovable(value) 
@@ -327,7 +327,7 @@ function ActionBars:Toggle(value)--Toggle config mode widgets
   --ActionWidgets
  for _,v in pairs(Actions:GetCurrent()) do
      local widget = v[3]
-     if v[5] == API:GetSpecialization() then
+     if v[5] == Config:GetSpec() then
        if widget and widget.edit and widget.group and widget.charges then
          if value == true then
          widget.edit:SetEnabled(value) 
@@ -356,7 +356,7 @@ function ActionBars:FindIndex(frameID) --return frameIndex based on frameID
 end
 function ActionBars:FindFrameID(frameIndex) --return frameID based on frameIndex
   for k,v in pairs(frameIDs) do
-    if v[2]==frameIndex and v[3] == API:GetSpecialization() then
+    if v[2]==frameIndex and v[3] == Config:GetSpec() then
       return k      
     end
   end
@@ -368,7 +368,7 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
     local actions = Actions:GetCurrent()
     ActionBars:Update(actions)   
     for frameID,v in pairs(frameIDs) do 
-      if v[3] == API:GetSpecialization()then
+      if v[3] == Config:GetSpec()then
         ActionBars:Sort(frameID,actions)    
       end              
     end
@@ -393,10 +393,7 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
     local isPVPspell = actions[actionID][10]  
     
 
-    if Config:IsValueSame(actionSpec,userSpec) then  
-      if spellID ==  353082 then
-       -- print(isPVPspell)        
-      end
+    if Config:IsValueSame(actionSpec,userSpec) then
       if globalHideRest == true and isResting ==true and configMode == false then
        widget:Hide()
       else
@@ -503,7 +500,7 @@ function ActionBars:Get()
               local frameID
               for k,v in pairs(frameIDs) do
                 if k~=nil then
-                  if v[2]>=highestID and v[3]==API:GetSpecialization() then
+                  if v[2]>=highestID and v[3]==Config:GetSpec() then
                     highestID = v[2]
                     frameID = v[1]                
                 end   
