@@ -18,6 +18,9 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local currentActions = {}
+--Dev Strings---
+local onClick ="OnClick"
+local onEditFocusLost = "OnEditFocusLost"
 --Actions:Functions-----------------------
 function Actions:Add(action) 
   local tA = Actions:GetTracked()
@@ -92,6 +95,42 @@ function Actions:Create(action,isEnabled,isExisting,key)
     if isExisting ==false then
     trackedActions[actionID] = cA[actionID]
     end
+    local function SetupAction()    
+      cA[actionID][3].group.plusButton:SetScript(onClick, function ()
+        if ActionBars:FindIndex(cA[actionID][6]) then
+          if ActionBars:FindIndex(cA[actionID][6])< ActionBars:Get():ActionsSpecBarCount(Config:GetSpec()) then
+            cA[actionID][6]= cA[actionID][6] + 1 
+            trackedActions[actionID][6]= cA[actionID][6]
+            
+          end         
+        end
+
+      end)
+      cA[actionID][3].group.minusButton:SetScript(onClick, function ()
+        if  ActionBars:FindIndex(cA[actionID][6]) then
+          if ActionBars:FindIndex(cA[actionID][6])> 1 then
+            cA[actionID][6]= cA[actionID][6] - 1 
+            trackedActions[actionID][6]= cA[actionID][6]
+           
+          end
+        end
+      end)
+        
+
+      if Config:IsCurrentPatch() then
+        cA[actionID][3].group.showWhenBoosted:SetScript(onClick, function (self) 
+          showOnlyWhenBoosted =self:GetChecked()
+          trackedActions[actionID][8]=showOnlyWhenBoosted     
+        end)
+      end
+     
+      cA[actionID][3].edit:SetScript(onEditFocusLost, function (self)             
+          action[4] = self:GetText() 
+          trackedActions[actionID][4] = action[4]      
+      end)
+    end
+    SetupAction()
+   
 end
 --Getters & Setters,Reset-----------------------------
 function Actions:Set(loadedTrackedActions)

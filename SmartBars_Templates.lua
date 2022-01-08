@@ -49,9 +49,6 @@ local nextRight =">"
 local nextLeft ="<"
 local zero = "0"
 local emptyText = " "
---DevEvents--
-local onClick ="OnClick"
-local onEditFocusLost = "OnEditFocusLost"
 --Defaultvalues--
 local defaultFrameScale =0.75
 local defaultFrameAlpha = 1
@@ -61,7 +58,9 @@ local maximumScale = 1.5
 function Templates:PrimaryFrame() 
     local function Frame()
       local frame = CreateFrame(frame,nil,nil,basicFrameWithInset,defaultLayer)
-      Templates:SetFrameMoveable(frame)  
+      frame:EnableMouse(true)
+      frame:SetMovable(true)
+      frame:RegisterForDrag(leftButton)
       frame:SetFrameStrata(backgroundFrameStrata)
       frame:SetSize(320,0)
       frame:SetScale(defaultFrameScale)
@@ -162,7 +161,8 @@ function Templates:ActionBar(index)
         
 local actionBar = CreateFrame(frame,nil,nil,nil,defaultButton)  
 local function Frame()
-  Templates:SetFrameMoveable(actionBar)
+  actionBar:EnableMouse(true)
+  actionBar:RegisterForDrag(leftButton)
   actionBar:SetFrameStrata(backgroundFrameStrata)
   actionBar:SetMovable(true)
   actionBar:SetSize(20,20)
@@ -185,7 +185,7 @@ edit.button:Hide()
 end
 local function OptionWidget()
           local optionWidget = CreateFrame(frame,nil,nil,actionBarFrameTemplate,overlayLayer)
-          optionWidget:SetFrameStrata(highFrameStrata)
+          optionWidget:SetFrameStrata(tooltipFrameStrata)
           optionWidget:SetPoint(left,edit,right,10,140)   
           optionWidget:SetSize(150,250)   
           optionWidget:SetScale(0.75)       
@@ -315,7 +315,7 @@ actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
   end
 return actionBar
 end 
-function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
+function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed,actionID)--Add group layout to desired widget
   local yOfs = -15
   local newWidget = CreateFrame(frame,nil, parentWidget)
   newWidget:SetPoint(center,parentWidget,center,0,0)
@@ -331,35 +331,20 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add 
   newWidget.showWhenBoosted:SetChecked(valueToSave[8])
   newWidget.showWhenBoosted:SetNormalFontObject(defaultFont)
   newWidget.showWhenBoosted.tooltipText = Localization:DisplayWhenBoosted() 
-  newWidget.showWhenBoosted:SetScript(onClick, function (self) 
-  valueToSave[8]=self:GetChecked()
-  end)
   end
-  
-  
-  
   newWidget.minusButton = CreateFrame(button,nil, newWidget,defaultButton,defaultLayer)
   newWidget.minusButton:SetPoint(center, parentWidget, center, -15,yOfs)
   newWidget.minusButton:SetSize(20,20)
   newWidget.minusButton:SetText(minus)
   newWidget.minusButton.tooltipText =Localization:ChangeBar()
   newWidget.minusButton:SetNormalFontObject(defaultFont)    
-  newWidget.minusButton:SetScript(onClick, function () 
-    if ActionBars:FindIndex(valueToSave[6])>1 then
-    valueToSave[6] = valueToSave[6]-1
-    end
-  end)
+
   newWidget.plusButton = CreateFrame(button,nil, newWidget,defaultButton,defaultLayer)
   newWidget.plusButton:SetPoint(center, parentWidget, center, 0, yOfs)
   newWidget.plusButton:SetSize(20,20)
   newWidget.plusButton:SetText(plus)
   newWidget.plusButton:SetNormalFontObject(defaultFont)  
   newWidget.plusButton.tooltipText =Localization:ChangeBar()  
-  newWidget.plusButton:SetScript(onClick, function ()
-    if ActionBars:FindIndex(valueToSave[6])< ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization()) then
-      valueToSave[6]=valueToSave[6] +1
-    end  
-  end)
   if not isDisplayed then
     newWidget:Hide()
   end
@@ -375,9 +360,6 @@ function Templates:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbo
   edit.tooltipText =Localization:ChangeBar()  
   edit:SetEnabled(isEnabled)
   edit:SetFont(fontFrizqt, 25, outline)
-  edit:SetScript(onEditFocusLost, function (self)             
-  valueToSave[4] = self:GetText() 
-  end)
   return edit
 end
 function Templates:CreateFontString(parentWidget,fontSize,someText)--Add fontstring with desired parameters
@@ -411,11 +393,6 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked)--Return widg
   actionWidget:SetNormalTexture(newTexture)
  
   return actionWidget
-end
-function Templates:SetFrameMoveable(frame)
-  frame:EnableMouse(true)
-  frame:SetMovable(true)
-  frame:RegisterForDrag(leftButton)
 end
 
 --Revision v 1.0.2 --

@@ -231,7 +231,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
       frames[i]:SetScript(onDragStart,function ()
         frames[i]:SetFrameStrata(tooltipFrameStrata)  
         frames[i].configWidgets[3]:SetFrameStrata(tooltipFrameStrata)
-        frames[i].configWidgets[2]:SetFrameStrata(tooltipFrameStrata)
+      --  frames[i].configWidgets[2]:SetFrameStrata(tooltipFrameStrata)
         frames[i].configWidgets[1]:SetFrameStrata(tooltipFrameStrata)
         frames[i]:StartMoving()
       end)
@@ -239,7 +239,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
         frames[i]:SetFrameStrata(backgroundFrameStrata) 
       
           frames[i].configWidgets[3]:SetFrameStrata(backgroundFrameStrata)
-          frames[i].configWidgets[2]:SetFrameStrata(backgroundFrameStrata)
+       --   frames[i].configWidgets[2]:SetFrameStrata(backgroundFrameStrata)
           frames[i].configWidgets[1]:SetFrameStrata(backgroundFrameStrata)   
         frames[i]:StopMovingOrSizing()
       Config:SaveConfig()
@@ -285,6 +285,8 @@ if  actionBarsSpecCount[spec] > 1 then
   local lastFrameIndex,lastFrameID = ActionBars:Get():HighestFrameID()  
   frames[lastFrameID]:Hide()
   frames[lastFrameID].configWidgets[1]:Hide()
+  frames[lastFrameID].configWidgets[2]:Hide()
+  frames[lastFrameID].configWidgets[3]:Hide()
   frames[lastFrameID] = nil
   frameIDs[lastFrameID] = nil
   framesScale[lastFrameID] = nil 
@@ -293,13 +295,21 @@ if  actionBarsSpecCount[spec] > 1 then
   framesHideRest[lastFrameID] =nil
   framesColumn[lastFrameID] = nil
   
-  local tA = Actions:GetCurrent()
+  local cA = Actions:GetCurrent()
+      for k in pairs(cA) do
+        local barNumber = cA[k][6]        
+        if barNumber==lastFrameID then    
+          cA[k][6] = cA[k][6]-1
+        end 
+      end 
+      local tA = Actions:GetTracked()
       for k in pairs(tA) do
         local barNumber = tA[k][6]        
         if barNumber==lastFrameID then    
           tA[k][6] = tA[k][6]-1
         end 
       end 
+    
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
 end
 UI:Update()

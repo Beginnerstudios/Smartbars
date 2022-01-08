@@ -30,7 +30,7 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.2 BETA"
+local currentVersion = "v - 1.0.3 DEV"
 local publicBuild = 99
 --Config:Functions------------------------
 function Config:CreateCommands()

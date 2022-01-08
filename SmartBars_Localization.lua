@@ -87,7 +87,7 @@ function Localization:ScaleText()
   return scaleText
 end
 function Localization:ChangeBar()
-  return scaleText
+  return changeBar
 end
 function Localization:IncreaseColumns()
   return increaseColumns
