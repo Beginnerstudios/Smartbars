@@ -7,6 +7,7 @@ local UI
 local Actions
 local ActionBars
 local Localization
+local API
 --Init------------------------------------
 function Templates:Init()
 Config = SmartBars.Config
@@ -14,6 +15,7 @@ UI = SmartBars.UI
 Actions = SmartBars.Actions
 ActionBars = SmartBars.ActionBars
 Localization = SmartBars.Localization
+API = SmartBars.API
 end
 -----DEV XML Variables--------------
 local defaultFont = "GameFontHighLight"

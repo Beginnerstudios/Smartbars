@@ -8,6 +8,7 @@ local UI
 local ActionBars
 local Localization
 local Core
+local API
 --Init------------------------------------
 function Events:Init()
 Actions = SmartBars.Actions
@@ -16,6 +17,7 @@ Config = SmartBars.Config
 UI = SmartBars.UI
 ActionBars = SmartBars.ActionBars
 Localization = SmartBars.Localization
+API = SmartBars.API
 end
 --Dev strings events-----------------------
 local playerLogin = "PLAYER_LOGIN"

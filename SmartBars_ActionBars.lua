@@ -7,6 +7,7 @@ local Config
 local Templates
 local Actions
 local Localization
+local API
 --Init------------------------------------
 function ActionBars:Init()
 UI = SmartBars.UI
@@ -14,6 +15,7 @@ Config =SmartBars.Config
 Templates = SmartBars.Templates
 Actions = SmartBars.Actions
 Localization = SmartBars.Localization
+API = SmartBars.API
 end
 --Variables--------------------------------
 --ActionBars
@@ -286,6 +288,7 @@ function ActionBars:Unload()
   for frameID in pairs(frames) do  
   if frames[frameID] then
   frames[frameID]:Hide()
+  frames[frameID].configWidgets[3]:Hide() --Hide iconholder 
   end
   end
   frames = nil
