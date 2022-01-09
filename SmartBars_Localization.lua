@@ -108,4 +108,4 @@ end
 function Localization:ConfirmRemoveBar()
   return confirmRemoveBar
 end
---Revision v 1.0.2 ---
+--Revision v 1.0.4 ---

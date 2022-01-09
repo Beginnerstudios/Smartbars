@@ -219,9 +219,9 @@ function UI:RefreshTrackedIcons()--update icons on tracked actions
   for actionID in pairs(cA) do
     if actionID and cA[actionID][5]== API:GetSpecialization()  then
       local widget =cA[actionID][3]
-    local spellID = cA[actionID][2]
-    local actionType = cA[actionID][9]
-    local slotID = cA[actionID][1]
+      local spellID = cA[actionID][2]
+      local actionType = cA[actionID][9]
+      local slotID = cA[actionID][1]
     if widget  then
       local newTexture= API:GetActionTexture(spellID,actionType,slotID)
       widget:SetNormalTexture(newTexture)   
@@ -230,6 +230,6 @@ function UI:RefreshTrackedIcons()--update icons on tracked actions
   end
 end
 
--- Revision version v1.0.2 ---
+-- Revision version v1.0.4 ---
 
 

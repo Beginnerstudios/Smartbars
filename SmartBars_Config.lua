@@ -12,9 +12,7 @@ local API
 --Init------------------------------------
 function Config:Init()
     UI = SmartBars.UI
---    Core = SmartBars.Core
     Actions = SmartBars.Actions
- --   Global = SmartBars.Global
     API = SmartBars.API
     ActionBars = SmartBars.ActionBars
     Localization = SmartBars.Localization
@@ -30,7 +28,7 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.4 ALPHA"
+local currentVersion = "v - 1.0.4 BETA"
 local publicBuild = 104
 --Config:Functions------------------------
 function Config:CreateCommands()
@@ -55,7 +53,7 @@ function Config:Save()
     SmartBarsCharacterActions = Actions:GetTracked()   
     SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecBarCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
 end
-function Config:LoadConfig()  
+function Config:Load()  
 Actions:Set(SmartBarsCharacterActions)   
 globalHideRest=SmartBarsSettings[7]  --global hide in restzone    
 ActionBars:Set(
@@ -199,4 +197,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v 1.0.3 -----
+-- Revision version v 1.0.4 -----

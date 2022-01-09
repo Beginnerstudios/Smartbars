@@ -33,7 +33,7 @@ function Core:Unload()
     Actions:Unload()
 end
 function Core:Load()
-    Config:LoadConfig()   
+    Config:Load()   
     ActionBars:Load()
     Actions:Load()
     ActionBars:StartUpdate()  
@@ -45,7 +45,7 @@ C_Timer.After(2, function()
     Core:Load()   
     print(Localization:LoadedMessage())   
 end)
--- Revision version v1.0.2 -----
+-- Revision version v1.0.4 -----
 
 
 

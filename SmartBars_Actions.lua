@@ -36,16 +36,7 @@ function Actions:Add(action)
       Actions:Create(action,true,false)          
     end   
  UI:Update()       
-end    
-function Actions:Unload()
-  if Config:GetTableCount(currentActions) >0 then
-  for actionID in pairs (currentActions) do
-    Actions:Delete(currentActions[actionID])
-  end
-  currentActions = nil
-  currentActions = {} 
-  end 
-end                                                            
+end                                                              
 function Actions:Load()
     local tA = Actions:GetTracked()
     if Config:GetTableCount(tA)>0 then                 
@@ -56,11 +47,15 @@ function Actions:Load()
         end       
     end
 end 
-function Actions:Delete(action)
-  action[3]:Hide()
-  action = nil
-  UI:Update()
-end
+function Actions:Unload()
+  if Config:GetTableCount(currentActions) >0 then
+  for actionID in pairs (currentActions) do
+    Actions:Delete(currentActions[actionID])
+  end
+  currentActions = nil
+  currentActions = {} 
+  end 
+end 
 function Actions:Create(action,isEnabled,isExisting,key)
   local cA = Actions:GetCurrent()
     local curretSpec    
@@ -133,6 +128,11 @@ function Actions:Create(action,isEnabled,isExisting,key)
     SetupAction()
    
 end
+function Actions:Delete(action)
+  action[3]:Hide()
+  action = nil
+  UI:Update()
+end
 --Getters & Setters,Reset-----------------------------
 function Actions:Set(loadedTrackedActions)
     trackedActions = loadedTrackedActions
@@ -143,4 +143,4 @@ end
 function Actions:GetCurrent()
 return currentActions
 end
--- Revision version v1.0.2 ----
+-- Revision version v1.0.4 ----

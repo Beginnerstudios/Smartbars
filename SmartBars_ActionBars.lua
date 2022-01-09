@@ -579,4 +579,4 @@ function ActionBars:GetSV()
          }
  return returnTable
 end
---Revision v 1.0.3 --
+--Revision v 1.0.4 --

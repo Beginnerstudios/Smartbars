@@ -355,7 +355,7 @@ function Templates:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbo
   return edit
 end
 function Templates:CreateFontString(parentWidget,fontSize,someText)--Add fontstring with desired parameters
-local fontString =parentWidget:CreateFontString(nil,defaultLayer)
+local fontString = parentWidget:CreateFontString(nil,defaultLayer)
 fontString:SetPoint(right,parentWidget,center,22,-17)
 fontString:SetFont(fontFrizqt,fontSize,nil)
 if not someText then
@@ -372,21 +372,15 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked,isFound)--Ret
   actionWidget:SetWidth(50)
   actionWidget:SetHeight(50) 
   local newTexture= API:GetActionTexture(action[2],action[6])
+  actionWidget:SetFrameStrata(mediumFrameStrata)
   if isTracked then
- 
-    actionWidget:SetFrameStrata(mediumFrameStrata)
     actionWidget:SetHighlightTexture(nil)
     actionWidget:SetPushedTexture(nil)    
   else
-   
-    local newTexture= API:GetActionTexture(action[2],action[6])
-    actionWidget:SetFrameStrata(mediumFrameStrata)
     actionWidget:SetHighlightTexture(newTexture)
     actionWidget:SetPushedTexture(newTexture)
   end
   actionWidget:SetNormalTexture(newTexture)
- 
   return actionWidget
 end
-
---Revision v 1.0.2 --
+--Revision v 1.0.4 --
