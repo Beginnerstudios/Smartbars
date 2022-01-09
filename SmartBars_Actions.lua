@@ -38,13 +38,12 @@ function Actions:Add(action)
  UI:Update()       
 end    
 function Actions:Unload()
-  local cA = Actions:GetCurrent()
-  if cA then
-  for actionID in pairs (cA) do
-    Actions:Delete(cA[actionID])
+  if Config:GetTableCount(currentActions) >0 then
+  for actionID in pairs (currentActions) do
+    Actions:Delete(currentActions[actionID])
   end
-  cA = nil
-  cA = {} 
+  currentActions = nil
+  currentActions = {} 
   end 
 end                                                            
 function Actions:Load()

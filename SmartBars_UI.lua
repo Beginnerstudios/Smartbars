@@ -54,39 +54,97 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     local xOffstet = 0
     local yOffset = -20
     local count = 0 
+    local displayedIDs = {}
+    local trackedIDs = {}
+    local count2 =0
     for k in pairs(actions) do
-      local widget = actions[k][3]
-      widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
-      widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
-      local actionType =actions[k][6]
-      local actionID = actions[k][2]
-      local actionName = API:GetDisplayedActionInfo(actionID,actionType)
-      if actionType =="item" then
-      widget.tooltipText = actionType.." - "..actionName
-    else
-      widget.tooltipText = actionName
-    end
-    xOffstet = xOffstet+50
-    count = count +1
-    --Next line after 12 spells
-    if(count==6) then
-      yOffset = yOffset -55
-      xOffstet = 0
-      count=0
-    end
-    --Compare widgets with tracked actions
-    for _,v in pairs(Actions:GetTracked()) do
-      if Config:IsValueSame(actions[k][2],v[2]) and Config:IsValueSame(v[5],API:GetSpecialization()) then
-        widget:SetChecked(true)
+      local function CreateWidget()
+        local widget = actions[k][3]
+        local actionType =actions[k][6]
+        local actionID = actions[k][2]
+        local actionName = API:GetDisplayedActionInfo(actionID,actionType)
+        widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
+        widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
+        widget:SetScript(onClick,function (self) 
+          Actions:Add(actions[k])
+          UI:Update()
+        end) 
+        if actionType =="item" then
+            widget.tooltipText = actionType.." - "..actionName
+        else
+            widget.tooltipText = actionName
+        end
+        xOffstet = xOffstet+50
+        count = count +1
+        --Next line after 12 spells
+        if(count==6) then
+            yOffset = yOffset -55
+            xOffstet = 0
+            count=0
+        end
+        for q,v in pairs(Actions:GetTracked()) do
+          local actionID = actions[k][2]
+          local trackedActionID = v[2]
+          local trackedActionSpec = v[5]
+          local currentSpec = API:GetSpecialization()
+          if Config:IsValueSame(actionID,trackedActionID) and Config:IsValueSame(trackedActionSpec,currentSpec) then
+            widget:SetChecked(true)
+          elseif Config:IsValueSame(trackedActionSpec,currentSpec)then
+            trackedIDs[trackedActionID] = actionID
+          end 
+         
+        end  
+        displayedIDs[actionID] = actions[k]
+    
+               
+          
+        
+      
+      end    
+     CreateWidget()
+    end 
+
+    for k,v in pairs(trackedIDs) do          
+      if trackedIDs[k]==displayedIDs[k]then
+      elseif not displayedIDs[k] then        
+        local function CreateWidget()
+          local cA = Actions:GetCurrent()
+          local tA = Actions:GetTracked()
+          local ID = Config:JoinNumber(k,API:GetSpecialization()) 
+          local actionType =tA[ID][9]
+          local actionID = k
+          local actionName = select(1,API:GetFoundActionInfo(actionID)[1])
+          local newAction = {}      
+          newAction[6] = tA[ID][9]   
+          newAction[2] = tA[ID][2]     
+          local widget=Templates:CreateActionWidget(newAction,primaryFrame,false)
+          widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
+          widget:SetChecked(true)
+          widget:SetScript(onClick,function (self) 
+         local actionID = Config:JoinNumber(actionID,API:GetSpecialization())         
+         tA[actionID] = nil
+         cA[actionID][3]:Hide()
+         cA[actionID] = nil
+          widget:Hide()
+          end) 
+          if actionType =="item" then
+              widget.tooltipText = actionType.." - "..actionName
+          else
+              widget.tooltipText = actionName
+          end
+          xOffstet = xOffstet+50
+          count = count +1
+          if(count==6) then
+              yOffset = yOffset -55
+              xOffstet = 0
+              count=0
+          end
+        end 
+        CreateWidget()
       end
     end
-    -- ACTION WIDGETS -- EVENTS 
-    widget:SetScript("OnClick",function (self) 
-    Actions:Add(actions[k])
-    UI:Update()
-    end)  
-   
-  end  
+    displayedIDs = nil
+    trackedIDs = nil
   end 
   local function Setup() 
   --Count of tracked actions for specific spec
@@ -116,7 +174,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
   configWidgets[3].textValue:SetText(barCount)
 
   end
-primaryFrame = Templates:PrimaryFrame()
+  primaryFrame = Templates:PrimaryFrame()
   Setup()
   Scripts()
   CreateActions(API:GetUserActions(),primaryFrame)   
@@ -146,9 +204,11 @@ function UI:Delete()
 end
 --UI:Update-------------------------------
 function UI:Update()
-local configWidgets = primaryFrame.configWidgets
-configWidgets[1].trackedValue:SetText(Config:GetTableCount(Actions:GetCurrent()))
-configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
+  if primaryFrame then
+    local configWidgets = primaryFrame.configWidgets
+    configWidgets[1].trackedValue:SetText(Config:GetTableCount(Actions:GetCurrent()))
+    configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
+  end
 end
 --Getters & Setters-----------------------------
 function UI:GetIsVisible()

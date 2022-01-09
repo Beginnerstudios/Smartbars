@@ -365,19 +365,21 @@ else
 end
 return fontString
 end
-function Templates:CreateActionWidget(action,parentFrame,isTracked)--Return widget with correct size and textures
+function Templates:CreateActionWidget(action,parentFrame,isTracked,isFound)--Return widget with correct size and textures
   local actionWidget = CreateFrame(checkButton,nil, parentFrame, defaultCheckButton,defaultLayer)
   actionWidget:SetPoint(left,parentFrame,left,0,0)
   actionWidget:SetHitRectInsets(0,0,0,0) 
   actionWidget:SetWidth(50)
   actionWidget:SetHeight(50) 
-  local spellID = action[2] 
-  local newTexture= API:GetActionTexture(spellID,action[6],action[1])
+  local newTexture= API:GetActionTexture(action[2],action[6])
   if isTracked then
+ 
     actionWidget:SetFrameStrata(mediumFrameStrata)
     actionWidget:SetHighlightTexture(nil)
-    actionWidget:SetPushedTexture(nil) 
+    actionWidget:SetPushedTexture(nil)    
   else
+   
+    local newTexture= API:GetActionTexture(action[2],action[6])
     actionWidget:SetFrameStrata(mediumFrameStrata)
     actionWidget:SetHighlightTexture(newTexture)
     actionWidget:SetPushedTexture(newTexture)

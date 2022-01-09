@@ -313,7 +313,7 @@ end
 Config:Save()
 UI:Update()
 end
-function ActionBars:Unload()
+function ActionBars:Unload() --unload all loaded action bars (specchange)
   for frameID in pairs(frames) do  
   if frames[frameID] then
   frames[frameID]:Hide()

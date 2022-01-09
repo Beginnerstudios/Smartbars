@@ -30,8 +30,8 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = "v - 1.0.3 BETA"
-local publicBuild = 103
+local currentVersion = "v - 1.0.4 ALPHA"
+local publicBuild = 104
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -199,4 +199,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v 1.0.2 -----
+-- Revision version v 1.0.3 -----

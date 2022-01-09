@@ -134,8 +134,7 @@ function API:IsPvPing()
         return false
     end
 end
-function API:IsActionInRange(slotID,actionType)
-  
+function API:IsActionInRange(slotID,actionType) 
     if actionType ==spell then
         local spellName= GetSpellInfo(slotID)      
         if IsSpellInRange(spellName,target) == 1 or IsSpellInRange(spellName,target) ==nil then
@@ -154,6 +153,13 @@ function API:GetDisplayedActionInfo(id,actionType)
         local name = GetItemInfo(id)
         return name
     end
+end
+function API:GetFoundActionInfo(id)  
+        if GetSpellInfo(id) then
+            return {GetSpellInfo(id),"spell"}
+        elseif not GetSpellInfo(id) then 
+            return {GetItemInfo(id),"item"}
+        end  
 end
 -- Revision version v1.0.2 ----
 
