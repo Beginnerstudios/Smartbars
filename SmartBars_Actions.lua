@@ -7,6 +7,7 @@ local API
 local Config
 local Templates
 local ActionBars
+local UI
 --Init------------------------------------
 function Actions:Init()
   --  UI = SmartBars.UI
@@ -14,6 +15,7 @@ function Actions:Init()
     Config = SmartBars.Config
     Templates = SmartBars.Templates
     ActionBars = SmartBars.ActionBars
+    UI = SmartBars.UI
 end
 --Variables--------------------------------
 local trackedActions = {}
@@ -32,7 +34,8 @@ function Actions:Add(action)
       tA[actionID]=nil
       else  
       Actions:Create(action,true,false)          
-    end         
+    end   
+ UI:Update()       
 end    
 function Actions:Unload()
   local cA = Actions:GetCurrent()
@@ -57,6 +60,7 @@ end
 function Actions:Delete(action)
   action[3]:Hide()
   action = nil
+  UI:Update()
 end
 function Actions:Create(action,isEnabled,isExisting,key)
   local cA = Actions:GetCurrent()
@@ -81,12 +85,12 @@ function Actions:Create(action,isEnabled,isExisting,key)
     else  
         actionID= Config:JoinNumber(action[2],API:GetSpecialization())
         curretSpec= API:GetSpecialization()
-        trackedFrame =select(2, ActionBars:Get():HighestFrameID())  
+        trackedFrame =select(2, ActionBars:GetHighest())  
         showOnlyWhenBoosted = false
         actionType = action[6]
         isPVP = API:IsPVPTalent(action[2])
     end    
-    cA[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:Get():ActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType,isPVP} 
+    cA[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:GetActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType,isPVP} 
     cA[actionID][3].edit = Templates:CreateEditBox(cA[actionID][3],cA[actionID],isEnabled)  
     cA[actionID][3].group = Templates:CreateGroupLayout(cA[actionID][3],cA[actionID],isEnabled,actionID) 
     cA[actionID][3].charges = Templates:CreateFontString(cA[actionID][3],15)  
@@ -96,7 +100,7 @@ function Actions:Create(action,isEnabled,isExisting,key)
     local function SetupAction()    
       cA[actionID][3].group.plusButton:SetScript(onClick, function ()
         if ActionBars:FindIndex(cA[actionID][6]) then
-          if ActionBars:FindIndex(cA[actionID][6])< ActionBars:Get():ActionsSpecBarCount(Config:GetSpec()) then
+          if ActionBars:FindIndex(cA[actionID][6])< ActionBars:GetCurrentSpecActionBarsCount() then
             cA[actionID][6]= cA[actionID][6] + 1 
             trackedActions[actionID][6]= cA[actionID][6]
             

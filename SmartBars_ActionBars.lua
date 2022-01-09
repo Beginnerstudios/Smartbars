@@ -7,6 +7,7 @@ local Templates
 local Actions
 local Localization
 local API
+local UI
 --Init------------------------------------
 function ActionBars:Init()
 Config =SmartBars.Config
@@ -14,6 +15,7 @@ Templates = SmartBars.Templates
 Actions = SmartBars.Actions
 Localization = SmartBars.Localization
 API = SmartBars.API
+UI= SmartBars.UI
 end
 --Variables--------------------------------
 --ActionBars
@@ -43,6 +45,7 @@ function ActionBars:Add()-- add new action bar to current specialization
   ActionBars:Create(frameID) 
   ActionBars:Toggle(true)      
   Config:Save()
+  UI:Update()
 end
 end 
 function ActionBars:Create(i)--create action bar with for specific frameID and setup its default values
@@ -166,7 +169,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
          elseif ActionBars:FindIndex(i) ==1 then                  
         local function ShowLastOptionWidget()
             ActionBars:HideOptionPanels()
-            local lastFrameID = select(2,ActionBars:Get():HighestFrameID()) 
+            local lastFrameID = select(2,ActionBars:GetHighest()) 
             local optionWidget = frames[lastFrameID].configWidgets[2]
             local barText = frames[lastFrameID].configWidgets[2].settings[1].text
             optionWidget:Show()
@@ -260,7 +263,7 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
   SetupActionBars(i) 
 end
 function ActionBars:Load()--load existing or create first action bar for current spec
-  local currentSpecActionsCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())
+  local currentSpecActionsCount = ActionBars:GetCurrentSpecActionBarsCount()
   if currentSpecActionsCount and currentSpecActionsCount~=0 then  
       for frameID in pairs(frameIDs) do                         
         ActionBars:Create(frameID)             
@@ -277,7 +280,7 @@ end
 function ActionBars:Remove()--remove action bar with highestIndex
 local spec = Config:GetSpec()
 if  actionBarsSpecCount[spec] > 1 then
-  local lastFrameID = select(2,ActionBars:Get():HighestFrameID())  
+  local lastFrameID = select(2,ActionBars:GetHighest())  
   frames[lastFrameID]:Hide()
   frames[lastFrameID].configWidgets[1]:Hide()
   frames[lastFrameID].configWidgets[2]:Hide()
@@ -308,9 +311,7 @@ if  actionBarsSpecCount[spec] > 1 then
       actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
 end
 Config:Save()
-end
-function ActionBars:StopUpdate()
-updater:SetScript(onUpdate,nil)
+UI:Update()
 end
 function ActionBars:Unload()
   for frameID in pairs(frames) do  
@@ -406,6 +407,9 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
       end              
     end
     end) 
+end
+function ActionBars:StopUpdate()
+  updater:SetScript(onUpdate,nil)
 end
 function ActionBars:Update(actions) --determinate if widget will be visible or hidden
   local configMode = Config:IsConfigMode() --1 in config
@@ -506,33 +510,28 @@ function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha
   frameIDs = loadedFrameIDs
   framesRows = loadedFramesRows
 end
-function ActionBars:Get()                 
-  local returnTable =
-         {                         
-             ActionBar = function(self,barIndex)              
-                return frames[barIndex]                                        
-             end,  
-             ActionBars = function(self)             
-              return frames                             
-             end,              
-             ActionsSpecBarCount = function(self,index)                                                                                    
-            return actionBarsSpecCount[index]
-             end,
-            HighestFrameID = function(self)  
+function ActionBars:GetHighest()                                                                     
+           
               local highestID=0 
               local frameID
               for k,v in pairs(frameIDs) do
                 if k~=nil then
                   if v[2]>=highestID and v[3]==Config:GetSpec() then
-                    highestID = v[2]
-                    frameID = v[1]                
+                  highestID = v[2]
+                  frameID = v[1] 
+                  end               
                 end   
-                end  
-            end                                                                                       
-              return highestID,frameID
-            end               
-         }
- return returnTable
+              end  
+                                                                                                   
+             return highestID,frameID
+                            
+end
+function ActionBars:GetActionBar(frameID)                                                                     
+return frames[frameID]            
+end
+function ActionBars:GetCurrentSpecActionBarsCount()
+local currentSpec = Config:GetSpec() 
+return actionBarsSpecCount[currentSpec] 
 end
 function ActionBars:GetSV()                 
   local returnTable =
@@ -580,4 +579,4 @@ function ActionBars:GetSV()
          }
  return returnTable
 end
---Revision v 0.9.9 --
+--Revision v 1.0.3 --

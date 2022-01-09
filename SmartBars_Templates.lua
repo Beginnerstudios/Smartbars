@@ -278,8 +278,6 @@ local function OptionWidget()
          restZoneWidget.title:SetPoint(left,restZoneWidget,center,-50,0)
          restZoneWidget.title:SetFontObject(defaultFont)
          restZoneWidget.title:SetText(Localization:HideActionsTitle()) 
-        -- local hiderest =ActionBars:Get():FramesHideRest()
-        -- restZoneWidget.checkBox:SetChecked(hiderest[index])
          return restZoneWidget
          end
       

@@ -41,13 +41,13 @@ function UI:Create()--Create primary frame + ActionUpdater frame
       Config:SetGlobalHideRest(self:GetChecked())
     end)   
     barsWidget.minusButton:SetScript(onClick, function () 
-      if ActionBars:Get():ActionsSpecBarCount(Config:GetSpec()) >1 then
+      if ActionBars:GetCurrentSpecActionBarsCount() >1 then
         local removeBarConfirm = "SMARTBARS_REMOVEBARCONFIRM"
         StaticPopup_Show (removeBarConfirm)  
       end      
     end) 
     barsWidget.plusButton:SetScript(onClick, function ()   
-      ActionBars:Add()     
+      ActionBars:Add()   
     end)
   end
   local function CreateActions(actions)
@@ -82,7 +82,10 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     end
     -- ACTION WIDGETS -- EVENTS 
     widget:SetScript("OnClick",function (self) 
-    Actions:Add(actions[k]) end)  
+    Actions:Add(actions[k])
+    UI:Update()
+    end)  
+   
   end  
   end 
   local function Setup() 
@@ -98,7 +101,6 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     end
   end
   configWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
-  --Determinate height of primary frame
   local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
   configWidgets[1].usedValue:SetText(usedSpellsCount)
   configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
@@ -110,7 +112,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     primaryFrameHeight = actionsHeight  
   end
   primaryFrame:SetHeight(primaryFrameHeight)
-  local barCount = ActionBars:Get():ActionsSpecBarCount(API:GetSpecialization())                                           
+  local barCount = ActionBars:GetCurrentSpecActionBarsCount()                                          
   configWidgets[3].textValue:SetText(barCount)
 
   end
@@ -143,6 +145,11 @@ function UI:Delete()
   end
 end
 --UI:Update-------------------------------
+function UI:Update()
+local configWidgets = primaryFrame.configWidgets
+configWidgets[1].trackedValue:SetText(Config:GetTableCount(Actions:GetCurrent()))
+configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
+end
 --Getters & Setters-----------------------------
 function UI:GetIsVisible()
 return isVisible
