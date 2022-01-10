@@ -383,4 +383,4 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked,isFound)--Ret
   actionWidget:SetNormalTexture(newTexture)
   return actionWidget
 end
---Revision v 1.0.4 --
+--Revision v 1.0.5 --

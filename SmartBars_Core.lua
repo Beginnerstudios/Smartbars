@@ -45,7 +45,7 @@ C_Timer.After(2, function()
     Core:Load()   
     print(Localization:LoadedMessage())   
 end)
--- Revision version v1.0.4 -----
+-- Revision version v1.0.5 -----
 
 
 
