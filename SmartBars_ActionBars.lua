@@ -427,27 +427,34 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
     local actionType = actions[actionID][9]  
     local isPVPspell = actions[actionID][10]  
     if configMode == true then
-  widget:Show()
+      widget:Show()
     else
-  if globalHideRest == true and isResting ==true or isResting==true and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted ==true and isBoosted == false or isPvPing == false and isPVPspell == true  then
-    widget:Hide()
-   else
-     local chargesText = API:GetActionCharges(spellID,actionType) 
-     local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
-     local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
-     local inRange = API:IsActionInRange(spellID,actionType)       
-     widget.charges:SetText(chargesText)
-     
-     if isBoosted ==true and displayOnlyWhenBoosted ==true and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true or isBoosted ==true and displayOnlyWhenBoosted==false then      
-       widget:Show()
-       ActionButton_ShowOverlayGlow(widget)                             
-     else 
-       ActionButton_HideOverlayGlow(widget)             
-       if notEnoughMana or isUsable==false or duration>1.5 or inRange==false then  
-         widget:Hide()  
-       else                                                                                        
-           local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
-           if isUserBuffedBy==true then
+    if
+    globalHideRest == true and isResting ==true or
+    isResting==true and framesHideRest[frameIndex]==true or
+    displayOnlyWhenBoosted ==true and isBoosted == false or
+    isPvPing == false and isPVPspell == true
+    then
+      widget:Hide()
+    else
+    local chargesText = API:GetActionCharges(spellID,actionType) 
+    local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
+    local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
+    local inRange = API:IsActionInRange(spellID,actionType)       
+    widget.charges:SetText(chargesText)     
+    if 
+    isBoosted ==true and displayOnlyWhenBoosted ==true and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true or
+    isBoosted ==true and displayOnlyWhenBoosted ==false and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true
+    then
+      widget:Show()
+      ActionButton_ShowOverlayGlow(widget)                             
+    else 
+      ActionButton_HideOverlayGlow(widget)             
+    if notEnoughMana == true or isUsable==false or duration>1.5 or inRange==false then  
+      widget:Hide()  
+    else                                                                                        
+      local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
+    if isUserBuffedBy==true then
             widget:Hide()                      
            else     
             widget:Show()                                                      
