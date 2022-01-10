@@ -116,7 +116,8 @@ function Actions:Create(action,isEnabled,isExisting,key)
       if Config:IsCurrentPatch() then
         cA[actionID][3].group.showWhenBoosted:SetScript(onClick, function (self) 
           showOnlyWhenBoosted =self:GetChecked()
-          trackedActions[actionID][8]=showOnlyWhenBoosted     
+          trackedActions[actionID][8]=showOnlyWhenBoosted    
+          cA[actionID][8] =showOnlyWhenBoosted
         end)
       end
      

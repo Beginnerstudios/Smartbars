@@ -436,8 +436,9 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
      local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
      local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
      local inRange = API:IsActionInRange(spellID,actionType)       
-     widget.charges:SetText(chargesText)          
-     if isBoosted ==true  and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true then      
+     widget.charges:SetText(chargesText)
+     
+     if isBoosted ==true and displayOnlyWhenBoosted ==true and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true or isBoosted ==true and displayOnlyWhenBoosted==false then      
        widget:Show()
        ActionButton_ShowOverlayGlow(widget)                             
      else 
