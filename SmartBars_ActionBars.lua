@@ -426,10 +426,9 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
     local displayOnlyWhenBoosted =actions[actionID][8]
     local actionType = actions[actionID][9]  
     local isPVPspell = actions[actionID][10]  
-
-if configMode == true then
+    if configMode == true then
   widget:Show()
-else
+    else
   if globalHideRest == true and isResting ==true or isResting==true and framesHideRest[frameIndex]==true or displayOnlyWhenBoosted ==true and isBoosted == false or isPvPing == false and isPVPspell == true  then
     widget:Hide()
    else
@@ -456,20 +455,12 @@ else
      end   
       
    end    
-end
-      
- 
-    
- 
-
-  end
-     
+    end
+  end     
 end
 function ActionBars:Sort(frameID,actions)--handle displayed widget position and parent
   local startxOffset = 0
   local startyOffset = 0
- -- local count =0
- -- local rowCount = 0
   local iconHolder = frames[frameID].configWidgets[3]
   for actionID in pairs(actions) do
     local actionFrameNumber = actions[actionID][6]      
@@ -568,4 +559,4 @@ function ActionBars:GetSV()
          }
  return returnTable
 end
---Revision v 1.0.4 --
+--Revision v 1.0.5 --
