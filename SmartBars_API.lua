@@ -5,7 +5,7 @@ local API = SmartBars.API
 local Config
 --Init------------------------------------
 function API:Init()
-   Config = SmartBars.Config
+Config = SmartBars.Config
 end
 --DevStrings--------------------------
 local item = "item"
@@ -161,5 +161,5 @@ function API:GetFoundActionInfo(id)
             return {GetItemInfo(id),"item"}
         end  
 end
--- Revision version v1.0.5 ----
+-- Revision version v1.0.6 ----
 

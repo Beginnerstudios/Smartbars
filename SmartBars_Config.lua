@@ -17,7 +17,7 @@ function Config:Init()
     ActionBars = SmartBars.ActionBars
     Localization = SmartBars.Localization
 end
---Config:Functions------------------------
+--Config:Variables------------------------
 local isConfigMode = false
 local currentSpecialization
 local isCleared
@@ -28,8 +28,8 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = " 1.0.5"
-local publicBuild = 105
+local currentVersion = " 1.0.6"
+local publicBuild = 106
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -51,7 +51,7 @@ end
 end
 function Config:Save()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecBarCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
+    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
 end
 function Config:Load()  
 Actions:Set(SmartBarsCharacterActions)   
@@ -197,4 +197,4 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v 1.0.5 -----
+-- Revision version v 1.0.6 -----

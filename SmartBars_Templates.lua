@@ -307,7 +307,7 @@ actionBar.configWidgets = {Edit(),OptionWidget(),IconHolder()}
   end
 return actionBar
 end 
-function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
+function Templates:GroupLayout(parentWidget,valueToSave,isDisplayed)--Add group layout to desired widget
   local yOfs = -15
   local newWidget = CreateFrame(frame,nil, parentWidget)
   newWidget:SetPoint(center,parentWidget,center,0,0)
@@ -342,7 +342,7 @@ function Templates:CreateGroupLayout(parentWidget,valueToSave,isDisplayed)--Add 
   end
   return newWidget
 end
-function Templates:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
+function Templates:EditBox(parentWidget,valueToSave,isEnabled)--Add editbox with desired text on frame 
   local edit = CreateFrame(editBox,nil, parentWidget,nil,defaultLayer)
   edit:SetPoint(center,parentWidget,center,2,0)
   edit:SetSize(50,50)
@@ -354,7 +354,7 @@ function Templates:CreateEditBox(parentWidget,valueToSave,isEnabled)--Add editbo
   edit:SetFont(fontFrizqt, 25, outline)
   return edit
 end
-function Templates:CreateFontString(parentWidget,fontSize,someText)--Add fontstring with desired parameters
+function Templates:FontString(parentWidget,fontSize,someText)--Add fontstring with desired parameters
 local fontString = parentWidget:CreateFontString(nil,defaultLayer)
 fontString:SetPoint(right,parentWidget,center,22,-17)
 fontString:SetFont(fontFrizqt,fontSize,nil)
@@ -365,7 +365,7 @@ else
 end
 return fontString
 end
-function Templates:CreateActionWidget(action,parentFrame,isTracked,isFound)--Return widget with correct size and textures
+function Templates:ActionWidget(action,parentFrame,isTracked,isFound)--Return widget with correct size and textures
   local actionWidget = CreateFrame(checkButton,nil, parentFrame, defaultCheckButton,defaultLayer)
   actionWidget:SetPoint(left,parentFrame,left,0,0)
   actionWidget:SetHitRectInsets(0,0,0,0) 
@@ -383,4 +383,4 @@ function Templates:CreateActionWidget(action,parentFrame,isTracked,isFound)--Ret
   actionWidget:SetNormalTexture(newTexture)
   return actionWidget
 end
---Revision v 1.0.5 --
+--Revision v 1.0.6 --

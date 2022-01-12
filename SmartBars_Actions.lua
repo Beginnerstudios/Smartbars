@@ -20,9 +20,6 @@ end
 --Variables--------------------------------
 local trackedActions = {}
 local currentActions = {}
---Dev Strings---
-local onClick ="OnClick"
-local onEditFocusLost = "OnEditFocusLost"
 --Actions:Functions-----------------------
 function Actions:Add(action) 
   local tA = Actions:GetTracked()
@@ -57,6 +54,7 @@ function Actions:Unload()
   end 
 end 
 function Actions:Create(action,isEnabled,isExisting,key)
+  local onClick ="OnClick"
   local cA = Actions:GetCurrent()
     local curretSpec    
     local actionID 
@@ -84,10 +82,10 @@ function Actions:Create(action,isEnabled,isExisting,key)
         actionType = action[6]
         isPVP = API:IsPVPTalent(action[2])
     end    
-    cA[actionID]= {action[1],action[2],Templates:CreateActionWidget(action,ActionBars:GetActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType,isPVP} 
-    cA[actionID][3].edit = Templates:CreateEditBox(cA[actionID][3],cA[actionID],isEnabled)  
-    cA[actionID][3].group = Templates:CreateGroupLayout(cA[actionID][3],cA[actionID],isEnabled,actionID) 
-    cA[actionID][3].charges = Templates:CreateFontString(cA[actionID][3],15)  
+    cA[actionID]= {action[1],action[2],Templates:ActionWidget(action,ActionBars:GetActionBar(trackedFrame).configWidgets[3],true),action[4],curretSpec,trackedFrame,isBoosted,showOnlyWhenBoosted,actionType,isPVP} 
+    cA[actionID][3].edit = Templates:EditBox(cA[actionID][3],cA[actionID],isEnabled)  
+    cA[actionID][3].group = Templates:GroupLayout(cA[actionID][3],cA[actionID],isEnabled,actionID) 
+    cA[actionID][3].charges = Templates:FontString(cA[actionID][3],15)  
     if isExisting ==false then
     trackedActions[actionID] = cA[actionID]
     end
@@ -120,8 +118,7 @@ function Actions:Create(action,isEnabled,isExisting,key)
           cA[actionID][8] =showOnlyWhenBoosted
         end)
       end
-     
-      cA[actionID][3].edit:SetScript(onEditFocusLost, function (self)             
+      cA[actionID][3].edit:SetScript("OnEditFocusLost", function (self)             
           action[4] = self:GetText() 
           trackedActions[actionID][4] = action[4]      
       end)
@@ -144,4 +141,4 @@ end
 function Actions:GetCurrent()
 return currentActions
 end
--- Revision version v1.0.5 ----
+-- Revision version v1.0.6 ----

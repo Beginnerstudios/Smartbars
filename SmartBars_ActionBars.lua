@@ -19,10 +19,10 @@ UI= SmartBars.UI
 end
 --Variables--------------------------------
 --ActionBars
-local updater
+local framesParent
 local frames = {}
 --Saved variables
-local actionBarsSpecCount ={}
+local framesSpecCount ={}
 local framesPosition = {}
 local framesScale = {}
 local framesAlpha = {}
@@ -30,18 +30,13 @@ local framesColumn ={}
 local framesHideRest = {}
 local framesRows = {}
 local frameIDs = {}
---DevEvents
-local onClick = "OnClick"
-local onValueChanged = "OnValueChanged"
-local onUpdate = "OnUpdate"
-
 --ActionBars----------------------
 function ActionBars:Add()-- add new action bar to current specialization
   local spec = Config:GetSpec()
-  if actionBarsSpecCount[spec] < 9 then
-  actionBarsSpecCount[spec] = actionBarsSpecCount[spec]+1
-  local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
-  frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
+  if framesSpecCount[spec] < 9 then
+    framesSpecCount[spec] = framesSpecCount[spec]+1
+  local frameID = Config:JoinNumber(spec,framesSpecCount[spec])
+  frameIDs[frameID] = {frameID,framesSpecCount[spec],spec}
   ActionBars:Create(frameID) 
   ActionBars:Toggle(true)      
   Config:Save()
@@ -53,10 +48,12 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     frames ={}
   end
   frames[i] = Templates:ActionBar(i)
-  frames[i]:SetParent(updater) 
+  frames[i]:SetParent(framesParent) 
 
   local function SetupActionBars(i)--Setup variables for action bar position,scale etc..
     local defaultFrameScale = 0.75
+    local onValueChanged = "OnValueChanged"
+    local onClick = "OnClick"
     local defaultFrameAlpha = 1
     local scaleWidget = frames[i].configWidgets[2].settings[2]
     local alphaWidget = frames[i].configWidgets[2].settings[3]
@@ -270,16 +267,16 @@ function ActionBars:Load()--load existing or create first action bar for current
       end   
   else
   local spec = Config:GetSpec()
-  actionBarsSpecCount[spec] = 1
-  local frameID = Config:JoinNumber(spec,actionBarsSpecCount[spec])
-  frameIDs[frameID] = {frameID,actionBarsSpecCount[spec],spec}
+  framesSpecCount[spec] = 1
+  local frameID = Config:JoinNumber(spec,framesSpecCount[spec])
+  frameIDs[frameID] = {frameID,framesSpecCount[spec],spec}
   ActionBars:Create(frameID)
   end
 
 end 
 function ActionBars:Remove()--remove action bar with highestIndex
 local spec = Config:GetSpec()
-if  actionBarsSpecCount[spec] > 1 then
+if  framesSpecCount[spec] > 1 then
   local lastFrameID = select(2,ActionBars:GetHighest())  
   frames[lastFrameID]:Hide()
   frames[lastFrameID].configWidgets[1]:Hide()
@@ -308,7 +305,7 @@ if  actionBarsSpecCount[spec] > 1 then
         end 
       end 
     
-      actionBarsSpecCount[spec] =actionBarsSpecCount[spec]-1
+      framesSpecCount[spec] =framesSpecCount[spec]-1
 end
 Config:Save()
 UI:Update()
@@ -397,8 +394,8 @@ function ActionBars:FindFrameID(frameIndex) --return frameID based on frameIndex
 end
 --Update----------------------
 function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate event (refreshing actions every frame)
-  updater = CreateFrame("Frame",nil,nil)
-  updater:SetScript(onUpdate, function ()
+  framesParent = CreateFrame("Frame",nil,nil)
+  framesParent:SetScript("OnUpdate", function ()
     local actions = Actions:GetCurrent()
     ActionBars:Update(actions)   
     for frameID,v in pairs(frameIDs) do 
@@ -409,7 +406,7 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
     end) 
 end
 function ActionBars:StopUpdate()
-  updater:SetScript(onUpdate,nil)
+  framesParent:SetScript("OnUpdate",nil)
 end
 function ActionBars:Update(actions) --determinate if widget will be visible or hidden
   local configMode = Config:IsConfigMode() --1 in config
@@ -429,36 +426,36 @@ function ActionBars:Update(actions) --determinate if widget will be visible or h
     if configMode == true then
       widget:Show()
     else
-    if
-    globalHideRest == true and isResting ==true or
-    isResting==true and framesHideRest[frameIndex]==true or
-    displayOnlyWhenBoosted ==true and isBoosted == false or
-    isPvPing == false and isPVPspell == true
-    then
-      widget:Hide()
-    else
-    local chargesText = API:GetActionCharges(spellID,actionType) 
-    local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
-    local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
-    local inRange = API:IsActionInRange(spellID,actionType)       
-    widget.charges:SetText(chargesText)     
-    if 
-    isBoosted ==true and displayOnlyWhenBoosted ==true and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true or
-    isBoosted ==true and displayOnlyWhenBoosted ==false and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true
-    then
-      widget:Show()
-      ActionButton_ShowOverlayGlow(widget)                             
-    else 
-      ActionButton_HideOverlayGlow(widget)             
-    if notEnoughMana == true or isUsable==false or duration>1.5 or inRange==false then  
-      widget:Hide()  
-    else                                                                                        
-      local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
-    if isUserBuffedBy==true then
+      if
+      globalHideRest == true and isResting ==true or
+      isResting==true and framesHideRest[frameIndex]==true or
+      displayOnlyWhenBoosted ==true and isBoosted == false or
+      isPvPing == false and isPVPspell == true
+      then
+        widget:Hide()
+      else
+        local chargesText = API:GetActionCharges(spellID,actionType) 
+        local isUsable,notEnoughMana = API:IsUsableAction(spellID,actionType)  
+        local _, duration, _ = API:GetActionCooldown(spellID,actionType,slotID)  
+        local inRange = API:IsActionInRange(spellID,actionType)      
+        widget.charges:SetText(chargesText)     
+        if 
+        isBoosted ==true and displayOnlyWhenBoosted ==true and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true or
+        isBoosted ==true and displayOnlyWhenBoosted ==false and isUsable==true and notEnoughMana==false and duration <1.5 and inRange==true
+        then
+        widget:Show()
+        ActionButton_ShowOverlayGlow(widget)                             
+        else 
+        ActionButton_HideOverlayGlow(widget)             
+        if notEnoughMana == true or isUsable==false or duration>1.5 or inRange==false then  
+        widget:Hide()  
+        else                                                                                        
+        local isUserBuffedBy= API:GetPlayerAuraBySpellID(spellID)
+          if isUserBuffedBy==true then
             widget:Hide()                      
-           else     
+          else     
             widget:Show()                                                      
-           end                                                            
+          end                                                            
          end         
      end   
       
@@ -488,13 +485,13 @@ function ActionBars:Sort(frameID,actions)--handle displayed widget position and 
     end
 end
 --Getter & Setter ------------ 
-function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedActionBarsSpecCount,loadedFrameIDs,loadedFramesRows)
+function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedFramesSpecCount,loadedFrameIDs,loadedFramesRows)
   framesPosition = loadedFramesPosition
   framesScale =loadedFramesScale
   framesAlpha = loadedFramesAlpha
   framesColumn = loadedFramesColumn
   framesHideRest = loadedFramesHideRest
-  actionBarsSpecCount = loadedActionBarsSpecCount
+  framesSpecCount = loadedFramesSpecCount
   frameIDs = loadedFrameIDs
   framesRows = loadedFramesRows
 end
@@ -519,13 +516,13 @@ return frames[frameID]
 end
 function ActionBars:GetCurrentSpecActionBarsCount()
 local currentSpec = Config:GetSpec() 
-return actionBarsSpecCount[currentSpec] 
+return framesSpecCount[currentSpec] 
 end
 function ActionBars:GetSV()                 
   local returnTable =
          {                                               
-            FramesSpecBarCounts = function(self)                                                                                    
-            return actionBarsSpecCount
+            FramesSpecCounts = function(self)                                                                                    
+            return framesSpecCount
                end,
             FramesScale = function(self)                                                                                                  
              return framesScale
@@ -567,4 +564,4 @@ function ActionBars:GetSV()
          }
  return returnTable
 end
---Revision v 1.0.5 --
+--Revision v 1.0.6 --

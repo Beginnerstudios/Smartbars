@@ -37,7 +37,7 @@ function Core:Load()
     ActionBars:Load()
     Actions:Load()
     ActionBars:StartUpdate()  
-    UI:RefreshTrackedIcons()
+    UI:RefreshIcons()
 end
 --Program run-----------------------------
 Core:Init()
@@ -45,7 +45,7 @@ C_Timer.After(2, function()
     Core:Load()   
     print(Localization:LoadedMessage())   
 end)
--- Revision version v1.0.5 -----
+-- Revision version v1.0.6 -----
 
 
 

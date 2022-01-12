@@ -20,19 +20,18 @@ end
 local primaryFrame 
 local isVisible = false  
 --DevEvents--
-local onClick ="OnClick"
-
 --UI:Frames-------------------------------
 function UI:Create()--Create primary frame + ActionUpdater frame 
   local function Scripts()
+    local onClick ="OnClick"
+    local resetPopup,removeBarPopup = "SMARTBARS_RESETCONFIRM","SMARTBARS_REMOVEBARCONFIRM"
     local configWidgets = primaryFrame.configWidgets
     primaryFrame.CloseButton:SetScript(onClick, function ()
       UI:Delete()
       Config:Toggle()
     end) 
     primaryFrame.resetButton:SetScript(onClick, function ()
-      local confirmPopup = "SMARTBARS_RESETCONFIRM"
-      StaticPopup_Show (confirmPopup)  
+      StaticPopup_Show (resetPopup)  
     end)
    -- local staticTitles = configWidgets[1]
     local restZoneWidget = configWidgets[2]
@@ -42,8 +41,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     end)   
     barsWidget.minusButton:SetScript(onClick, function () 
       if ActionBars:GetCurrentSpecActionBarsCount() >1 then
-        local removeBarConfirm = "SMARTBARS_REMOVEBARCONFIRM"
-        StaticPopup_Show (removeBarConfirm)  
+        StaticPopup_Show (removeBarPopup)  
       end      
     end) 
     barsWidget.plusButton:SetScript(onClick, function ()   
@@ -51,6 +49,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     end)
   end
   local function CreateActions(actions)
+    local onClick ="OnClick"
     local xOffstet = 0
     local yOffset = -20
     local count = 0 
@@ -63,7 +62,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
         local actionType =actions[k][6]
         local actionID = actions[k][2]
         local actionName = API:GetDisplayedActionInfo(actionID,actionType)
-        widget=Templates:CreateActionWidget(actions[k],primaryFrame,false)
+        widget=Templates:ActionWidget(actions[k],primaryFrame,false)
         widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
         widget:SetScript(onClick,function (self) 
           Actions:Add(actions[k])
@@ -117,7 +116,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
           local newAction = {}      
           newAction[6] = tA[ID][9]   
           newAction[2] = tA[ID][2]     
-          local widget=Templates:CreateActionWidget(newAction,primaryFrame,false)
+          local widget=Templates:ActionWidget(newAction,primaryFrame,false)
           widget:SetPoint("LEFT",primaryFrame.TitleBg,"LEFT",xOffstet+10,yOffset-100)
           widget:SetChecked(true)
           widget:SetScript(onClick,function (self) 
@@ -214,7 +213,7 @@ end
 function UI:GetIsVisible()
 return isVisible
 end
-function UI:RefreshTrackedIcons()--update icons on tracked actions
+function UI:RefreshIcons()--update icons on tracked actions
   local cA = Actions:GetCurrent()
   for actionID in pairs(cA) do
     if actionID and cA[actionID][5]== API:GetSpecialization()  then
@@ -229,7 +228,6 @@ function UI:RefreshTrackedIcons()--update icons on tracked actions
     end
   end
 end
-
--- Revision version v1.0.5 ---
+-- Revision version v1.0.6 ---
 
 
