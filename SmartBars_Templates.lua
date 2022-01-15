@@ -90,12 +90,12 @@ function Templates:PrimaryFrame()
       titles.actionsStatic:SetText(Localization:YourActions())
        
       titles.trackedValue = titles:CreateFontString(nil,defaultLayer)
-      titles.trackedValue:SetPoint(left,titles.trackedStatic,left,100,0)
+      titles.trackedValue:SetPoint(left,titles.trackedStatic,left,95,0)
       titles.trackedValue:SetFontObject(defaultFont)
       titles.trackedValue:SetText(zero)
        
       titles.usedValue = titles:CreateFontString(nil,defaultLayer)
-      titles.usedValue:SetPoint(left,titles.usedStatic,left,100,0)
+      titles.usedValue:SetPoint(left,titles.usedStatic,left,95,0)
       titles.usedValue:SetFontObject(defaultFont)
       titles.usedValue:SetText(zero)
       return titles
@@ -103,23 +103,23 @@ function Templates:PrimaryFrame()
     local function BarsWidget()
       local barsWidget = CreateFrame(frame,nil) 
       barsWidget.textStatic = barsWidget:CreateFontString(nil,defaultLayer)
-      barsWidget.textStatic:SetPoint(left,barsWidget,center,-30,0)
+      barsWidget.textStatic:SetPoint(left,barsWidget,center,50,0)
       barsWidget.textStatic:SetFontObject(defaultFont)
       barsWidget.textStatic:SetText(Localization:Bar())
       barsWidget.textValue = barsWidget:CreateFontString(nil,defaultLayer)
-      barsWidget.textValue:SetPoint(center,barsWidget,center,25,0)
+      barsWidget.textValue:SetPoint(center,barsWidget,center,75,0)
       barsWidget.textValue:SetFontObject(defaultFont)
      
 
       barsWidget.minusButton = CreateFrame(button,nil, barsWidget,defaultButton,defaultLayer)
-      barsWidget.minusButton :SetPoint(center, barsWidget, center, 5, -25)
+      barsWidget.minusButton :SetPoint(center, barsWidget, center, 50, -20)
       barsWidget.minusButton :SetSize(25,25)
       barsWidget.minusButton :SetText(minus)
       barsWidget.minusButton :SetNormalFontObject(defaultFont)  
       barsWidget.minusButton.tooltipText = Localization:RemoveActionBar()
   
       barsWidget.plusButton  = CreateFrame(button,nil, barsWidget,defaultButton,defaultLayer)
-      barsWidget.plusButton:SetPoint(center, barsWidget, center, 30, -25)
+      barsWidget.plusButton:SetPoint(center, barsWidget, center, 75, -20)
       barsWidget.plusButton:SetSize(25,25)
       barsWidget.plusButton:SetText(plus)
       barsWidget.plusButton:SetNormalFontObject(defaultFont)    
@@ -130,16 +130,27 @@ function Templates:PrimaryFrame()
       local widget = CreateFrame(frame,nil) 
       widget:SetSize(35,35)
       widget.checkBox = CreateFrame(checkButton,nil, widget,defaultCheckButton,defaultLayer)
-      widget.checkBox:SetSize(35,35)
-      widget.checkBox:SetPoint(center,widget,center,30,-30)
+      widget.checkBox:SetSize(20,20)
+      widget.checkBox:SetPoint(center,widget,center,105,0)
       widget.checkBox:SetHitRectInsets(0,0,0,0) 
       widget.checkBox.tooltipText = Localization:HideAllActions()
       widget.title = widget:CreateFontString(nil,defaultLayer)
       widget.title:SetPoint(left,widget,center,0,0)
       widget.title:SetFontObject(defaultFont)
-      widget.title:SetText(Localization:HideActionsTitle())   
+      widget.title:SetText(Localization:HideActionsTitle())  
+      
+      widget.loadingCheckBox = CreateFrame(checkButton,nil, widget,defaultCheckButton,defaultLayer)
+      widget.loadingCheckBox:SetSize(20,20)
+      widget.loadingCheckBox:SetPoint(center,widget,center,105,-20)
+      widget.loadingCheckBox:SetHitRectInsets(0,0,0,0) 
+      widget.loadingCheckBox.tooltipText = Localization:LoadingMessageTooltip()
+      widget.loadingTitle = widget:CreateFontString(nil,defaultLayer)
+      widget.loadingTitle:SetPoint(left,widget,center,0,-20)
+      widget.loadingTitle:SetFontObject(defaultFont)
+      widget.loadingTitle:SetText(Localization:LoadingMessageTitle())
       return widget
     end
+   
     local primaryFrame = Frame()
     primaryFrame.configWidgets = {StaticTitles(),RestZoneWidget(),BarsWidget()}   
     local xOfs =0
@@ -147,7 +158,7 @@ function Templates:PrimaryFrame()
       primaryFrame.configWidgets[k]:SetPoint(left, primaryFrame.TitleBg, left,(xOfs), -30)
       primaryFrame.configWidgets[k]:SetParent(primaryFrame)
       primaryFrame.configWidgets[k]:SetSize(80,80)
-      xOfs = xOfs+105
+      xOfs = xOfs+85
       end   
     return primaryFrame
 end
@@ -369,8 +380,7 @@ function Templates:ActionWidget(action,parentFrame,isTracked,isFound)--Return wi
   local actionWidget = CreateFrame(checkButton,nil, parentFrame, defaultCheckButton,defaultLayer)
   actionWidget:SetPoint(left,parentFrame,left,0,0)
   actionWidget:SetHitRectInsets(0,0,0,0) 
-  actionWidget:SetWidth(50)
-  actionWidget:SetHeight(50) 
+  actionWidget:SetSize(50,50)
   local newTexture= API:GetActionTexture(action[2],action[6])
   actionWidget:SetFrameStrata(mediumFrameStrata)
   if isTracked then
@@ -383,4 +393,4 @@ function Templates:ActionWidget(action,parentFrame,isTracked,isFound)--Return wi
   actionWidget:SetNormalTexture(newTexture)
   return actionWidget
 end
---Revision v 1.0.6 --
+--Revision v 1.0.9 --

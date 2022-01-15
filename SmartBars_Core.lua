@@ -38,12 +38,16 @@ function Core:Load()
     Actions:Load()
     ActionBars:StartUpdate()  
     UI:RefreshIcons()
+    Config:SendMessage()
 end
+
 --Program run-----------------------------
 Core:Init()
 C_Timer.After(2, function()   
-    Core:Load()   
+    Core:Load()  
+    if Config:GetWelcomeMessage() then        
     print(Localization:LoadedMessage())   
+    end 
 end)
 -- Revision version v1.0.6 -----
 

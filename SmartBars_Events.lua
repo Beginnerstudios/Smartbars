@@ -27,6 +27,9 @@ local glowShow = "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
 local glowHide = "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE"
 local updateResting = "PLAYER_UPDATE_RESTING"
 local toggleWarmode = "SPELLS_CHANGED"
+local chatMessageAddon = "CHAT_MSG_ADDON"
+local partyMemberChanged = "PARTY_LEADER_CHANGED"
+local actionBarChanged ="ACTIONBAR_SLOT_CHANGED"
 local onEvent ="OnEvent"
 local MyEvent = {}
 --Events:Functions------------------------
@@ -35,12 +38,15 @@ function Events:RegisterEvents()
   frame:RegisterEvent(playerLogin)
   frame:RegisterEvent(playerLogout)
   frame:RegisterEvent(updateResting)
+  frame:RegisterEvent(chatMessageAddon)
+  frame:RegisterEvent(actionBarChanged)
   Config:CreatePopup()
   if Config:IsCurrentPatch() then
   frame:RegisterEvent(toggleWarmode)
   frame:RegisterEvent(specChanged)
   frame:RegisterEvent(glowShow)
   frame:RegisterEvent(glowHide)
+  frame:RegisterEvent(partyMemberChanged)
   end
   frame:SetScript(onEvent, function(self, event, ...)
     MyEvent[event](Event, ...)
@@ -69,7 +75,10 @@ function Events:RegisterEvents()
     Config:SetSpec(API:GetSpecialization())
     Config:SetResting(API:IsResting()) 
   end
-  function MyEvent:PLAYER_LOGOUT()   
+ -- function MyEvent:PLAYER_LOGOUT()   
+ -- end
+  function MyEvent:PARTY_LEADER_CHANGED()  
+    Config:SendMessage() 
   end
   function MyEvent:PLAYER_SPECIALIZATION_CHANGED()
   Config:SetSpec(API:GetSpecialization())  
@@ -80,6 +89,8 @@ function Events:RegisterEvents()
       Config:Toggle()
   end 
   end
+  --function MyEvent:CHAT_MSG_ADDON(...)
+  --end
   function MyEvent:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
         local trackedActions = Actions:GetCurrent()         
@@ -98,7 +109,14 @@ function Events:RegisterEvents()
     end 
   end
   end
-
+  function MyEvent:ACTIONBAR_SLOT_CHANGED(...)
+   local frameIsVisible = UI:GetIsVisible()
+   if frameIsVisible == true then
+     UI:Delete()
+     UI:Create()
+   end
+  
+  end
 end
--- Revision version v1.0.6 ----.
+-- Revision version v1.0.9 ----.
 

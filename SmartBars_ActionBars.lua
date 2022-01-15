@@ -28,7 +28,6 @@ local framesScale = {}
 local framesAlpha = {}
 local framesColumn ={}
 local framesHideRest = {}
-local framesRows = {}
 local frameIDs = {}
 --ActionBars----------------------
 function ActionBars:Add()-- add new action bar to current specialization
@@ -116,14 +115,6 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
       else
         columnsWidget.text2:SetText(framesColumn[i])
  
-      end
-    end
-    local function Rows()
-      if not framesRows[i] then
-        framesRows[i] = 1
-      --  frames[i]:Height((framesRows[i]*50)+25)
-      else
-      --  frames[i]:Height((framesRows[i]*50)+25)
       end
     end
     local function Hide()
@@ -253,7 +244,6 @@ function ActionBars:Create(i)--create action bar with for specific frameID and s
     Scale()
     Alpha()
     Columns()
-    Rows()
     Hide()
     Scripts()
   end
@@ -485,7 +475,7 @@ function ActionBars:Sort(frameID,actions)--handle displayed widget position and 
     end
 end
 --Getter & Setter ------------ 
-function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedFramesSpecCount,loadedFrameIDs,loadedFramesRows)
+function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha,loadedFramesColumn,loadedFramesHideRest,loadedFramesSpecCount,loadedFrameIDs)
   framesPosition = loadedFramesPosition
   framesScale =loadedFramesScale
   framesAlpha = loadedFramesAlpha
@@ -493,7 +483,6 @@ function ActionBars:Set(loadedFramesPosition,loadedFramesScale,loadedFramesAlpha
   framesHideRest = loadedFramesHideRest
   framesSpecCount = loadedFramesSpecCount
   frameIDs = loadedFrameIDs
-  framesRows = loadedFramesRows
 end
 function ActionBars:GetHighest()                                                                     
            

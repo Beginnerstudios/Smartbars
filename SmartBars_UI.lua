@@ -39,6 +39,9 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     restZoneWidget.checkBox:SetScript(onClick,function (self)
       Config:SetGlobalHideRest(self:GetChecked())
     end)   
+    restZoneWidget.loadingCheckBox:SetScript(onClick,function (self)
+      Config:SetWelcomeMessage(self:GetChecked())
+    end)  
     barsWidget.minusButton:SetScript(onClick, function () 
       if ActionBars:GetCurrentSpecActionBarsCount() >1 then
         StaticPopup_Show (removeBarPopup)  
@@ -102,7 +105,6 @@ function UI:Create()--Create primary frame + ActionUpdater frame
       end    
      CreateWidget()
     end 
-
     for k,v in pairs(trackedIDs) do          
       if trackedIDs[k]==displayedIDs[k]then
       elseif not displayedIDs[k] then        
@@ -144,6 +146,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
     end
     displayedIDs = nil
     trackedIDs = nil
+    primaryFrame:SetHeight((yOffset)*-1+155)
   end 
   local function Setup() 
   --Count of tracked actions for specific spec
@@ -161,14 +164,7 @@ function UI:Create()--Create primary frame + ActionUpdater frame
   local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
   configWidgets[1].usedValue:SetText(usedSpellsCount)
   configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
-  local actionsHeight = usedSpellsCount/6*60+165
-  local primaryFrameHeight
-  if usedSpellsCount<=18 then 
-    primaryFrameHeight = 350
-    else 
-    primaryFrameHeight = actionsHeight  
-  end
-  primaryFrame:SetHeight(primaryFrameHeight)
+  configWidgets[2].loadingCheckBox:SetChecked(Config:GetWelcomeMessage())
   local barCount = ActionBars:GetCurrentSpecActionBarsCount()                                          
   configWidgets[3].textValue:SetText(barCount)
 
@@ -228,6 +224,6 @@ function UI:RefreshIcons()--update icons on tracked actions
     end
   end
 end
--- Revision version v1.0.6 ---
+-- Revision version v1.0.9 ---
 
 

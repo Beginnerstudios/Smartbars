@@ -15,12 +15,14 @@ local settingsReseted = addonName.."settings reseted."
 local resetAll = "Reset All"
 local usedActions = "Used actions: "
 local trackedActions = "Tracked actions: "
-local yourActions = "Your actions: "
+local yourActions = "Used actions: "
 local removeLastActionBar ="Remove last Action Bar."
 local createNewActionBar ="Create new Action Bar."
 local hideAllActions ="Hide all tracked actions in rest zone."
 local hideFrameActions="Hide this bar in rest zone."
-local hideActionsTitle ="Hide:"
+local hideActionsTitle ="Hide actions:"
+local loadingMessageTitle ="Login message:"
+local updateMessageTitle ="Update:"
 local displayWhenBoosted ="Check if you want display this spell only when BOOSTED."
 local columnsText = "Columns: "
 local alphaText = "Alpha: "
@@ -32,6 +34,8 @@ local settingsTitle ="Settings"
 local editText ="Edit"
 local confirmReset = "Are you sure you want reset SmartBars to default state?"
 local confirmRemoveBar = "Are you sure you want remove this bar? Your actions will be moved to previous bar."
+local tooltipLoadingMessageTitle = "Show login message."
+
 --Localization
 function Localization:LoadedMessage()
 return loadedMessage
@@ -108,4 +112,13 @@ end
 function Localization:ConfirmRemoveBar()
   return confirmRemoveBar
 end
---Revision v 1.0.6 ---
+function Localization:LoadingMessageTitle()
+  return loadingMessageTitle
+end
+function Localization:UpdateMessageTitle()
+  return updateMessageTitle
+end
+function  Localization:LoadingMessageTooltip()
+  return tooltipLoadingMessageTitle
+end
+--Revision v 1.0.9 ---

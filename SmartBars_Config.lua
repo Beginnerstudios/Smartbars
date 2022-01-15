@@ -22,14 +22,15 @@ local isConfigMode = false
 local currentSpecialization
 local isCleared
 local globalHideRest
+local welcomeMessage =true
 local pvp
 local resting
 --Save data---
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = " 1.0.6"
-local publicBuild = 106
+local currentVersion = " 1.0.9"
+local publicBuild = 109
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -51,11 +52,12 @@ end
 end
 function Config:Save()
     SmartBarsCharacterActions = Actions:GetTracked()   
-    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),ActionBars:GetSV():FramesRows()}
+    SmartBarsSettings = {ActionBars:GetSV():FramesPosition(),ActionBars:GetSV():FramesScale(),ActionBars:GetSV():FramesAlpha(),ActionBars:GetSV():FramesColumn(),ActionBars:GetSV():FramesHideRest(),ActionBars:GetSV():FramesSpecCounts(),globalHideRest,isCleared,ActionBars:GetSV():FrameIDs(),welcomeMessage}
 end
 function Config:Load()  
 Actions:Set(SmartBarsCharacterActions)   
-globalHideRest=SmartBarsSettings[7]  --global hide in restzone    
+globalHideRest=SmartBarsSettings[7]  --global hide in restzone   
+welcomeMessage = SmartBarsSettings[10] 
 ActionBars:Set(
     SmartBarsSettings[1], --framesposition
     SmartBarsSettings[2], --framesscale
@@ -63,8 +65,7 @@ ActionBars:Set(
     SmartBarsSettings[4], --framescolumn
     SmartBarsSettings[5],  --framesrest
     SmartBarsSettings[6],  --actionBarCount for each spec
-    SmartBarsSettings[9],   --frameIdNumbers
-    SmartBarsSettings[10]   --framesRows
+    SmartBarsSettings[9]   --frameIdNumbers
 )
 isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
@@ -133,6 +134,9 @@ end
 function Config:SetGlobalHideRest(value)
 globalHideRest = value
 end
+function Config:SetWelcomeMessage(value)
+    welcomeMessage = value
+    end
 --Getter&Setter----------------------------
 function Config:GetSpec()
     return currentSpecialization   
@@ -143,10 +147,11 @@ end
 function Config:GetGlobalHideRest()
     return globalHideRest
 end
+function Config:GetWelcomeMessage()
+    return welcomeMessage
+end
 function Config:GetSmartBarsPublicInfo()
-    local smartBarsVersion = currentVersion
-    local smartBarsCurrentBuild = publicBuild 
-    return smartBarsVersion,smartBarsCurrentBuild
+    return currentVersion,publicBuild
 end
 function Config:GetSmartBarsInfo()
     local smartBarsVersion = currentVersion
@@ -197,4 +202,10 @@ function Config:RoundNumber(num,numDecimalPlaces)
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))
      
 end
--- Revision version v 1.0.6 -----
+function Config:SendMessage()  
+       local prefix = "SmartBars"
+       C_ChatInfo.RegisterAddonMessagePrefix(prefix)
+       local build = publicBuild
+        C_ChatInfo.SendAddonMessage(prefix,build,"WHISPER",UnitName("player") )
+end
+-- Revision version v 1.0.9 -----
