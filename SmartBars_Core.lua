@@ -28,7 +28,7 @@ function Core:Init()
     Config:CreateCommands()  
 end
 function Core:Unload()
-    ActionBars:StopUpdate()
+    ActionBars:Stop()
     ActionBars:Unload()
     Actions:Unload()
 end
@@ -36,11 +36,10 @@ function Core:Load()
     Config:Load()   
     ActionBars:Load()
     Actions:Load()
-    ActionBars:StartUpdate()  
+    ActionBars:Start()  
     UI:RefreshIcons()
     Config:SendMessage()
 end
-
 --Program run-----------------------------
 Core:Init()
 C_Timer.After(2, function()   
@@ -49,7 +48,7 @@ C_Timer.After(2, function()
     print(Localization:LoadedMessage())   
     end 
 end)
--- Revision version v1.0.6 -----
+-- Revision version v1.1.0 -----
 
 
 

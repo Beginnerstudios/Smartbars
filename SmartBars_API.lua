@@ -42,8 +42,7 @@ function API:GetActionCooldown(spellID,actionType)
    
 end
 function API:GetBuildInfo()
-    local iterface = select(4, GetBuildInfo(pvptalent))
-    return iterface  
+    return select(4, GetBuildInfo()) 
 end
 function API:IsUsableAction(action,actionType)
 if actionType ==spell then
@@ -161,5 +160,5 @@ function API:GetFoundActionInfo(id)
             return {GetItemInfo(id),"item"}
         end  
 end
--- Revision version v1.0.9 ----
+-- Revision version v1.1.0 ----
 

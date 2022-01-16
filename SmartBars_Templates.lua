@@ -65,7 +65,6 @@ function Templates:PrimaryFrame()
       frame.resetButton:SetSize(50,15)
       frame.resetButton:SetNormalFontObject(defaultFont)       
       frame.resetButton:SetText(Localization:ResetAll())
-
       frame.title = frame:CreateFontString(nil,defaultLayer)
       frame.title:SetPoint(left,frame.TitleBg,left,5,-2)
       frame.title:SetFontObject(defaultFont)
@@ -393,4 +392,4 @@ function Templates:ActionWidget(action,parentFrame,isTracked,isFound)--Return wi
   actionWidget:SetNormalTexture(newTexture)
   return actionWidget
 end
---Revision v 1.0.9 --
+--Revision v 1.1.0 --

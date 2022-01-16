@@ -29,8 +29,8 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = " 1.0.9"
-local publicBuild = 109
+local currentVersion = " 1.1.0"
+local publicBuild = 110
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -71,73 +71,11 @@ isCleared = SmartBarsSettings[8]  --global isCleared value
 currentSpecialization = API:GetSpecialization()
 currentSaveVersion = SmartBarsSavedBuild
 end
-function Config:SetDefaults()
-    if not SmartBarsCharacterActions then
-        SmartBarsCharacterActions = {}      
-    end
-    if not SmartBarsSettings then
-        SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}}     
-    end 
-end
-function Config:SetDefaultBuild()
-    if not SmartBarsSavedBuild then
-        SmartBarsSavedBuild = 0   
-        savedSaveVersion = SmartBarsSavedBuild
-    else
-        savedSaveVersion = SmartBarsSavedBuild
-    end 
-end
-function Config:SetSavedBuild(value)
-    savedSaveVersion = value
-    SmartBarsSavedBuild = value
-end
-function Config:IsCurrentPatch()
-if API:GetBuildInfo()>90000 then
-    return true
-else
-    return false
-end
-end
-function Config:IsConfigMode()
- return isConfigMode
-end
-function Config:ResetAll()  
+function Config:Reset()  
     SmartBarsSavedBuild=nil   
     ReloadUI()
 end
-function Config:CreatePopup()
-    StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
-      text = Localization:ConfirmReset(),
-      button1 = "Yes",
-      button2 = "No",
-      OnAccept = function()
-          Config:ResetAll()
-      end,
-      timeout = 0,
-      whileDead = true,
-      hideOnEscape = true,
-      preferredIndex = 3,
-    }
-    StaticPopupDialogs["SMARTBARS_REMOVEBARCONFIRM"] = {
-        text = Localization:ConfirmRemoveBar(),
-        button1 = "Yes",
-        button2 = "No",
-        OnAccept = function()
-            ActionBars:Remove()
-        end,
-        timeout = 0,
-        whileDead = true,
-        hideOnEscape = true,
-        preferredIndex = 3,
-      }
-end
-function Config:SetGlobalHideRest(value)
-globalHideRest = value
-end
-function Config:SetWelcomeMessage(value)
-    welcomeMessage = value
-    end
---Getter&Setter----------------------------
+--Getter------------------------------------
 function Config:GetSpec()
     return currentSpecialization   
 end
@@ -159,17 +97,54 @@ function Config:GetSmartBarsInfo()
     local smartBarsSavedSaveVersion = savedSaveVersion 
     return smartBarsVersion,smartBarsCurrentSaveVersion,smartBarsSavedSaveVersion
 end
-function Config:SetSpec(currentSpec)
-    currentSpecialization = currentSpec    
+function Config:GetPVP()
+   return pvp
 end
+function Config:IsCurrentPatch()
+    if API:GetBuildInfo()>90000 then
+        return true
+    else
+        return false
+    end
+end
+function Config:IsConfigMode()
+     return isConfigMode
+end
+--Seter------------------------------------
 function Config:SetPVP(value)
     pvp = value
 end
 function Config:SetResting(value)
     resting = value
 end
-function Config:GetPVP()
-   return pvp
+function Config:SetSpec(currentSpec)
+    currentSpecialization = currentSpec    
+end
+function Config:SetGlobalHideRest(value)
+    globalHideRest = value
+end
+function Config:SetWelcomeMessage(value)
+        welcomeMessage = value
+end
+function Config:SetDefaults()
+    if not SmartBarsCharacterActions then
+        SmartBarsCharacterActions = {}      
+    end
+    if not SmartBarsSettings then
+        SmartBarsSettings = {{},{},{},{},{},{},false,false,{},{}}     
+    end 
+end
+function Config:SetDefaultBuild()
+    if not SmartBarsSavedBuild then
+        SmartBarsSavedBuild = 0   
+        savedSaveVersion = SmartBarsSavedBuild
+    else
+        savedSaveVersion = SmartBarsSavedBuild
+    end 
+end
+function Config:SetSavedBuild(value)
+    savedSaveVersion = value
+    SmartBarsSavedBuild = value
 end
 -- Utils-----------------------------------
 function Config:GetTableCount(tableArg)
@@ -208,4 +183,30 @@ function Config:SendMessage()
        local build = publicBuild
         C_ChatInfo.SendAddonMessage(prefix,build,"WHISPER",UnitName("player") )
 end
--- Revision version v 1.0.9 -----
+function Config:CreatePopup()
+    StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
+      text = Localization:ConfirmReset(),
+      button1 = "Yes",
+      button2 = "No",
+      OnAccept = function()
+          Config:Reset()
+      end,
+      timeout = 0,
+      whileDead = true,
+      hideOnEscape = true,
+      preferredIndex = 3,
+    }
+    StaticPopupDialogs["SMARTBARS_REMOVEBARCONFIRM"] = {
+        text = Localization:ConfirmRemoveBar(),
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+            ActionBars:Remove()
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+      }
+end
+-- Revision version v 1.1.0 ---------------

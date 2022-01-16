@@ -75,8 +75,8 @@ function Events:RegisterEvents()
     Config:SetSpec(API:GetSpecialization())
     Config:SetResting(API:IsResting()) 
   end
- -- function MyEvent:PLAYER_LOGOUT()   
- -- end
+ function MyEvent:PLAYER_LOGOUT()   
+  end
   function MyEvent:PARTY_LEADER_CHANGED()  
     Config:SendMessage() 
   end
@@ -89,8 +89,8 @@ function Events:RegisterEvents()
       Config:Toggle()
   end 
   end
-  --function MyEvent:CHAT_MSG_ADDON(...)
-  --end
+  function MyEvent:CHAT_MSG_ADDON(...)
+  end
   function MyEvent:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...) 
     local a = ...
         local trackedActions = Actions:GetCurrent()         

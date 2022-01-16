@@ -17,11 +17,10 @@ API = SmartBars.API
 end
 --Variables-------------------------------
 --Primaryframe
-local primaryFrame 
-local isVisible = false  
---DevEvents--
+local primaryFrame
+local isVisible = false
 --UI:Frames-------------------------------
-function UI:Create()--Create primary frame + ActionUpdater frame 
+function UI:Create()
   local function Scripts()
     local onClick ="OnClick"
     local resetPopup,removeBarPopup = "SMARTBARS_RESETCONFIRM","SMARTBARS_REMOVEBARCONFIRM"
@@ -205,11 +204,7 @@ function UI:Update()
     configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
   end
 end
---Getters & Setters-----------------------------
-function UI:GetIsVisible()
-return isVisible
-end
-function UI:RefreshIcons()--update icons on tracked actions
+function UI:RefreshIcons()
   local cA = Actions:GetCurrent()
   for actionID in pairs(cA) do
     if actionID and cA[actionID][5]== API:GetSpecialization()  then
@@ -224,6 +219,10 @@ function UI:RefreshIcons()--update icons on tracked actions
     end
   end
 end
--- Revision version v1.0.9 ---
+--Getters & Setters-----------------------
+function UI:GetIsVisible()
+return isVisible
+end
+-- Revision version v1.1.0 ---
 
 

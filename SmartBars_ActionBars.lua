@@ -383,7 +383,7 @@ function ActionBars:FindFrameID(frameIndex) --return frameID based on frameIndex
   end
 end
 --Update----------------------
-function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate event (refreshing actions every frame)
+function ActionBars:Start()--create frame what hold Script with OnUpdate event (refreshing actions every frame)
   framesParent = CreateFrame("Frame",nil,nil)
   framesParent:SetScript("OnUpdate", function ()
     local actions = Actions:GetCurrent()
@@ -395,7 +395,7 @@ function ActionBars:StartUpdate()--create frame what hold Script with OnUpdate e
     end
     end) 
 end
-function ActionBars:StopUpdate()
+function ActionBars:Stop()
   framesParent:SetScript("OnUpdate",nil)
 end
 function ActionBars:Update(actions) --determinate if widget will be visible or hidden
