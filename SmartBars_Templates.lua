@@ -56,7 +56,7 @@ function Templates:PrimaryFrame()
       frame:SetMovable(true)
       frame:RegisterForDrag(leftButton)
       frame:SetFrameStrata(backgroundFrameStrata)
-      frame:SetSize(320,0)
+      frame:SetWidth(320)
       frame:SetScale(defaultFrameScale)
       frame:SetPoint(center,nil,center,-450,100)  
       frame:SetClampedToScreen(true)      
@@ -73,28 +73,32 @@ function Templates:PrimaryFrame()
     end     
     local function StaticTitles()
       local titles = CreateFrame(frame,nil,UIConfig) 
+      local titleOffsetX = 10
+      local valueOffsetX = 95
+      local yZeroOffset = 0
+      local yOffset = 20
       titles.usedStatic = titles:CreateFontString(nil,defaultLayer)
-      titles.usedStatic:SetPoint(left,titles,left,10,0)
+      titles.usedStatic:SetPoint(left,titles,left,titleOffsetX,yZeroOffset)
       titles.usedStatic:SetFontObject(defaultFont)
       titles.usedStatic:SetText(Localization:UsedActions())
     
       titles.trackedStatic = titles:CreateFontString(nil,defaultLayer)
-      titles.trackedStatic:SetPoint(left,titles,left,10,-20)
+      titles.trackedStatic:SetPoint(left,titles,left,titleOffsetX,yOffset*-1)
       titles.trackedStatic:SetFontObject(defaultFont)
       titles.trackedStatic:SetText(Localization:TrackedActions())
 
       titles.actionsStatic = titles:CreateFontString(nil,defaultLayer)
-      titles.actionsStatic:SetPoint(left,titles,left,10,-54)
+      titles.actionsStatic:SetPoint(left,titles,left,titleOffsetX,(3*(yOffset))*-1)
       titles.actionsStatic:SetFontObject(defaultFont)
       titles.actionsStatic:SetText(Localization:YourActions())
        
       titles.trackedValue = titles:CreateFontString(nil,defaultLayer)
-      titles.trackedValue:SetPoint(left,titles.trackedStatic,left,95,0)
+      titles.trackedValue:SetPoint(left,titles.trackedStatic,left,valueOffsetX,yZeroOffset)
       titles.trackedValue:SetFontObject(defaultFont)
       titles.trackedValue:SetText(zero)
        
       titles.usedValue = titles:CreateFontString(nil,defaultLayer)
-      titles.usedValue:SetPoint(left,titles.usedStatic,left,95,0)
+      titles.usedValue:SetPoint(left,titles.usedStatic,left,valueOffsetX,yZeroOffset)
       titles.usedValue:SetFontObject(defaultFont)
       titles.usedValue:SetText(zero)
       return titles
@@ -321,7 +325,6 @@ function Templates:GroupLayout(parentWidget,valueToSave,isDisplayed)--Add group 
   local yOfs = -15
   local newWidget = CreateFrame(frame,nil, parentWidget)
   newWidget:SetPoint(center,parentWidget,center,0,0)
-  
   newWidget.barNumberText =newWidget:CreateFontString(nil,defaultLayer)
   newWidget.barNumberText:SetPoint(center,parentWidget,center,17,-17)
   newWidget.barNumberText:SetFont(fontFrizqt, 15,defaultLayer)
@@ -392,4 +395,4 @@ function Templates:ActionWidget(action,parentFrame,isTracked,isFound)--Return wi
   actionWidget:SetNormalTexture(newTexture)
   return actionWidget
 end
---Revision v 1.1.0 --
+--Revision v 1.1.1 --

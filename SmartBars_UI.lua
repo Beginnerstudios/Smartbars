@@ -223,6 +223,6 @@ end
 function UI:GetIsVisible()
 return isVisible
 end
--- Revision version v1.1.0 ---
+-- Revision version v1.1.1 ---
 
 

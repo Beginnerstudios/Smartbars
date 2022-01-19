@@ -29,8 +29,8 @@ local resting
 local currentSaveVersion =99.1
 local savedSaveVersion
 ---Public version----------
-local currentVersion = " 1.1.0"
-local publicBuild = 110
+local currentVersion = "v - 1.1.1"
+local publicBuild = 111
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
@@ -209,4 +209,4 @@ function Config:CreatePopup()
         preferredIndex = 3,
       }
 end
--- Revision version v 1.1.0 ---------------
+-- Revision version v 1.1.1 ---------------
