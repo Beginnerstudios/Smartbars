@@ -30,7 +30,7 @@ function API:GetActionTexture(slotID, actionType)
     elseif actionType == item then
        return C_Item.GetItemIconByID(slotID)
     else
-        return C_Item.GetItemIconByID(slotID)
+        return "image.tga"
     end
 end
 function API:GetActionCooldown(spellID, actionType)
@@ -181,7 +181,7 @@ function API:IsResting()
         if(id==nill)then
             return
         end
-    if GetSpellInfo(id) then
+    if C_Spell.GetSpellInfo(id) then
     return { C_Spell.GetSpellInfo(id), "spell" }
     elseif not C_Spell.GetSpellInfo(id) then
     return { GetItemInfo(id), "item" }

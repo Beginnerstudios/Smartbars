@@ -23,7 +23,6 @@ ActionBars:Init()
 Localization:Init()
 --Core:Functions--------------------------
 function Core:Init()
-    Config:DisableOldAddon()
     Events:RegisterEvents()
     Config:CreateCommands()  
 end

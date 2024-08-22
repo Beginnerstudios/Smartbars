@@ -34,8 +34,12 @@ local publicBuild = 112
 --Config:Functions------------------------
 function Config:CreateCommands()
     SLASH_SB1 = "/sb"
-    SlashCmdList["SB"] = function()
-    Config:Toggle()
+    SlashCmdList["SB"] = function(msg)
+        if msg == "reset" then
+            Config:Reset()
+        else
+            Config:Toggle()
+        end
     end
 end
 function Config:Toggle()
@@ -78,6 +82,7 @@ end
 function Config:Reset()  
     SmartBarsSavedBuild=nil   
     ReloadUI()
+    print("Smartbars reseted all settings on this character.")
 end
 --Getter------------------------------------
 function Config:GetSpec()
@@ -168,14 +173,7 @@ end
 function Config:JoinNumber(x, y)
     local z = tostring(x) .. tostring(y)
     return tonumber(z)
-end  
-function Config:DisableOldAddon()
-   -- local enabled = select(4,GetAddOnInfo("BS_ActionsTracker"))
-   -- if enabled then
-   --     DisableAddOn("BS_ActionsTracker")
-   --     print(Localization:OldFound())      
-   -- end 
-end  
+end   
 function Config:RoundNumber(num,numDecimalPlaces)
    
     return tonumber(string.format("%." .. (numDecimalPlaces) .. "f", num))

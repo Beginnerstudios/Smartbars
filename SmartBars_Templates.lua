@@ -401,18 +401,21 @@ function Templates:ActionWidget(action, parentFrame, isTracked, isFound)
     actionWidget:SetPoint(left, parentFrame, left, 0, 0)
     actionWidget:SetHitRectInsets(0, 0, 0, 0)
     actionWidget:SetSize(50, 50)
-    print(API:GetDisplayedActionInfo(action[2], action[6]))
     actionWidget.tooltip=API:GetDisplayedActionInfo(action[2], action[6])
     local newTexture = API:GetActionTexture(action[2], action[6])
+
     actionWidget:SetFrameStrata(mediumFrameStrata)
-    if isTracked then
-        actionWidget:SetHighlightTexture(newTexture)
-        actionWidget:SetPushedTexture(newTexture)
-    else
-        actionWidget:SetHighlightTexture(newTexture)
-        actionWidget:SetPushedTexture(newTexture)
+    if newTexture then
+        if isTracked then
+            actionWidget:SetHighlightTexture(newTexture)
+            actionWidget:SetPushedTexture(newTexture)
+        else
+            actionWidget:SetHighlightTexture(newTexture)
+            actionWidget:SetPushedTexture(newTexture)
+        end
+        actionWidget:SetNormalTexture(newTexture)
     end
-    actionWidget:SetNormalTexture(newTexture)
+
     return actionWidget
 end
 function Templates:PanelActionWidget(action, parentFrame, isTracked, isFound)
