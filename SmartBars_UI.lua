@@ -183,7 +183,7 @@ local tooltipFrameStrata = "TOOLTIP"
   primaryFrame:SetScript(onDragStart,function ()
   primaryFrame:SetFrameStrata(tooltipFrameStrata)     
   primaryFrame:StartMoving()
-  primaryFrame:StartSizing()
+  --primaryFrame:StartSizing()
   end)
   primaryFrame:SetScript(onDragStop,function ()
     primaryFrame:SetFrameStrata(highFrameStrata) 
