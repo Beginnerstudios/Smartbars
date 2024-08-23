@@ -1,7 +1,6 @@
-
---NameSpaces------------------------------
-local _,SmartBars = ...
-SmartBars.Core ={}
+-- NameSpaces------------------------------
+local _, SmartBars = ...
+SmartBars.Core = {}
 local UI = SmartBars.UI
 local Actions = SmartBars.Actions
 local Config = SmartBars.Config
@@ -11,8 +10,8 @@ local Templates = SmartBars.Templates
 local ActionBars = SmartBars.ActionBars
 local Localization = SmartBars.Localization
 local Core = SmartBars.Core
---LoadingMessage--------------------------
---Init------------------------------------
+-- LoadingMessage--------------------------
+-- Init------------------------------------
 UI:Init()
 Actions:Init()
 Config:Init()
@@ -21,10 +20,10 @@ API:Init()
 Templates:Init()
 ActionBars:Init()
 Localization:Init()
---Core:Functions--------------------------
+-- Core:Functions--------------------------
 function Core:Init()
     Events:RegisterEvents()
-    Config:CreateCommands()  
+    Config:CreateCommands()
 end
 function Core:Unload()
     ActionBars:Stop()
@@ -32,23 +31,20 @@ function Core:Unload()
     Actions:Unload()
 end
 function Core:Load()
-    Config:Load()   
+    Config:Load()
     ActionBars:Load()
     Actions:Load()
-    ActionBars:Start()  
+    ActionBars:Start()
     UI:RefreshIcons()
     Config:SendMessage()
 end
---Program run-----------------------------
+-- Program run-----------------------------
 Core:Init()
-C_Timer.After(2, function()   
-    Core:Load()  
-    if Config:GetWelcomeMessage() then        
-    print(Localization:LoadedMessage())   
-    end 
+C_Timer.After(2, function()
+    Core:Load()
+    if Config:GetWelcomeMessage() then
+        print(Localization:LoadedMessage())
+    end
 end)
 -- Revision version v1.1.1 -----
-
-
-
 

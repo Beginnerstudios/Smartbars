@@ -1,4 +1,4 @@
---NameSpaces------------------------------
+-- NameSpaces------------------------------
 local _, SmartBars = ...
 SmartBars.Templates = {}
 local Templates = SmartBars.Templates
@@ -6,7 +6,7 @@ local Config
 local ActionBars
 local Localization
 local API
---Init------------------------------------
+-- Init------------------------------------
 function Templates:Init()
     Config = SmartBars.Config
     ActionBars = SmartBars.ActionBars
@@ -37,18 +37,18 @@ local slider = "Slider"
 local checkButton = "CheckButton"
 local editBox = "EditBox"
 local leftButton = "LeftButton"
---Chars--
+-- Chars--
 local minus = "-"
 local plus = "+"
 local nextRight = ">"
 local nextLeft = "<"
 local zero = "0"
 local emptyText = " "
---Defaultvalues--
+-- Defaultvalues--
 local defaultFrameScale = 0.75
 local minimumScale = 0.3
 local maximumScale = 1.5
---Templates-----------------------------------------------------
+-- Templates-----------------------------------------------------
 function Templates:PrimaryFrame()
     local function Frame()
         local frame = CreateFrame(frame, nil, nil, basicFrameWithInset, defaultLayer)
@@ -81,7 +81,6 @@ function Templates:PrimaryFrame()
         titles.usedStatic:SetPoint(left, titles, left, titleOffsetX, yZeroOffset)
         titles.usedStatic:SetFontObject(defaultFont)
         titles.usedStatic:SetText(Localization:UsedActions())
-
 
         titles.trackedStatic = titles:CreateFontString(nil, defaultLayer)
         titles.trackedStatic:SetPoint(left, titles, left, titleOffsetX, yOffset * -1)
@@ -155,7 +154,7 @@ function Templates:PrimaryFrame()
     end
 
     local primaryFrame = Frame()
-    primaryFrame.configWidgets = { StaticTitles(), RestZoneWidget(), BarsWidget() }
+    primaryFrame.configWidgets = {StaticTitles(), RestZoneWidget(), BarsWidget()}
     local xOfs = 0
     for k in pairs(primaryFrame.configWidgets) do
         primaryFrame.configWidgets[k]:SetPoint(left, primaryFrame.TitleBg, left, (xOfs), -30)
@@ -287,7 +286,7 @@ function Templates:ActionBar(index)
             restZoneWidget.checkBox:SetHitRectInsets(0, 0, 0, 0)
             restZoneWidget.checkBox:SetSize(35, 35)
             restZoneWidget.checkBox:SetPoint(right, restZoneWidget, center, 50, 00)
-            restZoneWidget.checkBox.tooltip=Localization:HideAllActions()
+            restZoneWidget.checkBox.tooltip = Localization:HideAllActions()
             restZoneWidget.title = restZoneWidget:CreateFontString(nil, overlayLayer)
             restZoneWidget.title:SetPoint(left, restZoneWidget, center, -50, 0)
             restZoneWidget.title:SetFontObject(defaultFont)
@@ -301,7 +300,7 @@ function Templates:ActionBar(index)
             restZoneWidget.checkBox:SetHitRectInsets(0, 0, 0, 0)
             restZoneWidget.checkBox:SetSize(35, 35)
             restZoneWidget.checkBox:SetPoint(right, restZoneWidget, center, 50, 00)
-            restZoneWidget.checkBox.tooltip=Localization:ReverseSortingTooltip()
+            restZoneWidget.checkBox.tooltip = Localization:ReverseSortingTooltip()
             restZoneWidget.title = restZoneWidget:CreateFontString(nil, overlayLayer)
             restZoneWidget.title:SetPoint(left, restZoneWidget, center, -50, 0)
             restZoneWidget.title:SetFontObject(defaultFont)
@@ -309,7 +308,8 @@ function Templates:ActionBar(index)
             return restZoneWidget
         end
 
-        optionWidget.settings = { BarNavigator(), ScaleSlider(), AlphaSlider(), ColumnsWidgets(), RestZoneWidget(),Sorting() }
+        optionWidget.settings = {BarNavigator(), ScaleSlider(), AlphaSlider(), ColumnsWidgets(), RestZoneWidget(),
+                                 Sorting()}
         local yOfs = 0
         for k in pairs(optionWidget.settings) do
             optionWidget.settings[k]:SetPoint(center, optionWidget, top, 0, (yOfs) * -1)
@@ -327,7 +327,7 @@ function Templates:ActionBar(index)
         return iconHolder
     end
     local actionBar = Frame()
-    actionBar.configWidgets = { Edit(), OptionWidget(), IconHolder() }
+    actionBar.configWidgets = {Edit(), OptionWidget(), IconHolder()}
     for k in pairs(actionBar.configWidgets) do
         if k ~= 3 then
             actionBar.configWidgets[k]:Hide()
@@ -336,7 +336,7 @@ function Templates:ActionBar(index)
     return actionBar
 end
 function Templates:GroupLayout(parentWidget, valueToSave, isDisplayed)
-    --Add group layout to desired widget
+    -- Add group layout to desired widget
     local yOfs = -15
     local newWidget = CreateFrame(frame, nil, parentWidget)
     newWidget:SetPoint(center, parentWidget, center, 0, 0)
@@ -371,7 +371,7 @@ function Templates:GroupLayout(parentWidget, valueToSave, isDisplayed)
     return newWidget
 end
 function Templates:EditBox(parentWidget, valueToSave, isEnabled)
-    --Add editbox with desired text on frame
+    -- Add editbox with desired text on frame
     local edit = CreateFrame(editBox, nil, parentWidget, nil, defaultLayer)
     edit:SetPoint(center, parentWidget, center, 2, 0)
     edit:SetSize(50, 50)
@@ -384,7 +384,7 @@ function Templates:EditBox(parentWidget, valueToSave, isEnabled)
     return edit
 end
 function Templates:FontString(parentWidget, fontSize, someText)
-    --Add fontstring with desired parameters
+    -- Add fontstring with desired parameters
     local fontString = parentWidget:CreateFontString(nil, defaultLayer)
     fontString:SetPoint(right, parentWidget, center, 22, -17)
     fontString:SetFont(fontFrizqt, fontSize, nil)
@@ -396,12 +396,12 @@ function Templates:FontString(parentWidget, fontSize, someText)
     return fontString
 end
 function Templates:ActionWidget(action, parentFrame, isTracked, isFound)
-    --Return widget with correct size and textures
+    -- Return widget with correct size and textures
     local actionWidget = CreateFrame(checkButton, nil, parentFrame, defaultCheckButton, defaultLayer)
     actionWidget:SetPoint(left, parentFrame, left, 0, 0)
     actionWidget:SetHitRectInsets(0, 0, 0, 0)
     actionWidget:SetSize(50, 50)
-    actionWidget.tooltip=API:GetDisplayedActionInfo(action[2], action[6])
+    actionWidget.tooltip = API:GetDisplayedActionInfo(action[2], action[6])
     local newTexture = API:GetActionTexture(action[2], action[6])
 
     actionWidget:SetFrameStrata(mediumFrameStrata)
@@ -419,7 +419,7 @@ function Templates:ActionWidget(action, parentFrame, isTracked, isFound)
     return actionWidget
 end
 function Templates:PanelActionWidget(action, parentFrame, isTracked, isFound)
-    --Return widget with correct size and textures
+    -- Return widget with correct size and textures
     local actionWidget = CreateFrame(checkButton, nil, parentFrame, defaultCheckButton, defaultLayer)
     actionWidget:SetPoint(left, parentFrame, left, 0, 0)
     actionWidget:SetHitRectInsets(0, 0, 0, 0)
@@ -431,4 +431,4 @@ function Templates:PanelActionWidget(action, parentFrame, isTracked, isFound)
 
     return actionWidget
 end
---Revision v 1.1.1 --
+-- Revision v 1.1.1 --

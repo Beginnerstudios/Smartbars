@@ -1,4 +1,4 @@
---NameSpaces------------------------------
+-- NameSpaces------------------------------
 local _, SmartBars = ...
 SmartBars.ActionBars = {}
 local ActionBars = SmartBars.ActionBars
@@ -8,7 +8,7 @@ local Actions
 local Localization
 local API
 local UI
---Init------------------------------------
+-- Init------------------------------------
 function ActionBars:Init()
     Config = SmartBars.Config
     Templates = SmartBars.Templates
@@ -17,11 +17,11 @@ function ActionBars:Init()
     API = SmartBars.API
     UI = SmartBars.UI
 end
---Variables--------------------------------
---ActionBars
+-- Variables--------------------------------
+-- ActionBars
 local framesParent
 local frames = {}
---Saved variables
+-- Saved variables
 local framesSpecCount = {}
 local framesPosition = {}
 local framesScale = {}
@@ -30,14 +30,14 @@ local framesColumn = {}
 local framesHideRest = {}
 local frameIDs = {}
 local reverseSorting = {}
---ActionBars----------------------
+-- ActionBars----------------------
 function ActionBars:Add()
     -- add new action bar to current specialization
     local spec = Config:GetSpec()
     if framesSpecCount[spec] < 9 then
         framesSpecCount[spec] = framesSpecCount[spec] + 1
         local frameID = Config:JoinNumber(spec, framesSpecCount[spec])
-        frameIDs[frameID] = { frameID, framesSpecCount[spec], spec }
+        frameIDs[frameID] = {frameID, framesSpecCount[spec], spec}
         ActionBars:Create(frameID)
         ActionBars:Toggle(true)
         Config:Save()
@@ -45,7 +45,7 @@ function ActionBars:Add()
     end
 end
 function ActionBars:Create(i)
-    --create action bar with for specific frameID and setup its default values
+    -- create action bar with for specific frameID and setup its default values
     if not frames then
         frames = {}
     end
@@ -53,7 +53,7 @@ function ActionBars:Create(i)
     frames[i]:SetParent(framesParent)
 
     local function SetupActionBars(i)
-        --Setup variables for action bar position,scale etc..
+        -- Setup variables for action bar position,scale etc..
         local defaultFrameScale = 0.75
         local onValueChanged = "OnValueChanged"
         local onClick = "OnClick"
@@ -79,7 +79,7 @@ function ActionBars:Create(i)
                 end
                 i = ActionBars:FindFrameID(i)
                 frames[i]:SetPoint(point, nil, relativePoint, xOffset, yOffset)
-                framesPosition[i] = { xOffset, yOffset, point, relativePoint }
+                framesPosition[i] = {xOffset, yOffset, point, relativePoint}
             else
 
                 local xOffset = framesPosition[i][1]
@@ -270,7 +270,7 @@ function ActionBars:Create(i)
     SetupActionBars(i)
 end
 function ActionBars:Load()
-    --load existing or create first action bar for current spec
+    -- load existing or create first action bar for current spec
     local currentSpecActionsCount = ActionBars:GetCurrentSpecActionBarsCount()
     if currentSpecActionsCount and currentSpecActionsCount ~= 0 then
         for frameID in pairs(frameIDs) do
@@ -280,13 +280,13 @@ function ActionBars:Load()
         local spec = Config:GetSpec()
         framesSpecCount[spec] = 1
         local frameID = Config:JoinNumber(spec, framesSpecCount[spec])
-        frameIDs[frameID] = { frameID, framesSpecCount[spec], spec }
+        frameIDs[frameID] = {frameID, framesSpecCount[spec], spec}
         ActionBars:Create(frameID)
     end
 
 end
 function ActionBars:Remove()
-    --remove action bar with highestIndex
+    -- remove action bar with highestIndex
     local spec = Config:GetSpec()
     if framesSpecCount[spec] > 1 then
         local lastFrameID = select(2, ActionBars:GetHighest())
@@ -324,27 +324,27 @@ function ActionBars:Remove()
     UI:Update()
 end
 function ActionBars:Unload()
-    --unload all loaded action bars (specchange)
+    -- unload all loaded action bars (specchange)
     for frameID in pairs(frames) do
         if frames[frameID] then
             frames[frameID]:Hide()
-            frames[frameID].configWidgets[1]:Hide() --Hide iconholder
-            frames[frameID].configWidgets[2]:Hide() --Hide iconholder
-            frames[frameID].configWidgets[3]:Hide() --Hide iconholder
+            frames[frameID].configWidgets[1]:Hide() -- Hide iconholder
+            frames[frameID].configWidgets[2]:Hide() -- Hide iconholder
+            frames[frameID].configWidgets[3]:Hide() -- Hide iconholder
         end
     end
     frames = nil
 end
---Widgets--------------------------
+-- Widgets--------------------------
 function ActionBars:HideOptionPanels()
-    --hide all option Panels
+    -- hide all option Panels
     for frameID in pairs(frames) do
         frames[frameID].configWidgets[2]:Hide()
     end
 end
 function ActionBars:Toggle(value)
-    --Toggle config mode widgets
-    --Actionbars
+    -- Toggle config mode widgets
+    -- Actionbars
     for _, v in pairs(frameIDs) do
         if v[3] == Config:GetSpec() then
             local frameID = v[1]
@@ -359,7 +359,7 @@ function ActionBars:Toggle(value)
                     editButton:Show() -- edit button
                     editButton.button:Show()
 
-                    iconHolder:Show() --icon holder
+                    iconHolder:Show() -- icon holder
                 else
                     editButton:Hide()
                     editButton.button:Hide()
@@ -371,7 +371,7 @@ function ActionBars:Toggle(value)
         end
 
     end
-    --ActionWidgets
+    -- ActionWidgets
     for _, v in pairs(Actions:GetCurrent()) do
         local widget = v[3]
         if v[5] == Config:GetSpec() then
@@ -389,12 +389,11 @@ function ActionBars:Toggle(value)
             end
         end
 
-
     end
 end
---Find-------------------------
+-- Find-------------------------
 function ActionBars:FindIndex(frameID)
-    --return frameIndex based on frameID
+    -- return frameIndex based on frameID
     --  local frameIndex
     for k, v in pairs(frameIDs) do
         if k == frameID then
@@ -403,16 +402,16 @@ function ActionBars:FindIndex(frameID)
     end
 end
 function ActionBars:FindFrameID(frameIndex)
-    --return frameID based on frameIndex
+    -- return frameID based on frameIndex
     for k, v in pairs(frameIDs) do
         if v[2] == frameIndex and v[3] == Config:GetSpec() then
             return k
         end
     end
 end
---Update----------------------
+-- Update----------------------
 function ActionBars:Start()
-    --create frame what hold Script with OnUpdate event (refreshing actions every frame)
+    -- create frame what hold Script with OnUpdate event (refreshing actions every frame)
     framesParent = CreateFrame("Frame", nil, nil)
     framesParent:SetScript("OnUpdate", function()
         local actions = Actions:GetCurrent()
@@ -428,12 +427,11 @@ function ActionBars:Stop()
     framesParent:SetScript("OnUpdate", nil)
 end
 function ActionBars:Update(actions)
-    --determinate if widget will be visible or hidden
-    local configMode = Config:IsConfigMode() --1 in config
-    local isResting = Config:GetResting() --1 in config
+    -- determinate if widget will be visible or hidden
+    local configMode = Config:IsConfigMode() -- 1 in config
+    local isResting = Config:GetResting() -- 1 in config
     local isPvPing = Config:GetPVP() -- 1 in config
-    local globalHideRest = Config:GetGlobalHideRest() --1 ab 1 ui
-
+    local globalHideRest = Config:GetGlobalHideRest() -- 1 ab 1 ui
 
     for actionID in pairs(actions) do
         local slotID = actions[actionID][1]
@@ -445,41 +443,37 @@ function ActionBars:Update(actions)
         local actionType = actions[actionID][9]
         local isPVPspell = actions[actionID][10]
         local isNotOnActionBars = API:isNotOnActionBars(spellID, actionType)
+        local isInCinematic = API:IsInCinematic()
         if configMode == true then
             widget:Show()
         else
-            if
-            globalHideRest == true and isResting == true or
-                    isResting == true and framesHideRest[frameIndex] == true or
-                    displayOnlyWhenBoosted == true and isBoosted == false or
-                    isPvPing == false and isPVPspell == true or
-                    isNotOnActionBars == true
-            then
+            if globalHideRest == true and isResting == true or isResting == true and framesHideRest[frameIndex] == true or
+                displayOnlyWhenBoosted == true and isBoosted == false or isPvPing == false and isPVPspell == true or
+                isNotOnActionBars == true or isInCinematic == true then
                 widget:Hide()
             else
                 local chargesText = API:GetActionCharges(spellID, actionType)
                 local isUsable, notEnoughMana = API:IsUsableAction(spellID, actionType)
-                local  duration = API:GetActionCooldown(spellID, actionType)
+                local duration = API:GetActionCooldown(spellID, actionType)
                 local inRange = API:IsActionInRange(spellID, actionType)
                 widget.charges:SetText(chargesText)
-                if
-                isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true or
-                        isBoosted == true and displayOnlyWhenBoosted == false and isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true
-                then
+                if isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and
+                    duration < 1.5 and inRange == true or isBoosted == true and displayOnlyWhenBoosted == false and
+                    isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true then
                     widget:Show()
                     ActionButton_ShowOverlayGlow(widget)
                 else
                     ActionButton_HideOverlayGlow(widget)
-        
-                    if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false  then
+
+                    if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false then
                         widget:Hide()
                     else
                         local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID, actionType)
                         if isUserBuffedBy ~= nil then
-                           widget:Hide()
+                            widget:Hide()
                         else
-                           widget:Show()
-                       end
+                            widget:Show()
+                        end
                     end
                 end
 
@@ -488,16 +482,16 @@ function ActionBars:Update(actions)
     end
 end
 function ActionBars:Sort(frameID, actions)
-    --handle displayed widget position and parent
+    -- handle displayed widget position and parent
     local startxOffset = 0
     local startyOffset = 0
     local iconHolder = frames[frameID].configWidgets[3]
     local sorting = reverseSorting[frameID]
     local yOffsetSorting = -50;
-    if(sorting==nil) then
+    if (sorting == nil) then
         sorting = true;
     end
-    if(sorting) then
+    if (sorting) then
         yOffsetSorting = 50;
     end
     for actionID in pairs(actions) do
@@ -509,7 +503,7 @@ function ActionBars:Sort(frameID, actions)
             startxOffset = startxOffset + 50
             if (startxOffset == framesColumn[frameID] * 50) then
                 startxOffset = 0
-                startyOffset = startyOffset +yOffsetSorting
+                startyOffset = startyOffset + yOffsetSorting
             end
         elseif actionFrameNumber == frameID then
             widget:SetPoint("LEFT", iconHolder, "LEFT", startxOffset, startyOffset)
@@ -517,8 +511,9 @@ function ActionBars:Sort(frameID, actions)
         end
     end
 end
---Getter & Setter ------------ 
-function ActionBars:Set(loadedFramesPosition, loadedFramesScale, loadedFramesAlpha, loadedFramesColumn, loadedFramesHideRest, loadedFramesSpecCount, loadedFrameIDs, loadedReverseSorting)
+-- Getter & Setter ------------ 
+function ActionBars:Set(loadedFramesPosition, loadedFramesScale, loadedFramesAlpha, loadedFramesColumn,
+    loadedFramesHideRest, loadedFramesSpecCount, loadedFrameIDs, loadedReverseSorting)
     framesPosition = loadedFramesPosition
     framesScale = loadedFramesScale
     framesAlpha = loadedFramesAlpha
@@ -567,19 +562,18 @@ function ActionBars:GetSV()
         end,
         FramesPosition = function(self)
             for k in pairs(frames) do
-                --local frameIndex = k
+                -- local frameIndex = k
                 if k then
                     local function CalculateFramePosition(k)
                         local point, _, relativePoint, xOfs, yOfs = frames[k]:GetPoint(1)
                         local function round2(num, numDecimalPlaces)
                             return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
                         end
-                        return { round2(xOfs, 2), round2(yOfs, 2), point, relativePoint }
+                        return {round2(xOfs, 2), round2(yOfs, 2), point, relativePoint}
 
                     end
                     framesPosition[k] = CalculateFramePosition(k)
                 end
-
 
             end
             return framesPosition
@@ -595,8 +589,8 @@ function ActionBars:GetSV()
         end,
         FramesSorting = function(self)
             return reverseSorting
-        end,
+        end
     }
     return returnTable
 end
---Revision v 1.1.2 --
+-- Revision v 1.1.2 --

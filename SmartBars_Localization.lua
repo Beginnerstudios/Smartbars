@@ -1,86 +1,86 @@
---NameSpaces------------------------------
-local _,SmartBars = ...
-SmartBars.Localization ={}
-local Localization=SmartBars.Localization
---Init------------------------------------
+-- NameSpaces------------------------------
+local _, SmartBars = ...
+SmartBars.Localization = {}
+local Localization = SmartBars.Localization
+-- Init------------------------------------
 function Localization:Init()
 
 end
---Variables-----
+-- Variables-----
 local addonName = "SmartBars - "
-local loadedMessage = addonName.."/sb for settings , /sb reset to reset all settings on the current character."
+local loadedMessage = addonName .. "/sb for settings , /sb reset to reset all settings on the current character."
 local bar = "Bar: "
-local oldFound = addonName.."old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.If you dont want get this notification again delete BS_ActionsTracker folder from --/interface/addons."
-local settingsReseted = addonName.."settings reseted."
+local oldFound = addonName ..
+                     "old version of this addon was found enabled(BS_ActionsTracker), it is not possible to have both addons active, so BS_ActionsTracker was disabled.If you dont want get this notification again delete BS_ActionsTracker folder from --/interface/addons."
+local settingsReseted = addonName .. "settings reseted."
 local resetAll = "Reset All"
 local usedActions = "Used actions: "
 local trackedActions = "Tracked actions: "
 local yourActions = "Used actions: "
-local removeLastActionBar ="Remove last Action Bar."
-local createNewActionBar ="Create new Action Bar."
-local hideAllActions ="Hide all tracked actions in rest zone."
-local hideFrameActions="Hide this bar in rest zone."
-local hideActionsTitle ="Hide actions:"
-local reverseSortingTitle ="Reverse Sorting"
-local reverseSortingTooltip ="Checked - bottom to top\nUnchecked - top to bottom"
-local loadingMessageTitle ="Welcome message:"
+local removeLastActionBar = "Remove last Action Bar."
+local createNewActionBar = "Create new Action Bar."
+local hideAllActions = "Hide all tracked actions in rest zone."
+local hideFrameActions = "Hide this bar in rest zone."
+local hideActionsTitle = "Hide actions:"
+local reverseSortingTitle = "Reverse Sorting"
+local reverseSortingTooltip = "Checked - bottom to top\nUnchecked - top to bottom"
+local loadingMessageTitle = "Welcome message:"
 local tooltipLoadingMessageTitle = "Toggle welcome message."
-local updateMessageTitle ="Update:"
-local displayWhenBoosted ="Check if you want display this spell only when BOOSTED."
+local updateMessageTitle = "Update:"
+local displayWhenBoosted = "Check if you want display this spell only when BOOSTED."
 local columnsText = "Columns: "
 local alphaText = "Alpha: "
 local scaleText = "Scale: "
-local changeBar ="Change bar."
-local decreaseColumns ="Decrease number of columns."
-local increaseColumns ="Increase number of columns."
-local settingsTitle ="Settings"
-local editText ="Edit"
+local changeBar = "Change bar."
+local decreaseColumns = "Decrease number of columns."
+local increaseColumns = "Increase number of columns."
+local settingsTitle = "Settings"
+local editText = "Edit"
 local confirmReset = "Are you sure you want reset SmartBars to default state?"
 local confirmRemoveBar = "Are you sure you want remove this bar? Your actions will be moved to previous bar."
 
-
---Localization
+-- Localization
 function Localization:LoadedMessage()
-return loadedMessage
+    return loadedMessage
 end
 function Localization:Bar()
-return bar
+    return bar
 end
 function Localization:OldFound()
-return oldFound
+    return oldFound
 end
 function Localization:SettingsReseted()
-return settingsReseted
+    return settingsReseted
 end
 function Localization:AddonName()
-  return addonName
+    return addonName
 end
 function Localization:ResetAll()
-  return resetAll
+    return resetAll
 end
 function Localization:UsedActions()
     return usedActions
 end
 function Localization:TrackedActions()
-      return trackedActions
+    return trackedActions
 end
 function Localization:YourActions()
-        return yourActions
+    return yourActions
 end
 function Localization:AddActionBar()
-          return createNewActionBar
+    return createNewActionBar
 end
 function Localization:RemoveActionBar()
-            return removeLastActionBar
+    return removeLastActionBar
 end
 function Localization:HideAllActions()
-              return hideAllActions
+    return hideAllActions
 end
 function Localization:HideFrameActions()
-                return hideFrameActions
+    return hideFrameActions
 end
 function Localization:HideActionsTitle()
-  return hideActionsTitle
+    return hideActionsTitle
 end
 function Localization:ReverseSortingTitle()
     return reverseSortingTitle
@@ -89,48 +89,48 @@ function Localization:ReverseSortingTooltip()
     return reverseSortingTooltip
 end
 function Localization:DisplayWhenBoosted()
-  return displayWhenBoosted
+    return displayWhenBoosted
 end
 function Localization:ColumnText()
-  return columnsText
+    return columnsText
 end
 function Localization:AlphaText()
-  return alphaText
+    return alphaText
 end
 function Localization:ScaleText()
-  return scaleText
+    return scaleText
 end
 function Localization:ChangeBar()
-  return changeBar
+    return changeBar
 end
 function Localization:IncreaseColumns()
-  return increaseColumns
+    return increaseColumns
 end
 function Localization:DecreaseColumns()
-  return decreaseColumns
+    return decreaseColumns
 end
 function Localization:SettingsTitle()
-  return settingsTitle
+    return settingsTitle
 end
 function Localization:EditText()
-  return editText
+    return editText
 end
 function Localization:ConfirmReset()
-  return confirmReset
+    return confirmReset
 end
 function Localization:ConfirmRemoveBar()
-  return confirmRemoveBar
+    return confirmRemoveBar
 end
 function Localization:LoadingMessageTitle()
-  return loadingMessageTitle
+    return loadingMessageTitle
 end
 function Localization:LoadingMessageTooltip()
-  return loadingMessageTooltip
+    return loadingMessageTooltip
 end
 function Localization:UpdateMessageTitle()
-  return updateMessageTitle
+    return updateMessageTitle
 end
-function  Localization:LoadingMessageTooltip()
-  return tooltipLoadingMessageTitle
+function Localization:LoadingMessageTooltip()
+    return tooltipLoadingMessageTitle
 end
---Revision v 1.1.1 ---
+-- Revision v 1.1.1 ---

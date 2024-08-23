@@ -1,18 +1,18 @@
---NameSpaces------------------------------
+-- NameSpaces------------------------------
 local _, SmartBars = ...
 SmartBars.API = {}
 local API = SmartBars.API
 local Config
---Init------------------------------------
+-- Init------------------------------------
 function API:Init()
     Config = SmartBars.Config
 end
---DevStrings--------------------------
+-- DevStrings--------------------------
 local item = "item"
 local spell = "spell"
 local target = "target"
 local player = "player"
---API:Functions-----------------------
+-- API:Functions-----------------------
 function API:GetSpecialization()
     if Config:IsCurrentPatch() then
         GetSpecialization()
@@ -21,6 +21,9 @@ function API:GetSpecialization()
         return 0
     end
 end
+function API:IsInCinematic()
+        return IsInCinematicScene()
+end
 function API:GetActionInfo(slotID)
     return GetActionInfo(slotID)
 end
@@ -28,7 +31,7 @@ function API:GetActionTexture(slotID, actionType)
     if actionType == spell then
         return C_Spell.GetSpellTexture(slotID)
     elseif actionType == item then
-       return C_Item.GetItemIconByID(slotID)
+        return C_Item.GetItemIconByID(slotID)
     else
         return "image.tga"
     end
@@ -38,12 +41,12 @@ function API:GetActionCooldown(spellID, actionType)
     if actionType == spell then
         local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID);
         if spellCooldownInfo then
-            value =spellCooldownInfo.duration
+            value = spellCooldownInfo.duration
         end
     elseif actionType == item then
         local startTimeSeconds, durationSeconds, enableCooldownTimer = C_Item.GetItemCooldown(spellID);
         if durationSeconds then
-            value=durationSeconds
+            value = durationSeconds
         end
     else
     end
@@ -133,7 +136,7 @@ function API:GetUserActions()
     for i = 1, slotCount do
         local actionType, actionID = API:GetActionInfo(i)
         if actionID ~= nil and strmatch(actionID, "%d") and actionType == spell or actionType == item then
-            allSlotTable[actionID] = { i, actionID, nil, "", currentSpecialization, actionType }           --- [1]slot id [2]spellID
+            allSlotTable[actionID] = {i, actionID, nil, "", currentSpecialization, actionType} --- [1]slot id [2]spellID
         end
     end
     return allSlotTable
@@ -143,23 +146,23 @@ function API:IsResting()
         return true
     end
     return false
-    end
-    function API:IsPvPing()
+end
+function API:IsPvPing()
     if Config:IsCurrentPatch() then
-    return C_PvP.IsWarModeDesired()
+        return C_PvP.IsWarModeDesired()
     else
-    return false
+        return false
     end
+end
+function API:IsActionInRange(spellID, actionType)
+    local isInRange = nil
+    if actionType == "spell" then
+        isInRange = C_Spell.IsSpellInRange(spellID, "target")
     end
-    function API:IsActionInRange(spellID, actionType)
-        local isInRange = nil
-        if actionType == "spell" then
-            isInRange = C_Spell.IsSpellInRange(spellID, "target")
-        end
-        -- Return true if isInRange is either true or nil
-        return isInRange ~= false
-    end
-    function API:GetDisplayedActionInfo(id, actionType)
+    -- Return true if isInRange is either true or nil
+    return isInRange ~= false
+end
+function API:GetDisplayedActionInfo(id, actionType)
     if actionType == spell then
         local spellInfo = C_Spell.GetSpellInfo(id)
 
@@ -173,19 +176,19 @@ function API:IsResting()
         end
     end
     if actionType == item then
-    local name = GetItemInfo(id)
-    return name
+        local name = GetItemInfo(id)
+        return name
     end
+end
+function API:GetFoundActionInfo(id)
+    if (id == nill) then
+        return
     end
-    function API:GetFoundActionInfo(id)
-        if(id==nill)then
-            return
-        end
     if C_Spell.GetSpellInfo(id) then
-    return { C_Spell.GetSpellInfo(id), "spell" }
+        return {C_Spell.GetSpellInfo(id), "spell"}
     elseif not C_Spell.GetSpellInfo(id) then
-    return { GetItemInfo(id), "item" }
+        return {GetItemInfo(id), "item"}
     end
-    end
-    -- Revision version v1.1.2 ----
+end
+-- Revision version v1.1.2 ----
 
