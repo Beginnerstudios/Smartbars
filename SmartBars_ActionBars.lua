@@ -444,8 +444,14 @@ function ActionBars:Update(actions)
         local isPVPspell = actions[actionID][10]
         local isNotOnActionBars = API:isNotOnActionBars(spellID, actionType)
         local isInCinematic = API:IsInCinematic()
+        if (isBoosted) then
+            ActionButton_ShowOverlayGlow(widget)
+        else
+            ActionButton_HideOverlayGlow(widget)
+        end
         if configMode == true then
             widget:Show()
+            ActionButton_HideOverlayGlow(widget)
         else
             if globalHideRest == true and isResting == true or isResting == true and framesHideRest[frameIndex] == true or
                 displayOnlyWhenBoosted == true and isBoosted == false or isPvPing == false and isPVPspell == true or
@@ -457,13 +463,12 @@ function ActionBars:Update(actions)
                 local duration = API:GetActionCooldown(spellID, actionType)
                 local inRange = API:IsActionInRange(spellID, actionType)
                 widget.charges:SetText(chargesText)
+
                 if isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and
                     duration < 1.5 and inRange == true or isBoosted == true and displayOnlyWhenBoosted == false and
                     isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true then
                     widget:Show()
-                    ActionButton_ShowOverlayGlow(widget)
                 else
-                    ActionButton_HideOverlayGlow(widget)
 
                     if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false then
                         widget:Hide()
@@ -473,6 +478,7 @@ function ActionBars:Update(actions)
                             widget:Hide()
                         else
                             widget:Show()
+
                         end
                     end
                 end

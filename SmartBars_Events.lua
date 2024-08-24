@@ -101,6 +101,7 @@ function Events:RegisterEvents()
     function MyEvent:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(...)
         local a = ...
         local trackedActions = Actions:GetCurrent()
+
         for actionID in pairs(trackedActions) do
             if trackedActions[actionID][2] == a then
                 trackedActions[actionID][7] = true
