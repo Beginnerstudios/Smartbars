@@ -21,7 +21,6 @@ local primaryFrame
 local isVisible = false
 -- UI:Frames-------------------------------
 function UI:Create()
-    local displayedIDs = {}
     local function SetupPrimaryFrame()
         primaryFrame = Templates:PrimaryFrame()
     end
@@ -84,14 +83,16 @@ function UI:Create()
         local xOffset = 0
         local yOffset = initialYOffset
         local count = 0
+        local displayedIDs = {}
         local trackedIDs = {}
 
         for k, actionData in pairs(actions) do
             local actionType = actionData[6]
-            if actionType == actionTypeFilter or actionTypeFilter=="missing" then
+            if actionType == actionTypeFilter then
                 local actionID = actionData[2]
                 local widget = Templates:ActionWidget(actionData, primaryFrame, false)
                 local actionName = API:GetDisplayedActionInfo(actionID, actionType)
+
                 widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function()
                     Actions:Add(actionData)
@@ -112,8 +113,7 @@ function UI:Create()
                     local trackedActionID = trackedData[2]
                     local trackedActionSpec = trackedData[5]
                     local currentSpec = API:GetSpecialization()
-                    local newTexture = API:GetActionTexture(actionID, actionType)   
-                    widget:SetNormalTexture(newTexture)
+
                     if Config:IsValueSame(actionID, trackedActionID) and
                         Config:IsValueSame(trackedActionSpec, currentSpec) then
                         widget:SetChecked(true)
@@ -121,10 +121,11 @@ function UI:Create()
                         trackedIDs[trackedActionID] = actionID
                     end
                 end
+
                 displayedIDs[actionID] = actionData
-                --  print(displayedIDs[actionID][2])
             end
         end
+
         return yOffset
     end
 
@@ -133,65 +134,15 @@ function UI:Create()
 
         -- Create spell widgets
         yOffset = CreateActionWidgets(API:GetUserActions(), "spell", yOffset)
-        yOffset = yOffset - 55
+        yOffset = yOffset-55
         -- Add title between spells and items
-        local title = Templates:ItemsTitle("Items:", yOffset, primaryFrame)
-        title:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", 10, yOffset - 77)
+        local title = Templates:ItemsTitle(yOffset, primaryFrame)
+        title:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", 10, yOffset-77)
 
         -- Create item widgets
-        yOffset = CreateActionWidgets(API:GetUserActions(), "item", yOffset - 10)
-
-        local function AddMissing(displayedActions)
-            local missingData = {}
-            local currentSpec = API:GetSpecialization()
-            local displayedActionIDs = {}
-
-            -- Populate displayedActionIDs with action IDs from currently displayed actions
-            for _, actionData in pairs(displayedActions) do
-                local actionID = actionData[2] -- Assuming actionID is at index 2
-                displayedActionIDs[actionID] = true
-            end
-
-            -- Get tracked actions and compare with displayed actions
-            local trackedActions = Actions:GetTracked()
-            for _, trackedData in pairs(trackedActions) do
-                local trackedActionID = trackedData[2] -- Assuming actionID is at index 2
-                local trackedSpec = trackedData[5] -- Specialization at index 5
-
-                -- Check if specialization matches and the action is not already displayed
-                if trackedSpec == currentSpec and not displayedActionIDs[trackedActionID] then
-                    missingData[trackedActionID] = trackedData
-                end
-            end
-            local tA = missingData
-            for actionID in pairs(missingData) do
-                if actionID and tA[actionID][5] == API:GetSpecialization() then
-                    local widget = Templates:ActionWidget(missingData,primaryFrame,true)
-                    local spellID = tA[actionID][2]
-                    local actionType = tA[actionID][9]
-                    if widget then
-                        local newTexture = API:GetActionTexture(spellID, actionType)   
-                            widget:SetNormalTexture(newTexture)
-                    end
-                end
-            end
-UI:RefreshIcons()
-            return missingData
-        end
-        local missingData = AddMissing(displayedIDs);
-        local missingCount = 0
-        for _ in pairs(missingData) do
-            missingCount = missingCount + 1
-        end
-        if missingCount > 0 then
-            yOffset = yOffset - 55
-            local title = Templates:ItemsTitle("Missing", yOffset, primaryFrame)
-            title:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", 10, yOffset - 77)
-            CreateActionWidgets(missingData,"missing",yOffset)
-        end
+        yOffset = CreateActionWidgets(API:GetUserActions(), "item", yOffset-10)
 
         primaryFrame:SetHeight(-yOffset + 155)
-
     end
 
     local function EnableFrameDragging()
@@ -217,6 +168,7 @@ UI:RefreshIcons()
     SetPrimaryFrameScripts()
     CreateActionsUI()
     EnableFrameDragging()
+
     isVisible = true
 end
 
@@ -234,9 +186,8 @@ function UI:Update()
         configWidgets[1].trackedValue:SetText(Config:GetTableCount(Actions:GetCurrent()))
         configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
     end
-    UI:RefreshIcons()
 end
-function UI:RefreshIcons(cA)
+function UI:RefreshIcons()
     local cA = Actions:GetCurrent()
     for actionID in pairs(cA) do
         if actionID and cA[actionID][5] == API:GetSpecialization() then
