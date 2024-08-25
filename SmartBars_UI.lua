@@ -85,6 +85,44 @@ function UI:Create()
         local count = 0
         local displayedIDs = {}
         local trackedIDs = {}
+        local function RemoveNotInBars(trackedIDs,displayedIDs)
+            for k, v in pairs(trackedIDs) do
+                if trackedIDs[k] == displayedIDs[k] then
+                elseif not displayedIDs[k] then
+                    local function CreateWidget()
+                        local cA = Actions:GetCurrent()
+                        local tA = Actions:GetTracked()
+                        local ID = Config:JoinNumber(k, API:GetSpecialization())
+                        local actionID = k
+                        local actionName = select(1, API:GetFoundActionInfo(actionID)[1])
+                        local newAction = {}
+                        newAction[6] = tA[ID][9]
+                        newAction[2] = tA[ID][2]
+                        local widget = Templates:ActionWidget(newAction, primaryFrame, false)
+                        widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
+                        widget:SetChecked(true)
+                        widget:SetScript(onClick, function(self)
+                            local actionID = Config:JoinNumber(actionID, API:GetSpecialization())
+                            tA[actionID] = nil
+                            cA[actionID][3]:Hide()
+                            cA[actionID] = nil
+                            widget:Hide()
+                        end)
+
+                        widget.tooltipText = actionName
+
+                        xOffset = xOffset + 50
+                        count = count + 1
+                        if (count == 6) then
+                            yOffset = yOffset - 55
+                            xOffset = 0
+                            count = 0
+                        end
+                    end
+                    CreateWidget()
+                end
+            end
+        end
 
         for k, actionData in pairs(actions) do
             local actionType = actionData[6]
@@ -124,6 +162,9 @@ function UI:Create()
 
                 displayedIDs[actionID] = actionData
             end
+        end
+        if(actionTypeFilter=="spell")then
+            RemoveNotInBars(trackedIDs,displayedIDs)
         end
 
         return yOffset
