@@ -78,6 +78,8 @@ function API:GetPlayerAuraBySpellID(spellID, actionType)
             return nil
         end
     end
+
+
     return aura
 end
 

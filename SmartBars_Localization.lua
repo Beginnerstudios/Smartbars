@@ -16,7 +16,9 @@ local settingsReseted = addonName .. "settings reseted."
 local resetAll = "Reset All"
 local usedActions = "Used actions: "
 local trackedActions = "Tracked actions: "
-local yourActions = "Used actions: "
+local yourActions = "Spells: "
+local yourItems = "Items: "
+
 local removeLastActionBar = "Remove last Action Bar."
 local createNewActionBar = "Create new Action Bar."
 local hideAllActions = "Hide all tracked actions in rest zone."
@@ -67,6 +69,10 @@ end
 function Localization:YourActions()
     return yourActions
 end
+function Localization:YourItems()
+    return yourItems
+end
+
 function Localization:AddActionBar()
     return createNewActionBar
 end

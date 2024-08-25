@@ -463,24 +463,19 @@ function ActionBars:Update(actions)
                 local duration = API:GetActionCooldown(spellID, actionType)
                 local inRange = API:IsActionInRange(spellID, actionType)
                 widget.charges:SetText(chargesText)
-
+                local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID, actionType)
+    
                 if isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and
                     duration < 1.5 and inRange == true or isBoosted == true and displayOnlyWhenBoosted == false and
                     isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true then
                     widget:Show()
                 else
-
-                    if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false then
+                    local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID, actionType)
+                    if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false or isUserBuffedBy ~=nil then
                         widget:Hide()
                     else
-                        local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID, actionType)
-                        if isUserBuffedBy ~= nil then
-                            widget:Hide()
-                        else
                             widget:Show()
-
                         end
-                    end
                 end
 
             end

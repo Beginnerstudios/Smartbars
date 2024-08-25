@@ -51,12 +51,14 @@ local maximumScale = 1.5
 -- Templates-----------------------------------------------------
 function Templates:PrimaryFrame()
     local function Frame()
-        local frame = CreateFrame(frame, nil, nil, basicFrameWithInset, defaultLayer)
+local frame = CreateFrame(frame, nil, nil, basicFrameWithInset, defaultLayers)
+
         frame:EnableMouse(true)
         frame:SetMovable(true)
         frame:RegisterForDrag(leftButton)
         frame:SetFrameStrata(backgroundFrameStrata)
-        frame:SetWidth(320)
+frame:SetWidth(420)
+
         frame:SetScale(defaultFrameScale)
         frame:SetPoint(center, nil, center, -450, 100)
         frame:SetClampedToScreen(true)
@@ -80,7 +82,10 @@ function Templates:PrimaryFrame()
         titles.usedStatic = titles:CreateFontString(nil, defaultLayer)
         titles.usedStatic:SetPoint(left, titles, left, titleOffsetX, yZeroOffset)
         titles.usedStatic:SetFontObject(defaultFont)
-        titles.usedStatic:SetText(Localization:UsedActions())
+titles.usedStatic:SetText(Localization:UsedActions())
+
+
+
 
         titles.trackedStatic = titles:CreateFontString(nil, defaultLayer)
         titles.trackedStatic:SetPoint(left, titles, left, titleOffsetX, yOffset * -1)
@@ -164,6 +169,23 @@ function Templates:PrimaryFrame()
     end
     return primaryFrame
 end
+function Templates:ItemsTitle(titleText,yOffset, parent)
+    -- Create a new font string (label)
+    local title = parent:CreateFontString(nil, defaultLayer, "GameFontNormal")
+
+    -- Set the position of the text using xOffset and yOffset
+    title:SetPoint(left, parent, left, -10, yOffset)
+
+    -- Set the text of the label
+    title:SetText(titleText)
+
+    -- Optionally, you can modify the font size, color, etc.
+    title:SetFont(defaultFont, 12) -- Example: change the font size
+    title:SetTextColor(1, 1, 1, 1) -- Example: set the text color to white
+
+    return title
+end
+
 function Templates:ActionBar(index)
 
     local actionBar = CreateFrame(frame, nil, nil, nil, defaultButton)
