@@ -8,14 +8,17 @@ local Config
 local Templates
 local ActionBars
 local UI
+local Utils
 -- Init------------------------------------
 function Actions:Init()
     --  UI = SmartBars.UI
+    Utils = SmartBars.Utils
     API = SmartBars.API
     Config = SmartBars.Config
     Templates = SmartBars.Templates
     ActionBars = SmartBars.ActionBars
     UI = SmartBars.UI
+    Utils = SmartBars.Utils
 end
 -- Variables--------------------------------
 local trackedActions = {}
@@ -24,7 +27,7 @@ local currentActions = {}
 function Actions:Add(action)
     local tA = Actions:GetTracked()
     local cA = Actions:GetCurrent()
-    local actionID = Config:JoinNumber(action[2], API:GetSpecialization())
+    local actionID = Utils:JoinNumber(action[2], API:GetSpecialization())
     if tA[actionID] then
         cA[actionID][3]:Hide()
         cA[actionID] = nil
@@ -36,7 +39,7 @@ function Actions:Add(action)
 end
 function Actions:Load()
     local tA = Actions:GetTracked()
-    if Config:GetTableCount(tA) > 0 then
+    if Utils:GetTableCount(tA) > 0 then
         for actionID in pairs(tA) do
             if tA[actionID][5] == API:GetSpecialization() then
                 Actions:Create(tA[actionID], false, true, actionID)
@@ -45,7 +48,7 @@ function Actions:Load()
     end
 end
 function Actions:Unload()
-    if Config:GetTableCount(currentActions) > 0 then
+    if Utils:GetTableCount(currentActions) > 0 then
         for actionID in pairs(currentActions) do
             Actions:Delete(currentActions[actionID])
         end
@@ -75,7 +78,7 @@ function Actions:Create(action, isEnabled, isExisting, key)
             isPVP = action[10]
         end
     else
-        actionID = Config:JoinNumber(action[2], API:GetSpecialization())
+        actionID = Utils:JoinNumber(action[2], API:GetSpecialization())
         curretSpec = API:GetSpecialization()
         trackedFrame = select(2, ActionBars:GetHighest())
         showOnlyWhenBoosted = false
@@ -112,13 +115,13 @@ function Actions:Create(action, isEnabled, isExisting, key)
             end
         end)
 
-        if Config:IsCurrentPatch() then
+
             cA[actionID][3].group.showWhenBoosted:SetScript(onClick, function(self)
                 showOnlyWhenBoosted = self:GetChecked()
                 trackedActions[actionID][8] = showOnlyWhenBoosted
                 cA[actionID][8] = showOnlyWhenBoosted
             end)
-        end
+
         cA[actionID][3].edit:SetScript("OnEditFocusLost", function(self)
             action[4] = self:GetText()
             trackedActions[actionID][4] = action[4]

@@ -14,12 +14,7 @@ local target = "target"
 local player = "player"
 -- API:Functions-----------------------
 function API:GetSpecialization()
-    if Config:IsCurrentPatch() then
-        GetSpecialization()
-        return GetSpecialization()
-    else
-        return 0
-    end
+    return GetSpecialization()
 end
 function API:IsInCinematic()
         return IsInCinematicScene()
@@ -83,18 +78,16 @@ function API:GetPlayerAuraBySpellID(spellID, actionType)
 end
 
 function API:IsPVPTalent(spellID)
-    if Config:IsCurrentPatch() then
+
         local talents = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
         for _, pvptalent in pairs(talents) do
             local talentID = select(6, GetPvpTalentInfoByID(pvptalent))
             if talentID == spellID then
                 return true
+            else
+                return false
             end
         end
-    else
-        return false
-    end
-
 end
 function API:isNotOnActionBars(actionId, actionType)
     local isPresent = true
@@ -148,12 +141,8 @@ function API:IsResting()
     end
     return false
 end
-function API:IsPvPing()
-    if Config:IsCurrentPatch() then
+function API:IsPVP()
         return C_PvP.IsWarModeDesired()
-    else
-        return false
-    end
 end
 function API:IsActionInRange(spellID, actionType)
     local isInRange = nil

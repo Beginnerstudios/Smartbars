@@ -4,7 +4,7 @@
 ## Author: BStudios
 ## Version:1.1.2(Retail)
 ## SavedVariablesPerCharacter:SmartBarsCharacterActions,SmartBarsSettings,SmartBarsSavedBuild
-
+SmartBars_Utils.lua
 SmartBars_Global.lua
 SmartBars_UI.lua
 SmartBars_Actions.lua
@@ -15,3 +15,4 @@ SmartBars_Templates.lua
 SmartBars_ActionBars.lua
 SmartBars_Localization.lua
 SmartBars_Core.lua
+

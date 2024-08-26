@@ -3,6 +3,7 @@ local _, SmartBars = ...
 SmartBars.Events = {}
 local Events = SmartBars.Events
 local Actions
+local ActionBars
 local Config
 local UI
 -- local ActionBars
@@ -13,6 +14,7 @@ local API
 function Events:Init()
     Actions = SmartBars.Actions
     Core = SmartBars.Core
+    ActionBars = SmartBars.ActionBars
     Config = SmartBars.Config
     UI = SmartBars.UI
     -- ActionBars = SmartBars.ActionBars
@@ -41,21 +43,19 @@ function Events:RegisterEvents()
     frame:RegisterEvent(updateResting)
     frame:RegisterEvent(chatMessageAddon)
     frame:RegisterEvent(actionBarChanged)
-    Config:CreatePopup()
-    if Config:IsCurrentPatch() then
+    Events:CreateEventsPopups()
         frame:RegisterEvent(toggleWarmode)
         frame:RegisterEvent(specChanged)
         frame:RegisterEvent(glowShow)
         frame:RegisterEvent(glowHide)
         frame:RegisterEvent(partyMemberChanged)
         frame:RegisterEvent(zoneChanged)
-    end
     frame:SetScript(onEvent, function(self, event, ...)
         MyEvent[event](Event, ...)
     end)
     function MyEvent:SPELLS_CHANGED()
         C_Timer.After(1, function()
-            Config:SetPVP(API:IsPvPing())
+            Config:SetPVP(API:IsPVP())
         end)
     end
     function MyEvent:PLAYER_UPDATE_RESTING()
@@ -69,18 +69,7 @@ function Events:RegisterEvents()
         end)
     end
     function MyEvent:PLAYER_LOGIN()
-        Config:SetDefaultBuild()
-        local build = select(2, Config:GetSmartBarsInfo())
-        local savedBuild = select(3, Config:GetSmartBarsInfo())
-        if savedBuild < build then
-            SmartBarsCharacterActions = nil
-            SmartBarsSettings = nil
-            Config:SetSavedBuild(build)
-            Config:SetDefaults()
-            print(Localization:SettingsReseted())
-        end
-        Config:SetSpec(API:GetSpecialization())
-        Config:SetResting(API:IsResting())
+        Config:SetDefaults()
     end
     function MyEvent:PLAYER_LOGOUT()
     end
@@ -125,6 +114,32 @@ function Events:RegisterEvents()
         end
 
     end
+end
+function Events:CreateEventsPopups()
+    StaticPopupDialogs["SMARTBARS_RESETCONFIRM"] = {
+        text = Localization:ConfirmReset(),
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+            Config:Reset()
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3
+    }
+    StaticPopupDialogs["SMARTBARS_REMOVEBARCONFIRM"] = {
+        text = Localization:ConfirmRemoveBar(),
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+            ActionBars:Remove()
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3
+    }
 end
 -- Revision version v1.1.1 ----.
 

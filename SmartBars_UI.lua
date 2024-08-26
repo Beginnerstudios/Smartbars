@@ -7,8 +7,10 @@ local Config
 local Templates
 local ActionBars
 local API
+local Utils
 -- Init------------------------------------
 function UI:Init()
+    Utils = SmartBars.Utils
     Actions = SmartBars.Actions
     Config = SmartBars.Config
     Templates = SmartBars.Templates
@@ -97,10 +99,10 @@ function UI:Create()
                     local trackedActionID = v[2]
                     local trackedActionSpec = v[5]
                     local currentSpec = API:GetSpecialization()
-                    if Config:IsValueSame(actionID, trackedActionID) and
-                            Config:IsValueSame(trackedActionSpec, currentSpec) then
+                    if Utils:IsValueSame(actionID, trackedActionID) and
+                            Utils:IsValueSame(trackedActionSpec, currentSpec) then
                         widget:SetChecked(true)
-                    elseif Config:IsValueSame(trackedActionSpec, currentSpec) then
+                    elseif Utils:IsValueSame(trackedActionSpec, currentSpec) then
                         trackedIDs[trackedActionID] = actionID
                     end
                 end
@@ -138,10 +140,10 @@ function UI:Create()
                     local trackedActionID = v[2]
                     local trackedActionSpec = v[5]
                     local currentSpec = API:GetSpecialization()
-                    if Config:IsValueSame(actionID, trackedActionID) and
-                            Config:IsValueSame(trackedActionSpec, currentSpec) then
+                    if Utils:IsValueSame(actionID, trackedActionID) and
+                            Utils:IsValueSame(trackedActionSpec, currentSpec) then
                         widget:SetChecked(true)
-                    elseif Config:IsValueSame(trackedActionSpec, currentSpec) then
+                    elseif Utils:IsValueSame(trackedActionSpec, currentSpec) then
                         trackedIDs[trackedActionID] = actionID
                     end
                 end
@@ -165,7 +167,7 @@ function UI:Create()
                 local function CreateWidget()
                     local cA = Actions:GetCurrent()
                     local tA = Actions:GetTracked()
-                    local ID = Config:JoinNumber(k, API:GetSpecialization())
+                    local ID = Utils:JoinNumber(k, API:GetSpecialization())
                     local actionType = tA[ID][9]
                     local actionID = k
                     local actionName = select(1, API:GetFoundActionInfo(actionID)[1])
@@ -176,7 +178,7 @@ function UI:Create()
                     widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                     widget:SetChecked(true)
                     widget:SetScript(onClick, function(self)
-                        local actionID = Config:JoinNumber(actionID, API:GetSpecialization())
+                        local actionID = Utils:JoinNumber(actionID, API:GetSpecialization())
                         tA[actionID] = nil
                         cA[actionID][3]:Hide()
                         cA[actionID] = nil
@@ -205,12 +207,12 @@ function UI:Create()
         for actionID in pairs(trackedActions) do
             local actionSpec = trackedActions[actionID][5]
             local currentSpec = API:GetSpecialization()
-            if Config:IsValueSame(actionSpec, currentSpec) then
+            if Utils:IsValueSame(actionSpec, currentSpec) then
                 trackedActionForSpecCount = trackedActionForSpecCount + 1
             end
         end
         configWidgets[1].trackedValue:SetText(trackedActionForSpecCount)
-        local usedSpellsCount = Config:GetTableCount(API:GetUserActions())
+        local usedSpellsCount = Utils:GetTableCount(API:GetUserActions())
         configWidgets[1].usedValue:SetText(usedSpellsCount)
         configWidgets[2].checkBox:SetChecked(Config:GetGlobalHideRest())
         configWidgets[2].loadingCheckBox:SetChecked(Config:GetWelcomeMessage())
@@ -258,7 +260,7 @@ end
 function UI:Update()
     if primaryFrame then
         local configWidgets = primaryFrame.configWidgets
-        configWidgets[1].trackedValue:SetText(Config:GetTableCount(Actions:GetCurrent()))
+        configWidgets[1].trackedValue:SetText(Utils:GetTableCount(Actions:GetCurrent()))
         configWidgets[3].textValue:SetText(ActionBars:GetCurrentSpecActionBarsCount())
     end
 end

@@ -8,6 +8,7 @@ local Actions
 local Localization
 local API
 local UI
+local Utils
 -- Init------------------------------------
 function ActionBars:Init()
     Config = SmartBars.Config
@@ -16,6 +17,7 @@ function ActionBars:Init()
     Localization = SmartBars.Localization
     API = SmartBars.API
     UI = SmartBars.UI
+    Utils = SmartBars.Utils
 end
 -- Variables--------------------------------
 -- ActionBars
@@ -36,7 +38,7 @@ function ActionBars:Add()
     local spec = Config:GetSpec()
     if framesSpecCount[spec] < 9 then
         framesSpecCount[spec] = framesSpecCount[spec] + 1
-        local frameID = Config:JoinNumber(spec, framesSpecCount[spec])
+        local frameID = Utils:JoinNumber(spec, framesSpecCount[spec])
         frameIDs[frameID] = {frameID, framesSpecCount[spec], spec}
         ActionBars:Create(frameID)
         ActionBars:Toggle(true)
@@ -93,24 +95,24 @@ function ActionBars:Create(i)
             if not framesScale[i] then
                 frames[i].configWidgets[3]:SetScale(defaultFrameScale)
                 scaleWidget.slider:SetValue(defaultFrameScale)
-                scaleWidget.text:SetText(Config:RoundNumber(defaultFrameScale, 2))
+                scaleWidget.text:SetText(Utils:RoundNumber(defaultFrameScale, 2))
             else
                 local scale = framesScale[i]
                 frames[i].configWidgets[3]:SetScale(scale)
                 scaleWidget.slider:SetValue(scale)
-                scaleWidget.text:SetText(Config:RoundNumber(scale, 2))
+                scaleWidget.text:SetText(Utils:RoundNumber(scale, 2))
             end
         end
         local function Alpha()
             if not framesAlpha[i] then
                 frames[i].configWidgets[3]:SetAlpha(defaultFrameAlpha)
                 alphaWidget.slider:SetValue(defaultFrameAlpha)
-                alphaWidget.text:SetText(Config:RoundNumber(defaultFrameAlpha, 2))
+                alphaWidget.text:SetText(Utils:RoundNumber(defaultFrameAlpha, 2))
             else
                 local alpha = framesAlpha[i]
                 frames[i].configWidgets[3]:SetAlpha(alpha)
                 alphaWidget.slider:SetValue(alpha)
-                alphaWidget.text:SetText(Config:RoundNumber(alpha, 2))
+                alphaWidget.text:SetText(Utils:RoundNumber(alpha, 2))
             end
         end
         local function Columns()
@@ -197,14 +199,14 @@ function ActionBars:Create(i)
                 scaleWidget.slider:SetScript(onValueChanged, function(self)
                     iconHolder:SetScale(self:GetValue())
                     framesScale[i] = self:GetValue()
-                    scaleWidget.text:SetText(Config:RoundNumber(framesScale[i], 2))
+                    scaleWidget.text:SetText(Utils:RoundNumber(framesScale[i], 2))
                 end)
             end
             local function Alpha()
                 alphaWidget.slider:SetScript(onValueChanged, function(self)
                     iconHolder:SetAlpha(self:GetValue())
                     framesAlpha[i] = self:GetValue()
-                    alphaWidget.text:SetText(Config:RoundNumber(framesAlpha[i], 2))
+                    alphaWidget.text:SetText(Utils:RoundNumber(framesAlpha[i], 2))
                 end)
             end
             local function Hide()
@@ -279,7 +281,7 @@ function ActionBars:Load()
     else
         local spec = Config:GetSpec()
         framesSpecCount[spec] = 1
-        local frameID = Config:JoinNumber(spec, framesSpecCount[spec])
+        local frameID = Utils:JoinNumber(spec, framesSpecCount[spec])
         frameIDs[frameID] = {frameID, framesSpecCount[spec], spec}
         ActionBars:Create(frameID)
     end
@@ -428,7 +430,7 @@ function ActionBars:Stop()
 end
 function ActionBars:Update(actions)
     -- determinate if widget will be visible or hidden
-    local configMode = Config:IsConfigMode() -- 1 in config
+    local configMode = Config:GetConfigMode() -- 1 in config
     local isResting = Config:GetResting() -- 1 in config
     local isPvPing = Config:GetPVP() -- 1 in config
     local globalHideRest = Config:GetGlobalHideRest() -- 1 ab 1 ui

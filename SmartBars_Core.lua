@@ -36,7 +36,6 @@ function Core:Load()
     Actions:Load()
     ActionBars:Start()
     UI:RefreshIcons()
-    Config:SendMessage()
 end
 -- Program run-----------------------------
 Core:Init()
