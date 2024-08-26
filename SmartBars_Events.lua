@@ -17,7 +17,6 @@ function Events:Init()
     ActionBars = SmartBars.ActionBars
     Config = SmartBars.Config
     UI = SmartBars.UI
-    -- ActionBars = SmartBars.ActionBars
     Localization = SmartBars.Localization
     API = SmartBars.API
 end
@@ -141,5 +140,5 @@ function Events:CreateEventsPopups()
         preferredIndex = 3
     }
 end
--- Revision version v1.1.1 ----.
+-- Revision version v10.0.2 ----.
 
