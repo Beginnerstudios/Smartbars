@@ -108,7 +108,10 @@ function UI:Create()
             end
             CreateWidget()
         end
-
+        yOffset = yOffset - 55
+        xOffstet = 0
+        count = 0
+        Templates:ItemsTitle(10,primaryFrame)
         -- Process item actions
         for _, action in pairs(itemActions) do
             local function CreateWidget()
@@ -145,7 +148,10 @@ function UI:Create()
             end
             CreateWidget()
         end
-
+        yOffset = yOffset - 85
+        xOffstet = 0
+        count = 0
+        Templates:ItemsTitle(10,primaryFrame)
         for k, v in pairs(trackedIDs) do
             if not displayedIDs[k] then
                 local function CreateWidget()

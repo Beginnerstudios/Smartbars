@@ -174,7 +174,7 @@ function Templates:ItemsTitle(yOffset, parent)
     local title = parent:CreateFontString(nil, defaultLayer, "GameFontNormal")
 
     -- Set the position of the text using xOffset and yOffset
-    title:SetPoint(left, parent, left, -10, yOffset)
+    title:SetPoint(left, parent, left, 10, yOffset)
 
     -- Set the text of the label
     title:SetText(Localization:YourItems())
