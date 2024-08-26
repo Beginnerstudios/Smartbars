@@ -139,6 +139,17 @@ end
 function Actions:GetTracked()
     return trackedActions
 end
+function Actions:GetTrackedForCurrentSpec()
+    local currentSpec = API:GetSpecialization();
+    tracked = {}
+    for actionID, actionData in pairs(trackedActions) do
+        -- Check if actionData is a table and has the correct specialization
+        if  actionData[5] == currentSpec then
+            tracked[actionID] = actionData
+        end
+    end
+    return tracked
+end
 function Actions:GetCurrent()
     return currentActions
 end
