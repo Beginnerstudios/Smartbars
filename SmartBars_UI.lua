@@ -52,7 +52,7 @@ function UI:Create()
     end
     local function CreateActions(actions)
         local onClick = "OnClick"
-        local xOffstet = 0
+        local xOffset = 0
         local yOffset = -20
         local count = 0
         local displayedIDs = {}
@@ -74,25 +74,25 @@ function UI:Create()
 
         -- Process spell actions
         for _, action in pairs(spellActions) do
+            if (count == 8) then
+                yOffset = yOffset - 55
+                xOffset = 0
+                count = 0
+            end
             local function CreateWidget()
                 local widget = action[3]
                 local actionID = action[2]
                 local actionName = API:GetDisplayedActionInfo(actionID, "spell")
                 widget = Templates:ActionWidget(action, primaryFrame, false)
-                widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffstet + 10, yOffset - 100)
+                widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
                     Actions:Add(action)
                     UI:Update()
                 end)
                 widget.tooltipText = actionName
-                xOffstet = xOffstet + 50
+                xOffset = xOffset + 50
                 count = count + 1
-                -- Next line after 12 spells
-                if (count == 8) then
-                    yOffset = yOffset - 55
-                    xOffstet = 0
-                    count = 0
-                end
+                -- Next line after 8 spells
                 for q, v in pairs(Actions:GetTracked()) do
                     local trackedActionID = v[2]
                     local trackedActionSpec = v[5]
@@ -108,31 +108,32 @@ function UI:Create()
             end
             CreateWidget()
         end
-        yOffset = yOffset - 55
-        xOffstet = 0
+        yOffset = yOffset - 75
+        xOffset = 0
         count = 0
-        Templates:ItemsTitle(10,primaryFrame)
+        local itemsTitle = Templates:ItemsTitle("Items:", 0, primaryFrame)
+        itemsTitle:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", 10 , yOffset-60)-- Place title slightly above items
         -- Process item actions
         for _, action in pairs(itemActions) do
+            if (count == 8) then
+                yOffset = yOffset - 55
+                xOffset = 0
+                count = 0
+            end
             local function CreateWidget()
                 local widget = action[3]
                 local actionID = action[2]
                 local actionName = API:GetDisplayedActionInfo(actionID, "item")
                 widget = Templates:ActionWidget(action, primaryFrame, false)
-                widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffstet + 10, yOffset - 100)
+                widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
                     Actions:Add(action)
                     UI:Update()
                 end)
                 widget.tooltipText = actionName
-                xOffstet = xOffstet + 50
+                xOffset = xOffset + 50
                 count = count + 1
-                -- Next line after 12 items
-                if (count == 8) then
-                    yOffset = yOffset - 55
-                    xOffstet = 0
-                    count = 0
-                end
+                -- Next line after 8 items
                 for q, v in pairs(Actions:GetTracked()) do
                     local trackedActionID = v[2]
                     local trackedActionSpec = v[5]
@@ -148,12 +149,19 @@ function UI:Create()
             end
             CreateWidget()
         end
-        yOffset = yOffset - 85
-        xOffstet = 0
+        yOffset = yOffset - 75
+        xOffset = 0
         count = 0
-        Templates:ItemsTitle(10,primaryFrame)
+        local itemsTitle = Templates:ItemsTitle("Tracked, but not on action bars:", 0, primaryFrame)
+        itemsTitle:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", 10 , yOffset-60)-- Place title slightly above items
+--Process missing actions
         for k, v in pairs(trackedIDs) do
             if not displayedIDs[k] then
+                if (count == 8) then
+                    yOffset = yOffset - 55
+                    xOffset = 0
+                    count = 0
+                end
                 local function CreateWidget()
                     local cA = Actions:GetCurrent()
                     local tA = Actions:GetTracked()
@@ -165,7 +173,7 @@ function UI:Create()
                     newAction[6] = tA[ID][9]
                     newAction[2] = tA[ID][2]
                     local widget = Templates:ActionWidget(newAction, primaryFrame, false)
-                    widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffstet + 10, yOffset - 100)
+                    widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                     widget:SetChecked(true)
                     widget:SetScript(onClick, function(self)
                         local actionID = Config:JoinNumber(actionID, API:GetSpecialization())
@@ -175,13 +183,8 @@ function UI:Create()
                         widget:Hide()
                     end)
                     widget.tooltipText = actionName
-                    xOffstet = xOffstet + 50
+                    xOffset = xOffset + 50
                     count = count + 1
-                    if (count == 8) then
-                        yOffset = yOffset - 55
-                        xOffstet = 0
-                        count = 0
-                    end
                 end
                 CreateWidget()
             end
@@ -191,6 +194,8 @@ function UI:Create()
         trackedIDs = nil
         primaryFrame:SetHeight((yOffset) * -1 + 155)
     end
+
+
 
     local function Setup()
         -- Count of tracked actions for specific spec

@@ -169,7 +169,7 @@ titles.usedStatic:SetText(Localization:UsedActions())
     end
     return primaryFrame
 end
-function Templates:ItemsTitle(yOffset, parent)
+function Templates:ItemsTitle(textString,yOffset, parent)
     -- Create a new font string (label)
     local title = parent:CreateFontString(nil, defaultLayer, "GameFontNormal")
 
@@ -177,7 +177,7 @@ function Templates:ItemsTitle(yOffset, parent)
     title:SetPoint(left, parent, left, 10, yOffset)
 
     -- Set the text of the label
-    title:SetText(Localization:YourItems())
+    title:SetText(textString)
 
     -- Optionally, you can modify the font size, color, etc.
     title:SetFont(defaultFont, 12) -- Example: change the font size
