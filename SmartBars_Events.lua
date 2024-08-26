@@ -74,7 +74,7 @@ function Events:RegisterEvents()
     function MyEvent:PLAYER_LOGOUT()
     end
     function MyEvent:PARTY_LEADER_CHANGED()
-        Config:SendMessage()
+
     end
     function MyEvent:PLAYER_SPECIALIZATION_CHANGED()
         Config:SetSpec(API:GetSpecialization())
