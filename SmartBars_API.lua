@@ -11,7 +11,6 @@ end
 local item = "item"
 local spell = "spell"
 local target = "target"
-local player = "player"
 -- API:Functions-----------------------
 function API:GetSpecialization()
     return GetSpecialization()
@@ -65,6 +64,10 @@ function API:GetPlayerAuraBySpellID(spellID, actionType)
         local consecration = C_UnitAuras.GetPlayerAuraBySpellID(188370)
         return consecration
     end
+    if spellID == 433568 then
+        local rite = C_UnitAuras.GetPlayerAuraBySpellID(433550)
+        return rite
+    end
     if aura ~= nil then
         if aura.spellId == 192081 then
             return nil
@@ -76,7 +79,6 @@ function API:GetPlayerAuraBySpellID(spellID, actionType)
     
     return aura
 end
-
 function API:IsPVPTalent(spellID)
 
         local talents = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
@@ -102,7 +104,6 @@ function API:isNotOnActionBars(actionId, actionType)
     end
     return isPresent
 end
-
 function API:GetActionCharges(slotID, actionType)
     if actionType == item then
         local currentItemCharges = GetItemCount(slotID)
@@ -146,8 +147,8 @@ function API:IsPVP()
 end
 function API:IsActionInRange(spellID, actionType)
     local isInRange = nil
-    if actionType == "spell" then
-        isInRange = C_Spell.IsSpellInRange(spellID, "target")
+    if actionType == spell then
+        isInRange = C_Spell.IsSpellInRange(spellID, target)
     end
     -- Return true if isInRange is either true or nil
     return isInRange ~= false
