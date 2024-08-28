@@ -84,7 +84,7 @@ function UI:Create()
             local function CreateWidget()
                 local widget = action[3]
                 local actionID = action[2]
-                local actionName = API:GetDisplayedActionInfo(actionID, "spell")
+                local actionName = API:GetActionName(actionID, "spell")
                 widget = Templates:ActionWidget(action, primaryFrame, false)
                 widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
@@ -125,7 +125,7 @@ function UI:Create()
             local function CreateWidget()
                 local widget = action[3]
                 local actionID = action[2]
-                local actionName = API:GetDisplayedActionInfo(actionID, "item")
+                local actionName = API:GetActionName(actionID, "item")
                 widget = Templates:ActionWidget(action, primaryFrame, false)
                 widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
@@ -170,7 +170,7 @@ function UI:Create()
                     local ID = Utils:JoinNumber(k, API:GetSpecialization())
                     local actionType = tA[ID][9]
                     local actionID = k
-                    local actionName = select(1, API:GetFoundActionInfo(actionID)[1])
+                    local actionName = API:GetActionName(actionID,actionType)
                     local newAction = {}
                     newAction[6] = tA[ID][9]
                     newAction[2] = tA[ID][2]

@@ -11,6 +11,7 @@ end
 local item = "item"
 local spell = "spell"
 local target = "target"
+local emptyString =""
 -- API:Functions-----------------------
 function API:GetSpecialization()
     return GetSpecialization()
@@ -27,11 +28,11 @@ function API:GetActionTexture(slotID, actionType)
     elseif actionType == item then
         return C_Item.GetItemIconByID(slotID)
     else
-        return "image.tga"
+        return emptyString
     end
 end
 function API:GetActionCooldown(spellID, actionType)
-    local value = nil;
+    local value
     if actionType == spell then
         local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID);
         if spellCooldownInfo then
@@ -58,7 +59,7 @@ function API:IsUsableAction(action, actionType)
         return isUsable, notEnoughMana
     end
 end
-function API:GetPlayerAuraBySpellID(spellID, actionType)
+function API:GetPlayerAuraBySpellID(spellID)
     local aura = C_UnitAuras.GetPlayerAuraBySpellID(spellID)
     if spellID == 26573 then
         local consecration = C_UnitAuras.GetPlayerAuraBySpellID(188370)
@@ -80,7 +81,6 @@ function API:GetPlayerAuraBySpellID(spellID, actionType)
     return aura
 end
 function API:IsPVPTalent(spellID)
-
         local talents = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
         for _, pvptalent in pairs(talents) do
             local talentID = select(6, GetPvpTalentInfoByID(pvptalent))
@@ -91,39 +91,14 @@ function API:IsPVPTalent(spellID)
             end
         end
 end
-function API:isNotOnActionBars(actionId, actionType)
-    local isPresent = true
-    local slotCount = 120;
-    for i = 1, slotCount do
-        local type, actionID = API:GetActionInfo(i)
-        if actionID ~= nil then
-            if actionId == actionID then
-                isPresent = false
-            end
-        end
-    end
-    return isPresent
-end
-function API:GetActionCharges(slotID, actionType)
+function API:GetActionCharges(actionId, actionType)
     if actionType == item then
-        local currentItemCharges = GetItemCount(slotID)
-        if currentItemCharges == 0 or currentItemCharges == nil then
-            return ""
-        else
-            return currentItemCharges
-        end
+        local currentItemCharges = GetItemCount(actionId)
+        return (currentItemCharges and currentItemCharges > 0) and currentItemCharges or emptyString
     elseif actionType == spell then
-        local chargeInfo = C_Spell.GetSpellCharges(slotID)
-        -- Check if the chargeInfo is valid (not nil)
-        if chargeInfo then
-            -- Return the number of current charges
-            return chargeInfo.currentCharges
-        else
-            -- Return nil if the spell is not found or is not charge-based
-            return ""
-        end
+        local chargeInfo = C_Spell.GetSpellCharges(actionId)
+        return chargeInfo and chargeInfo.currentCharges or emptyString
     end
-
 end
 function API:GetUserActions()
     local slotCount = 120
@@ -131,55 +106,31 @@ function API:GetUserActions()
     for i = 1, slotCount do
         local actionType, actionID = API:GetActionInfo(i)
         if actionID ~= nil and strmatch(actionID, "%d") and actionType == spell or actionType == item then
-            allSlotTable[actionID] = {i, actionID, nil, "", currentSpecialization, actionType} --- [1]slot id [2]spellID
+            allSlotTable[actionID] = {i, actionID, nil, emptyString, Config:GetSpec(), actionType} --- [1]slot id [2]spellID
         end
     end
     return allSlotTable
 end
 function API:IsResting()
-    if (IsResting()) then
-        return true
-    end
-    return false
+    return IsResting()
 end
 function API:IsPVP()
         return C_PvP.IsWarModeDesired()
 end
 function API:IsActionInRange(spellID, actionType)
-    local isInRange = nil
+    local isInRange
     if actionType == spell then
         isInRange = C_Spell.IsSpellInRange(spellID, target)
     end
-    -- Return true if isInRange is either true or nil
     return isInRange ~= false
 end
-function API:GetDisplayedActionInfo(id, actionType)
+function API:GetActionName(actionId, actionType)
     if actionType == spell then
-        local spellInfo = C_Spell.GetSpellInfo(id)
-
-        -- Check if the spellInfo is valid (not nil)
-        if spellInfo then
-            -- Return the name of the spell
-            return spellInfo.name
-        else
-            -- Return nil if the spell is not found
-            return ""
-        end
+        return C_Spell.GetSpellInfo(actionId).name
     end
     if actionType == item then
-        local name = GetItemInfo(id)
-        return name
+        return GetItemInfo(actionId)
     end
 end
-function API:GetFoundActionInfo(id)
-    if (id == nill) then
-        return
-    end
-    if C_Spell.GetSpellInfo(id) then
-        return {C_Spell.GetSpellInfo(id), "spell"}
-    elseif not C_Spell.GetSpellInfo(id) then
-        return {GetItemInfo(id), "item"}
-    end
-end
--- Revision version v1.1.2 ----
+-- Revision version v11.0.2 ----
 

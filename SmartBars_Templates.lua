@@ -421,7 +421,7 @@ function Templates:ActionWidget(action, parentFrame, isTracked, isFound)
     actionWidget:SetPoint(left, parentFrame, left, 0, 0)
     actionWidget:SetHitRectInsets(0, 0, 0, 0)
     actionWidget:SetSize(50, 50)
-    actionWidget.tooltip = API:GetDisplayedActionInfo(action[2], action[6])
+    actionWidget.tooltip = API:GetActionName(action[2], action[6])
     local newTexture = API:GetActionTexture(action[2], action[6])
 
     actionWidget:SetFrameStrata(mediumFrameStrata)

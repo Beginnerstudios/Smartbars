@@ -70,6 +70,7 @@ local globalHideRest
 local welcomeMessage = true
 local pvp
 local resting
+local currentSpecialization
 local currentVersion = "v - 1.1.2 (Alpha)"
 -- Getter------------------------------------
 function Config:GetSpec()
