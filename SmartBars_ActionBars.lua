@@ -444,6 +444,7 @@ function ActionBars:Update(actions)
         local displayOnlyWhenBoosted = actions[actionID][8]
         local actionType = actions[actionID][9]
         local isPVPspell = actions[actionID][10]
+        local isNotOnActionBars = API:isNotOnActionBars(spellID, actionType)
         local isInCinematic = API:IsInCinematic()
         if (isBoosted) then
             ActionButton_ShowOverlayGlow(widget)
@@ -454,30 +455,35 @@ function ActionBars:Update(actions)
             widget:Show()
             ActionButton_HideOverlayGlow(widget)
         else
-            if globalHideRest == true and isResting == true or isResting == true and framesHideRest[frameIndex] == true or
-                displayOnlyWhenBoosted == true and isBoosted == false or isPvPing == false and isPVPspell == true or isInCinematic == true then
-                widget:Hide()
-            else
-                local chargesText = API:GetActionCharges(spellID, actionType)
-                local isUsable, notEnoughMana = API:IsUsableAction(spellID, actionType)
-                local duration = API:GetActionCooldown(spellID, actionType)
-                local inRange = API:IsActionInRange(spellID, actionType)
-                widget.charges:SetText(chargesText)
-
-                if isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and
-                    duration < 1.5 and inRange == true or isBoosted == true and displayOnlyWhenBoosted == false and
-                    isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true then
-                    widget:Show()
+            local isSpellKnown = API:isSpellKnown(spellID, actionType)
+            if(isSpellKnown==true) then
+                if globalHideRest == true and isResting == true or isResting == true and framesHideRest[frameIndex] == true or
+                        displayOnlyWhenBoosted == true and isBoosted == false or isPvPing == false and isPVPspell == true or isNotOnActionBars == true  or isInCinematic == true then
+                    widget:Hide()
                 else
-                    local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID)
-                    if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false or isUserBuffedBy ~=nil then
-                        widget:Hide()
+                    local chargesText = API:GetActionCharges(spellID, actionType)
+                    local isUsable, notEnoughMana = API:IsUsableAction(spellID, actionType)
+                    local duration = API:GetActionCooldown(spellID, actionType)
+                    local inRange = API:IsActionInRange(spellID, actionType)
+                    widget.charges:SetText(chargesText)
+
+                    if isBoosted == true and displayOnlyWhenBoosted == true and isUsable == true and notEnoughMana == false and
+                            duration < 1.5 and inRange == true or isBoosted == true and displayOnlyWhenBoosted == false and
+                            isUsable == true and notEnoughMana == false and duration < 1.5 and inRange == true then
+                        widget:Show()
                     else
+                        local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID)
+                        if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false or isUserBuffedBy ~=nil then
+                            widget:Hide()
+                        else
                             widget:Show()
                         end
+                    end
                 end
-
+            else
+                widget:Hide()
             end
+
         end
     end
 end

@@ -45,5 +45,5 @@ C_Timer.After(2, function()
         print(Localization:LoadedMessage())
     end
 end)
--- Revision version v1.1.1 -----
+-- Revision version v11.0.2 -----
 

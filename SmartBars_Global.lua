@@ -2,5 +2,5 @@
 local _, SmartBars = ...
 SmartBars.Global = {}
 local Global = SmartBars.Global
--- Revision version v1.1.2 ----------------
+-- Revision version v11.0.2 ----------------
 

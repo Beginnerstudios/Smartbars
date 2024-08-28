@@ -111,6 +111,27 @@ function API:GetUserActions()
     end
     return allSlotTable
 end
+function API:isNotOnActionBars(actionId)
+    local isPresent = true
+    local slotCount = 120;
+    for i = 1, slotCount do
+        local type, actionID = API:GetActionInfo(i)
+        if actionID ~= nil then
+            if actionId == actionID then
+                isPresent = false
+            end
+        end
+    end
+    return isPresent
+end
+-- Not handling pet spells right not
+function API:isSpellKnown(spellID,actionType)
+    if(actionType==spell) then
+        return IsSpellKnownOrOverridesKnown(spellID, false)
+    else
+        return true
+    end
+end
 function API:IsResting()
     return IsResting()
 end
