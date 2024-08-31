@@ -17,7 +17,7 @@ function API:GetSpecialization()
     return GetSpecialization()
 end
 function API:IsInCinematic()
-        return IsInCinematicScene()
+        return IsInCinematicScene() or InCinematic()
 end
 function API:GetActionInfo(slotID)
     return GetActionInfo(slotID)
@@ -131,6 +131,9 @@ function API:isSpellKnown(spellID,actionType)
     else
         return true
     end
+end
+function API:isGliding()
+    return C_PlayerInfo.GetGlidingInfo()
 end
 function API:IsResting()
     return IsResting()

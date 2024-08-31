@@ -346,6 +346,7 @@ function Templates:ActionBar(index)
         iconHolder:SetPoint(center, actionBar, center, 0, -50)
         iconHolder:SetSize(50, 50)
         iconHolder:EnableMouse(false)
+        iconHolder:RegisterForDrag("LeftButton")
         return iconHolder
     end
     local actionBar = Frame()

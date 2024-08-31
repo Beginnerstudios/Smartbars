@@ -69,12 +69,16 @@ local configMode = false
 local globalHideRest
 local welcomeMessage = true
 local pvp
+local isGliding
 local resting
 local currentSpecialization
 local currentVersion = "v - 1.1.2 (Alpha)"
 -- Getter------------------------------------
 function Config:GetSpec()
     return currentSpecialization
+end
+function Config:GetIsGliding()
+    return isGliding
 end
 function Config:GetResting()
     return resting
@@ -104,6 +108,9 @@ end
 function Config:SetResting(value)
     resting = value
 end
+function Config:SetIsGliding(value)
+    isGliding = value
+end
 function Config:SetSpec(currentSpec)
     currentSpecialization = currentSpec
 end
@@ -122,5 +129,6 @@ function Config:SetDefaults()
     end
     Config:SetSpec(API:GetSpecialization())
     Config:SetResting(API:IsResting())
+    Config:SetIsGliding(API:isGliding())
 end
 -- Revision version v 11.0.2 ---------------

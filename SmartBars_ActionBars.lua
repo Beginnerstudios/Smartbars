@@ -360,10 +360,11 @@ function ActionBars:Toggle(value)
                 if value == true then
                     editButton:Show() -- edit button
                     editButton.button:Show()
-
+                    editButton:EnableMouse(value)
                     iconHolder:Show() -- icon holder
                 else
                     editButton:Hide()
+                    editButton:EnableMouse(value)
                     editButton.button:Hide()
                     optionPanel:Hide()
                     iconHolder:Show()
@@ -434,6 +435,7 @@ function ActionBars:Update(actions)
     local isResting = Config:GetResting() -- 1 in config
     local isPvPing = Config:GetPVP() -- 1 in config
     local globalHideRest = Config:GetGlobalHideRest() -- 1 ab 1 ui
+    local isGliding = Config:GetIsGliding()
 
     for actionID in pairs(actions) do
         local slotID = actions[actionID][1]
@@ -454,6 +456,8 @@ function ActionBars:Update(actions)
         if configMode == true then
             widget:Show()
             ActionButton_HideOverlayGlow(widget)
+            elseif isGliding then
+            widget:Hide()
         else
             local isSpellKnown = API:isSpellKnown(spellID, actionType)
             if(isSpellKnown==true) then
@@ -473,7 +477,7 @@ function ActionBars:Update(actions)
                         widget:Show()
                     else
                         local isUserBuffedBy = API:GetPlayerAuraBySpellID(spellID)
-                        if notEnoughMana == true or isUsable == false or duration > 1.4 or inRange == false or isUserBuffedBy ~=nil then
+                        if notEnoughMana == true or isUsable == false or duration > 1.7 or inRange == false or isUserBuffedBy ~=nil then
                             widget:Hide()
                         else
                             widget:Show()

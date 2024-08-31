@@ -27,6 +27,7 @@ local specChanged = "PLAYER_SPECIALIZATION_CHANGED"
 local glowShow = "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW"
 local glowHide = "SPELL_ACTIVATION_OVERLAY_GLOW_HIDE"
 local updateResting = "PLAYER_UPDATE_RESTING"
+local playerIsGlidingChanged = "PLAYER_IS_GLIDING_CHANGED"
 local zoneChanged = "ZONE_CHANGED_NEW_AREA"
 local toggleWarmode = "SPELLS_CHANGED"
 local chatMessageAddon = "CHAT_MSG_ADDON"
@@ -42,6 +43,7 @@ function Events:RegisterEvents()
     frame:RegisterEvent(updateResting)
     frame:RegisterEvent(chatMessageAddon)
     frame:RegisterEvent(actionBarChanged)
+    frame:RegisterEvent(playerIsGlidingChanged)
     Events:CreateEventsPopups()
         frame:RegisterEvent(toggleWarmode)
         frame:RegisterEvent(specChanged)
@@ -112,6 +114,9 @@ function Events:RegisterEvents()
             UI:Create()
         end
 
+    end
+    function MyEvent:PLAYER_IS_GLIDING_CHANGED(...)
+     Config:SetIsGliding(API:isGliding())
     end
 end
 function Events:CreateEventsPopups()
