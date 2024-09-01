@@ -88,19 +88,20 @@ function Actions:Create(action, isEnabled, isExisting, key)
     cA[actionID] = {action[1], action[2],
                     Templates:PanelActionWidget(action, ActionBars:GetActionBar(trackedFrame).configWidgets[3], true),
                     action[4], curretSpec, trackedFrame, isBoosted, showOnlyWhenBoosted, actionType, isPVP}
-    cA[actionID][3].edit = Templates:EditBox(cA[actionID][3], cA[actionID], isEnabled)
+    cA[actionID][3].edit = Templates:EditBox(cA[actionID][3], cA[actionID], isEnabled,actionID)
     cA[actionID][3].group = Templates:GroupLayout(cA[actionID][3], cA[actionID], isEnabled, actionID)
     cA[actionID][3].charges = Templates:FontString(cA[actionID][3], 15)
+    cA[actionID][3]:EnableMouse(false)
     if isExisting == false then
         trackedActions[actionID] = cA[actionID]
     end
     local function SetupAction()
-        cA[actionID][3].group.plusButton:SetScript(onClick, function()
+        cA[actionID][3].group.
+        plusButton:SetScript(onClick, function()
             if ActionBars:FindIndex(cA[actionID][6]) then
                 if ActionBars:FindIndex(cA[actionID][6]) < ActionBars:GetCurrentSpecActionBarsCount() then
                     cA[actionID][6] = cA[actionID][6] + 1
                     trackedActions[actionID][6] = cA[actionID][6]
-
                 end
             end
 

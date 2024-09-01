@@ -46,6 +46,7 @@ function ActionBars:Add()
         UI:Update()
     end
 end
+
 function ActionBars:Create(i)
     -- create action bar with for specific frameID and setup its default values
     if not frames then
@@ -352,7 +353,6 @@ function ActionBars:Toggle(value)
             local frameID = v[1]
             local configWidgets = frames[frameID].configWidgets
             frames[frameID]:SetMovable(value)
-            frames[frameID]:EnableMouse(value)
             for _ in pairs(configWidgets) do
                 local editButton = configWidgets[1]
                 local optionPanel = configWidgets[2]
@@ -361,18 +361,21 @@ function ActionBars:Toggle(value)
                     editButton:Show() -- edit button
                     editButton.button:Show()
                     editButton:EnableMouse(value)
-                    iconHolder:Show() -- icon holder
+                   -- iconHolder:Show() -- icon holder
                 else
                     editButton:Hide()
                     editButton:EnableMouse(value)
                     editButton.button:Hide()
                     optionPanel:Hide()
-                    iconHolder:Show()
+                  --  iconHolder:Show()
                 end
 
             end
         end
 
+    end
+    for _, v in pairs(Actions:GetCurrent()) do
+        v[3].edit:EnableMouse(value)
     end
     -- ActionWidgets
     for _, v in pairs(Actions:GetCurrent()) do
@@ -551,6 +554,15 @@ function ActionBars:GetHighest()
 end
 function ActionBars:GetActionBar(frameID)
     return frames[frameID]
+end
+function ActionBars:GetActionBarFromSpellId(actionId)
+        local trackedActions = Actions:GetTracked()
+    for k, v in pairs(trackedActions) do
+        if(k==actionId) then
+            local val  = string.sub(v[6], -1);
+            return tonumber(Config:GetSpec()..val)
+        end
+    end
 end
 function ActionBars:GetCurrentSpecActionBarsCount()
     local currentSpec = Config:GetSpec()

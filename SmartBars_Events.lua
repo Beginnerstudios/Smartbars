@@ -67,6 +67,7 @@ function Events:RegisterEvents()
     function MyEvent:ZONE_CHANGED_NEW_AREA()
         C_Timer.After(1, function()
             Config:SetResting(API:IsResting())
+            Config:SetIsGliding(API:isGliding())
         end)
     end
     function MyEvent:PLAYER_LOGIN()

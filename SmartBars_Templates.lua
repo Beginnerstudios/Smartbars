@@ -190,21 +190,21 @@ function Templates:ActionBar(index)
 
     local actionBar = CreateFrame(frame, nil, nil, nil, defaultButton)
     local function Frame()
-        actionBar:EnableMouse(true)
+        actionBar:EnableMouse(false)
         actionBar:RegisterForDrag(leftButton)
         actionBar:SetFrameStrata(backgroundFrameStrata)
         actionBar:SetMovable(true)
-        actionBar:SetSize(100, 20)
+        actionBar:SetSize(50, 20)
         actionBar:SetClampedToScreen(true)
         return actionBar
     end
     local edit = CreateFrame(frame, nil, nil, actionBarFrameTemplate)
     local function Edit()
-        edit:SetPoint(center, actionBar, center, -30, 0)
-        edit:SetSize(15, 15)
+        edit:SetPoint(center, actionBar, center, 0, 0)
+        edit:SetSize(1, 1)
         edit.button = CreateFrame(button, nil, actionBar, defaultButton, backgroundFrameStrata)
         edit.button:Hide()
-        edit.button:SetPoint(center, edit, center, -10, -30)
+        edit.button:SetPoint(center, actionBar, center, -35, 0)
         edit.button:SetSize(40, 20)
         edit.button.text = edit.button:CreateFontString(nil, "BACKGROUND")
         edit.button.text:SetPoint(center, edit.button, center, 0, 0)
@@ -343,10 +343,8 @@ function Templates:ActionBar(index)
     end
     local function IconHolder()
         local iconHolder = CreateFrame(frame, nil, nil, nil, overlayLayer)
-        iconHolder:SetPoint(center, actionBar, center, 0, -50)
+        iconHolder:SetPoint(center, actionBar, center, 0, 0)
         iconHolder:SetSize(50, 50)
-        iconHolder:EnableMouse(false)
-        iconHolder:RegisterForDrag("LeftButton")
         return iconHolder
     end
     local actionBar = Frame()
@@ -362,6 +360,7 @@ function Templates:GroupLayout(parentWidget, valueToSave, isDisplayed)
     -- Add group layout to desired widget
     local yOfs = -15
     local newWidget = CreateFrame(frame, nil, parentWidget)
+    newWidget:EnableMouse(false)
     newWidget:SetPoint(center, parentWidget, center, 0, 0)
     newWidget.barNumberText = newWidget:CreateFontString(nil, defaultLayer)
     newWidget.barNumberText:SetPoint(center, parentWidget, center, 17, -17)
@@ -377,6 +376,7 @@ function Templates:GroupLayout(parentWidget, valueToSave, isDisplayed)
     newWidget.minusButton:SetPoint(center, parentWidget, center, -15, yOfs)
     newWidget.minusButton:SetSize(20, 20)
     newWidget.minusButton:SetText(minus)
+
     newWidget.minusButton.tooltipText = Localization:ChangeBar()
     newWidget.minusButton:SetNormalFontObject(defaultFont)
 
@@ -391,10 +391,24 @@ function Templates:GroupLayout(parentWidget, valueToSave, isDisplayed)
     end
     return newWidget
 end
-function Templates:EditBox(parentWidget, valueToSave, isEnabled)
+function Templates:EditBox(parentWidget, valueToSave, isEnabled,spellId)
     -- Add editbox with desired text on frame
     local edit = CreateFrame(editBox, nil, parentWidget, nil, defaultLayer)
     edit:SetPoint(center, parentWidget, center, 2, 0)
+    edit:RegisterForDrag("LeftButton")
+    edit:EnableMouse(false)
+    edit:SetScript("OnDragStart", function()
+
+        if Config:GetConfigMode() then
+            ActionBars:GetActionBar(ActionBars:GetActionBarFromSpellId(spellId)):StartMoving()
+
+        end
+    end)
+    edit:SetScript("OnDragStop", function()
+        if Config:GetConfigMode() then
+            ActionBars:GetActionBar(ActionBars:GetActionBarFromSpellId(spellId)):StopMovingOrSizing()
+        end
+    end)
     edit:SetSize(50, 50)
     edit:SetText(valueToSave[4])
     edit:SetAutoFocus(false)
@@ -445,6 +459,12 @@ function Templates:PanelActionWidget(action, parentFrame, isTracked, isFound)
     actionWidget:SetPoint(left, parentFrame, left, 0, 0)
     actionWidget:SetHitRectInsets(0, 0, 0, 0)
     actionWidget:SetSize(50, 50)
+    if(isTracked) then
+        actionWidget:EnableMouse(false)
+    end
+    if(isTracked==false) then
+        actionWidget.tooltip = API:GetActionName(action[2], action[6])
+    end
     actionWidget:SetFrameStrata(mediumFrameStrata)
     if action[6] and action[2] ~= nil then
         actionWidget:SetNormalTexture(API:GetActionTexture(action[2], action[6]))

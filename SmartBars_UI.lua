@@ -85,7 +85,7 @@ function UI:Create()
                 local widget = action[3]
                 local actionID = action[2]
                 local actionName = API:GetActionName(actionID, "spell")
-                widget = Templates:ActionWidget(action, primaryFrame, false)
+                widget = Templates:PanelActionWidget(action, primaryFrame, false)
                 widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
                     Actions:Add(action)
@@ -126,7 +126,7 @@ function UI:Create()
                 local widget = action[3]
                 local actionID = action[2]
                 local actionName = API:GetActionName(actionID, "item")
-                widget = Templates:ActionWidget(action, primaryFrame, false)
+                widget = Templates:PanelActionWidget(action, primaryFrame, false)
                 widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                 widget:SetScript(onClick, function(self)
                     Actions:Add(action)
@@ -174,7 +174,7 @@ function UI:Create()
                     local newAction = {}
                     newAction[6] = tA[ID][9]
                     newAction[2] = tA[ID][2]
-                    local widget = Templates:ActionWidget(newAction, primaryFrame, false)
+                    local widget = Templates:PanelActionWidget(newAction, primaryFrame, false)
                     widget:SetPoint("LEFT", primaryFrame.TitleBg, "LEFT", xOffset + 10, yOffset - 100)
                     widget:SetChecked(true)
                     widget:SetScript(onClick, function(self)
