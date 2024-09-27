@@ -1,8 +1,8 @@
-## Interface:11502
+## Interface:110002
 ## Title: SmartBars
 ## Notes: Tracking actions of your choice.
 ## Author: martin.masika@icloud.com
-## Version:203(R)
+## Version:207(R)
 ## IconTexture: Interface\AddOns\Smartbars\media\icon
 ## SavedVariablesPerCharacter:SmartBarsCharacterActions,SmartBarsSettings
 SmartBars_Utils.lua

@@ -55,16 +55,14 @@ local changeLog = [[
 Build 207(R):
 - Added option to hide action while mounted.
   All actions are hidden while skyriding.
-- Addet option to remove all actions in current spec.
+- Added option to remove all actions in current spec.
 Build 203-206(R):
 - Added priority settings for tracked actions (1-10).
   Higher priority moves actions to the left on the bar.
   To configure, hover over an action in config mode and scroll up or down.
   Idea contributed by: Dezarc
 - Added a search bar to filter actions in the main UI window.
-
 ]]
-
 -- Localization
 function Localization:LoadedMessage()
     return loadedMessage
@@ -165,4 +163,4 @@ end
 function Localization:LoadingMessageTooltip()
     return tooltipLoadingMessageTitle
 end
--- Revision BUILD 205(R)
+-- Revision BUILD 207(R)
